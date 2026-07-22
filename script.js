@@ -418,7 +418,7 @@ formulario?.addEventListener("submit", async e => {
   // Dispara os pixels antes do await: se a rede da edge falhar, o sinal
   // client-side já saiu e o lead não some do Ads/Meta.
   dispararMeta(browser.event_id, dados.segmento);
-  dispararGoogle(dados, browser.event_id, TRACK.convLabelForm);
+  dispararGoogle(dados, browser.event_id, TRACK.convLabel);
 
   try {
     const res = await enviarLead(payload);
@@ -461,7 +461,7 @@ window.fifiTrackBotLead = () => {
   botFinalizado = true;
   // event_id próprio: o CAPI deste lead vem do bot com o event_id DELE, então
   // aqui só interessa que o transaction_id seja único por sessão.
-  dispararGoogle(respostasBot, gerarEventId(), TRACK.convLabelBot);
+  dispararGoogle(respostasBot, gerarEventId(), TRACK.convLabel);
 };
 
 /* ---------- 6. Movimento -------------------------------------------------

@@ -33,11 +33,14 @@
       metaPixelId:   '3538639579767084',     // pixel da FIFI (mesmo do e-commerce)
       googleAdsId:   'AW-16753876130',
       ga4Id:         '',                     // ← GA4 pendente ('' = não carrega)
-      // Labels vazios de propósito: `dispararGoogle` não faz nada sem label.
-      // Com label falso a conversão sairia com send_to inválido e sumiria em
-      // silêncio, dando a impressão de que o Google está configurado.
-      convLabelForm: '',                     // ← pendente
-      convLabelBot:  '',                     // ← pendente
+      // UMA ação de conversão para as duas rotas (form e Typebot): é o mesmo
+      // evento de negócio, e dividir partiria o sinal do Smart Bidding em
+      // duas ações de volume baixo. Quem separa a origem é a coluna `Origem`
+      // da planilha, não o Google.
+      // Label vazio de propósito: `dispararGoogle` não faz nada sem label. Com
+      // label falso o send_to sai inválido e a conversão some em silêncio,
+      // dando a impressão de que o Google está configurado.
+      convLabel:     '',                     // ← pendente
       typebotId:     'fifi-profissional',
       endpoint:      '/api/leads',
     };
