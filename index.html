@@ -30,11 +30,14 @@
        NÃO cria — sem ele o Advanced Matching degrada em silêncio).      -->
   <script>
     window.FIFI_TRACK = {
-      metaPixelId:   'META_PIXEL_ID',        // ← pixel da FIFI (e-commerce)
-      googleAdsId:   'AW-XXXXXXXXXX',        // ← ID de conversão Google Ads
-      ga4Id:         'G-XXXXXXXXXX',         // ← GA4 (deixar '' para não carregar)
-      convLabelForm: 'LABEL_FORM',           // ← label da ação de conversão do form
-      convLabelBot:  'LABEL_TYPEBOT',        // ← label da ação de conversão do Typebot
+      metaPixelId:   '3538639579767084',     // pixel da FIFI (mesmo do e-commerce)
+      googleAdsId:   'AW-16753876130',
+      ga4Id:         '',                     // ← GA4 pendente ('' = não carrega)
+      // Labels vazios de propósito: `dispararGoogle` não faz nada sem label.
+      // Com label falso a conversão sairia com send_to inválido e sumiria em
+      // silêncio, dando a impressão de que o Google está configurado.
+      convLabelForm: '',                     // ← pendente
+      convLabelBot:  '',                     // ← pendente
       typebotId:     'fifi-profissional',
       endpoint:      '/api/leads',
     };
@@ -53,10 +56,10 @@
     fbq('track', 'PageView', {}, { eventID: window.FIFI_PAGEVIEW_ID });
   </script>
   <noscript><img height="1" width="1" style="display:none"
-    src="https://www.facebook.com/tr?id=META_PIXEL_ID&ev=PageView&noscript=1" alt=""></noscript>
+    src="https://www.facebook.com/tr?id=3538639579767084&ev=PageView&noscript=1" alt=""></noscript>
 
   <!-- Google gtag (Ads + GA4, direto no código — sem GTM) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXXX"></script>
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16753876130"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
