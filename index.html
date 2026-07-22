@@ -344,7 +344,15 @@
         msclkid: ids.msclkid || '',
       },
       theme: {
-        button: { backgroundColor: '#25D366', customIconSrc: '/wa-icon.svg' },
+        button: {
+          backgroundColor: '#25D366',
+          // data URI, não caminho relativo: o bundle do Typebot valida com
+          // `src.startsWith('http') || src.startsWith('data:image/svg+xml')`.
+          // Caminho relativo reprova e ele renderiza a string como TEXTO no
+          // botão, sem erro e sem request. Data URI ainda vale mais que URL
+          // absoluta: funciona em preview local e em qualquer domínio futuro.
+          customIconSrc: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTcuNDcyIDE0LjM4MmMtLjI5Ny0uMTQ5LTEuNzU4LS44NjctMi4wMy0uOTY3LS4yNzMtLjA5OS0uNDcxLS4xNDgtLjY3LjE1LS4xOTcuMjk3LS43NjcuOTY2LS45NCAxLjE2NC0uMTczLjE5OS0uMzQ3LjIyMy0uNjQ0LjA3NS0uMjk3LS4xNS0xLjI1NS0uNDYzLTIuMzktMS40NzUtLjg4My0uNzg4LTEuNDgtMS43NjEtMS42NTMtMi4wNTktLjE3My0uMjk3LS4wMTgtLjQ1OC4xMy0uNjA2LjEzNC0uMTMzLjI5OC0uMzQ3LjQ0Ni0uNTIuMTQ5LS4xNzQuMTk4LS4yOTguMjk4LS40OTcuMDk5LS4xOTguMDUtLjM3MS0uMDI1LS41Mi0uMDc1LS4xNDktLjY2OS0xLjYxMi0uOTE2LTIuMjA3LS4yNDItLjU3OS0uNDg3LS41LS42NjktLjUxLS4xNzMtLjAwOC0uMzcxLS4wMS0uNTctLjAxLS4xOTggMC0uNTIuMDc0LS43OTIuMzcyLS4yNzIuMjk3LTEuMDQgMS4wMTYtMS4wNCAyLjQ3OSAwIDEuNDYyIDEuMDY1IDIuODc1IDEuMjEzIDMuMDc0LjE0OS4xOTggMi4wOTYgMy4yIDUuMDc3IDQuNDg3LjcxLjMwNiAxLjI2My40ODkgMS42OTQuNjI1LjcxMi4yMjcgMS4zNi4xOTUgMS44NzEuMTE4LjU3MS0uMDg1IDEuNzU4LS43MTkgMi4wMDYtMS40MTMuMjQ4LS42OTQuMjQ4LTEuMjg5LjE3My0xLjQxMy0uMDc0LS4xMjQtLjI3Mi0uMTk4LS41Ny0uMzQ3bS01LjQyMSA3LjQwM2gtLjAwNGE5Ljg3IDkuODcgMCAwMS01LjAzMS0xLjM3OGwtLjM2MS0uMjE0LTMuNzQxLjk4Mi45OTgtMy42NDgtLjIzNS0uMzc0YTkuODYgOS44NiAwIDAxLTEuNTEtNS4yNmMuMDAxLTUuNDUgNC40MzYtOS44ODQgOS44ODgtOS44ODQgMi42NCAwIDUuMTIyIDEuMDMgNi45ODggMi44OThhOS44MjUgOS44MjUgMCAwMTIuODkzIDYuOTk0Yy0uMDAzIDUuNDUtNC40MzcgOS44ODUtOS44ODUgOS44ODVNMjAuNTIgMy40NDlDMTguMjQgMS4yNDUgMTUuMjQgMCAxMi4wNDUgMCA1LjQ2MyAwIC4xMDQgNS4zMzQuMTAxIDExLjg5MmMwIDIuMDk2LjU0OSA0LjE0IDEuNTk1IDUuOTQ1TDAgMjRsNi4zMzUtMS42NTJhMTIuMDYyIDEyLjA2MiAwIDAwNS43MSAxLjQ0N2guMDA2YzYuNTg1IDAgMTEuOTQ2LTUuMzM1IDExLjk0OS0xMS44OTNhMTEuODIxIDExLjgyMSAwIDAwLTMuNDgtOC40MTN6Ii8+PC9zdmc+Cg==',
+        },
       },
       onEnd: () => window.fifiTrackBotLead && window.fifiTrackBotLead(),
       onAnswer: (a) => window.fifiBotAnswer && window.fifiBotAnswer(a),
