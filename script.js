@@ -54,6 +54,48 @@ menu?.querySelectorAll("a").forEach(link => {
   });
 });
 
+/* ---------- 2b. Modal da demonstração -------------------------------------
+   `<dialog>` nativo já dá Esc, foco preso e backdrop. O que falta é o que ele
+   NÃO faz: parar o vídeo ao fechar. Sem isso o áudio continua tocando por trás
+   do backdrop fechado. `currentTime = 0` volta pro início, senão reabrir cai no
+   meio da narração.                                                          */
+const modalDemo   = document.querySelector(".demo-modal");
+const videoDemo   = document.querySelector("[data-demo-video]");
+const abrirDemo   = document.querySelectorAll("[data-demo-open]");
+const fecharDemo  = document.querySelectorAll("[data-demo-close]");
+
+if (modalDemo && videoDemo) {
+  abrirDemo.forEach(b => b.addEventListener("click", () => {
+    modalDemo.showModal();
+    videoDemo.play().catch(() => {});   // autoplay COM som pode ser barrado: o clique é o gesto, mas nem todo browser aceita
+  }));
+
+  fecharDemo.forEach(b => b.addEventListener("click", () => modalDemo.close()));
+
+  // Clique no backdrop: o <dialog> reporta o próprio elemento como target, e
+  // o retângulo dele exclui a área do backdrop — daí a checagem por coordenada.
+  modalDemo.addEventListener("click", e => {
+    if (e.target !== modalDemo) return;
+    const r = modalDemo.getBoundingClientRect();
+    const fora = e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom;
+    if (fora) modalDemo.close();
+  });
+
+  // Parar o vídeo em QUALQUER caminho de fechamento (X, backdrop, Esc).
+  // Não dá pra confiar só no evento `close`: testado no Chromium 148 ele não
+  // dispara em `dialog.close()` — só `beforetoggle`/`toggle` chegam, e o áudio
+  // continuava tocando por trás do backdrop fechado. `toggle` é recente
+  // (Chrome 120+), `close` é o antigo: ouvir os dois cobre as duas pontas.
+  // O handler é idempotente, então disparar duas vezes não faz mal.
+  const pararDemo = () => {
+    if (modalDemo.open) return;
+    videoDemo.pause();
+    videoDemo.currentTime = 0;
+  };
+  modalDemo.addEventListener("close", pararDemo);
+  modalDemo.addEventListener("toggle", pararDemo);
+}
+
 /* ---------- 3. Linha de produtos por embalagem ---------------------------
    Quatro linhas reais, conferidas no deck (p25-27) e no catalogo do
    fifilimpeza.com. A linha pet foi deixada de fora: esta e uma pagina B2B.

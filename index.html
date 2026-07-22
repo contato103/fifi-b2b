@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=50">
+  <link rel="stylesheet" href="styles.css?v=53">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="FIFI Profissional: linha concentrada para empresas">
@@ -176,6 +176,11 @@
             <li class="anim-up"><span>04</span><p>Produtos agressivos que danificam superfícies</p></li>
             <li class="anim-up"><span>05</span><p>Alto custo mensal com reposição</p></li>
           </ol>
+
+          <button type="button" class="button button-play anim-up" data-demo-open>
+            <span class="play-mark" aria-hidden="true"></span>
+            Veja uma demonstração
+          </button>
         </div>
       </div>
 
@@ -300,10 +305,29 @@
     <small>© 2026 FIFI Profissional. Marcas de clientes exibidas mediante autorização.</small>
   </footer>
 
+  <!-- ══ DEMONSTRAÇÃO EM VÍDEO ════════════════════════════════════
+       `preload="none"` é o que segura o peso: os ~6 MB só saem da rede
+       quando a pessoa abre o modal. No load da página o custo é zero.
+       `<dialog>` nativo entrega Esc, foco preso e backdrop de graça —
+       não precisa de lib nem de gerenciar aria-hidden na mão.       -->
+  <dialog class="demo-modal" id="demo-video" aria-label="Demonstração do sistema de diluição FIFI">
+    <button type="button" class="demo-close" data-demo-close aria-label="Fechar demonstração">&times;</button>
+    <video
+      data-demo-video
+      controls
+      playsinline
+      preload="none"
+      poster="video/demo-poster.webp"
+      width="540" height="960">
+      <source src="video/demo-sistema.mp4" type="video/mp4">
+      Seu navegador não reproduz vídeo. <a href="video/demo-sistema.mp4">Baixe a demonstração</a>.
+    </video>
+  </dialog>
+
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
-  <script src="script.js?v=52" defer></script>
+  <script src="script.js?v=54" defer></script>
 
   <!-- ══ TYPEBOT — bubble com cara de WhatsApp ═════════════════════
        initBubble é web component (não iframe): roda no MESMO document
