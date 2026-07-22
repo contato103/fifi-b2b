@@ -81,6 +81,10 @@ async function getAccessToken(serviceAccountKey) {
 
 function formatPhone(raw) {
   let d = (raw || '').replace(/\D/g, '');
+  // Sem dígito nenhum, devolver '' e não '+55': o prefixo sozinho é lixo na
+  // planilha e, por ser truthy, passa pelo guard do onChange como se fosse
+  // telefone de verdade.
+  if (!d) return '';
   if (d.startsWith('55') && d.length >= 12) d = d.slice(2);
   if (d.startsWith('0')) d = d.slice(1);
   if (d.length === 10) d = d.slice(0, 2) + '9' + d.slice(2);
