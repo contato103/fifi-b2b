@@ -194,8 +194,14 @@ campoCnpj?.addEventListener("input", e => {
    junto com o lead pra edge, que grava no Sheets e manda o CAPI. O pixel
    dispara Lead com o MESMO event_id → a Meta deduplica os dois sinais.
    UTMs em localStorage (first-touch, sobrevive a sessões); click IDs
-   last-touch.                                                             */
-const T = window.FIFI_TRACK || {};
+   last-touch.
+
+   NÃO renomear para uma letra solta. Este arquivo é script clássico: um
+   `const X` no topo colide com qualquer `var X` global já criado pelas libs
+   de CDN e o browser descarta o ARQUIVO INTEIRO com SyntaxError, sem nada
+   renderizar. Foi o que aconteceu com `const T` — o lenis.min.js exporta um
+   `var T = class {...}` (VirtualScroll dele) e matou a LP toda em silêncio. */
+const TRACK = window.FIFI_TRACK || {};
 
 function getCookie(nome) {
   const m = document.cookie.match(new RegExp("(^| )" + nome + "=([^;]+)"));
@@ -268,7 +274,7 @@ function dadosDoBrowser(nomeCompleto) {
    scraping do DOM — o gtag normaliza e hasheia sozinho. transaction_id
    trava double-submit.                                                    */
 function dispararGoogle(dados, eventId, label) {
-  if (typeof gtag !== "function" || !T.googleAdsId || !label) return;
+  if (typeof gtag !== "function" || !TRACK.googleAdsId || !label) return;
   const userData = { address: {} };
   if (dados.email) userData.email = dados.email;
   if (dados.phone) userData.phone_number = "+55" + dados.phone.replace(/\D/g, "").replace(/^55/, "");
@@ -278,7 +284,7 @@ function dispararGoogle(dados, eventId, label) {
 
   gtag("set", "user_data", userData);
   gtag("event", "conversion", {
-    send_to: T.googleAdsId + "/" + label,
+    send_to: TRACK.googleAdsId + "/" + label,
     transaction_id: eventId,
   });
 }
@@ -292,7 +298,7 @@ function dispararMeta(eventId, segmento) {
 }
 
 function enviarLead(payload) {
-  return fetch(T.endpoint || "/api/leads", {
+  return fetch(TRACK.endpoint || "/api/leads", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),
@@ -370,7 +376,7 @@ formulario?.addEventListener("submit", async e => {
   // Dispara os pixels antes do await: se a rede da edge falhar, o sinal
   // client-side já saiu e o lead não some do Ads/Meta.
   dispararMeta(browser.event_id, dados.segmento);
-  dispararGoogle(dados, browser.event_id, T.convLabelForm);
+  dispararGoogle(dados, browser.event_id, TRACK.convLabelForm);
 
   try {
     const res = await enviarLead(payload);
@@ -413,7 +419,7 @@ window.fifiTrackBotLead = () => {
   botFinalizado = true;
   // event_id próprio: o CAPI deste lead vem do bot com o event_id DELE, então
   // aqui só interessa que o transaction_id seja único por sessão.
-  dispararGoogle(respostasBot, gerarEventId(), T.convLabelBot);
+  dispararGoogle(respostasBot, gerarEventId(), TRACK.convLabelBot);
 };
 
 /* ---------- 6. Movimento -------------------------------------------------
