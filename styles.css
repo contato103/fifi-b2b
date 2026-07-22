@@ -122,7 +122,13 @@ h1 em, h2 em { color: var(--lime); font-style: italic; font-weight: 600; }
 .menu-button, .mobile-menu { display: none; }
 
 /* ---------------- botões ---------------- */
+/* `appearance: none` + `background: transparent` na BASE, não só nas variantes.
+   Todo botão daqui era <a>, que não tem fundo do agente; o primeiro <button> de
+   verdade (o da demonstração) herdava o `buttonface` cinza do navegador e virava
+   uma pílula clara com texto ilegível sempre que a variante não carregava. */
 .button {
+  appearance: none; -webkit-appearance: none;
+  background: transparent; color: inherit;
   min-height: 52px; padding: 0 var(--space-xl);
   display: inline-flex; justify-content: center; align-items: center;
   border: 0; border-radius: 999px;
