@@ -1,0 +1,7 @@
+.vercel
+
+# tem token CAPI/RD — nunca versionar
+*.gs
+
+# backups de versoes anteriores
+*.bak

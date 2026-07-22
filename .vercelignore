@@ -1,0 +1,6 @@
+# backups e notas de trabalho não vão pro deploy
+*.bak
+index-v1.html
+.impeccable.md
+*.gs
+CHECKLIST-TRACKING.md

@@ -1,0 +1,354 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Sistema de diluição, produtos concentrados e treinamento para operações que precisam controlar o custo de limpeza. FIFI Profissional para empresas.">
+  <meta name="theme-color" content="#0d3b31">
+  <title>FIFI Profissional | O maior custo não está no produto. Está no desperdício.</title>
+
+  <link rel="icon" href="img/favicon.ico" sizes="32x32">
+  <link rel="icon" href="img/favicon.png" type="image/png" sizes="256x256">
+  <link rel="apple-touch-icon" href="img/favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=50">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="FIFI Profissional: linha concentrada para empresas">
+  <meta property="og:description" content="Sistema de diluição, produtos concentrados e treinamento para controlar o custo de limpeza da sua operação.">
+  <meta property="og:image" content="img/foto-sistema.webp">
+  <meta property="og:locale" content="pt_BR">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- ══ TRACKING ═══════════════════════════════════════════════════
+       IDs centralizados aqui. Trocar num lugar só muda tudo.
+       O PageView dispara com o mesmo event_id mandado ao CAPI: além do
+       dedup, é o `track` que faz nascer o cookie _fbp (o `init` sozinho
+       NÃO cria — sem ele o Advanced Matching degrada em silêncio).      -->
+  <script>
+    window.FIFI_TRACK = {
+      metaPixelId:   'META_PIXEL_ID',        // ← pixel da FIFI (e-commerce)
+      googleAdsId:   'AW-XXXXXXXXXX',        // ← ID de conversão Google Ads
+      ga4Id:         'G-XXXXXXXXXX',         // ← GA4 (deixar '' para não carregar)
+      convLabelForm: 'LABEL_FORM',           // ← label da ação de conversão do form
+      convLabelBot:  'LABEL_TYPEBOT',        // ← label da ação de conversão do Typebot
+      typebotId:     'fifi-profissional',
+      endpoint:      '/api/leads',
+    };
+  </script>
+
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+    (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', window.FIFI_TRACK.metaPixelId);
+    window.FIFI_PAGEVIEW_ID = (crypto.randomUUID && crypto.randomUUID()) ||
+      String(Date.now()) + Math.random().toString(16).slice(2);
+    fbq('track', 'PageView', {}, { eventID: window.FIFI_PAGEVIEW_ID });
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=META_PIXEL_ID&ev=PageView&noscript=1" alt=""></noscript>
+
+  <!-- Google gtag (Ads + GA4, direto no código — sem GTM) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXXX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', window.FIFI_TRACK.googleAdsId);   // grava _gcl_aw (papel do Conversion Linker)
+    if (window.FIFI_TRACK.ga4Id) gtag('config', window.FIFI_TRACK.ga4Id);
+  </script>
+</head>
+<body>
+  <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="site-header">
+    <a class="brand" href="#inicio" aria-label="FIFI Profissional, início">
+      <img class="brand-mark" src="img/logo-fifi.webp" alt="FIFI" width="420" height="206">
+      <span class="brand-sub">Profissional</span>
+    </a>
+    <nav aria-label="Navegação principal">
+      <a href="#sistema">O sistema</a>
+      <a href="#linha">Produtos</a>
+    </nav>
+    <a class="button button-small button-lime magnetic" href="#diagnostico">Quero um orçamento</a>
+    <button class="menu-button" type="button" aria-expanded="false" aria-controls="menu-mobile">
+      <span></span><span></span>
+      <span class="sr-only">Abrir menu</span>
+    </button>
+    <div id="menu-mobile" class="mobile-menu" hidden>
+      <a href="#sistema">O sistema</a>
+      <a href="#linha">Produtos</a>
+      <a href="#diagnostico">Quero um orçamento</a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- ============ HERO ============ -->
+    <section class="hero" id="inicio">
+      <div class="hero-copy">
+        <p class="eyebrow anim-up"><span></span> Fifi para empresas</p>
+        <!-- Corte das linhas medido, nao estetico: "Produtos de alto desempenho"
+             numa linha so exigiria fonte de 26px a 381px de tela e quebrava sozinha,
+             criando uma quarta linha orfa. Nenhuma destas passa de 9,7x a fonte. -->
+        <h1>
+          <span class="h1-line"><span class="anim-mask">Produtos de alto</span></span>
+          <span class="h1-line"><span class="anim-mask">desempenho para</span></span>
+          <span class="h1-line"><span class="anim-mask">empresas que</span></span>
+          <span class="h1-line"><em class="anim-mask">buscam performance.</em></span>
+        </h1>
+        <p class="hero-lead anim-up">O maior custo não está no produto, está no desperdício. Concentrados, sistema de diluição instalado e equipe treinada: o consumo para de variar de turno para turno e o custo vira previsível.</p>
+        <div class="hero-actions anim-up">
+          <a class="button button-lime magnetic" href="#diagnostico">Quero um orçamento</a>
+          <a class="text-link" href="#sistema">Ver como funciona <span aria-hidden="true">↘</span></a>
+        </div>
+      </div>
+
+      <div class="hero-visual">
+        <div class="orbit orbit-one"></div>
+        <div class="orbit orbit-two"></div>
+        <div class="product-stage">
+          <img class="product product-back" src="img/5l-limpa-musgo.webp" alt="Galão FIFI Limpa Musgo 5 litros" width="620" height="620">
+          <img class="product product-front" src="img/5l-citrus-5d.webp" alt="Galão FIFI Citrus 5D 5 litros" width="620" height="620">
+          <img class="product product-main" src="img/5l-organic-pro.webp" alt="Galão FIFI Organic Pro 5 litros" width="620" height="620" fetchpriority="high">
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ============ PROVA SOCIAL ============ -->
+    <section class="proof" aria-labelledby="proof-title">
+      <p id="proof-title">Operações que já usam e aprovam</p>
+      <div class="marquee" data-marquee>
+        <div class="marquee-track"></div>
+      </div>
+    </section>
+
+        <!-- ============ LINHA DE PRODUTOS (abas por embalagem) ============ -->
+    <section class="lineup section" id="linha" aria-labelledby="line-title">
+      <div class="lineup-head">
+        <p class="eyebrow anim-up"><span></span> Linha profissional</p>
+        <h2 class="anim-up" id="line-title">A linha completa.<br><em>Uma solução por operação.</em></h2>
+        <p class="anim-up">Produtos biodegradáveis para diferentes níveis de sujidade, superfícies e protocolos. A combinação é definida no diagnóstico.</p>
+      </div>
+
+      <div class="lineup-tabs" role="tablist" aria-label="Embalagens disponíveis">
+        <button role="tab" aria-selected="true"  id="tab-5l"    aria-controls="linha-out" data-linha="5l">5&nbsp;litros</button>
+        <button role="tab" aria-selected="false" id="tab-1l"    aria-controls="linha-out" data-linha="1l"    tabindex="-1">1&nbsp;litro</button>
+        <button role="tab" aria-selected="false" id="tab-500ml" aria-controls="linha-out" data-linha="500ml" tabindex="-1">500&nbsp;ml</button>
+        <button role="tab" aria-selected="false" id="tab-350ml" aria-controls="linha-out" data-linha="350ml" tabindex="-1">350&nbsp;ml</button>
+      </div>
+
+      <div class="lineup-grid" id="linha-out" role="tabpanel" aria-labelledby="tab-5l" tabindex="0"></div>
+
+    </section>
+
+<!-- ============ O SISTEMA ============ -->
+    <section class="system section" id="sistema" aria-labelledby="system-title">
+      <div class="system-head">
+        <p class="eyebrow anim-up"><span></span> Processo validado</p>
+        <h2 class="anim-up" id="system-title">Não vendemos produto.<br><em>Entregamos um sistema.</em></h2>
+        <p class="system-lead anim-up">Instalamos um dosador para cada produto na sua operação, ligado direto ao galão concentrado. A equipe não mede nada no olho: encosta o borrifador, o produto sai já diluído na medida certa e cada área usa o seu, identificado na parede. É isso que faz o consumo parar de variar de turno para turno.</p>
+      </div>
+
+      <div class="system-split">
+        <figure class="system-media anim-up">
+          <img src="img/foto-sistema.webp" alt="Instalação do sistema FIFI: quatro dosadores de parede conectados a galões de 5 litros em gaiolas, com placas de identificação por produto" width="1018" height="628" loading="lazy">
+          <figcaption>Instalação do sistema de diluição. Imagem ilustrativa</figcaption>
+        </figure>
+
+        <div class="system-fix">
+          <h3 class="anim-up">O que o sistema elimina</h3>
+          <ol class="pain-list">
+            <li class="anim-up"><span>01</span><p>Uso excessivo de produtos</p></li>
+            <li class="anim-up"><span>02</span><p>Falta de padrão na diluição</p></li>
+            <li class="anim-up"><span>03</span><p>Desperdício invisível no dia a dia</p></li>
+            <li class="anim-up"><span>04</span><p>Produtos agressivos que danificam superfícies</p></li>
+            <li class="anim-up"><span>05</span><p>Alto custo mensal com reposição</p></li>
+          </ol>
+        </div>
+      </div>
+
+      <ol class="steps">
+        <li class="anim-up"><span>1</span><h3>Identificação</h3><p>Mapeamos os produtos certos para cada área.</p></li>
+        <li class="anim-up"><span>2</span><h3>Instalação</h3><p>Montamos o aparelho de diluição na operação.</p></li>
+        <li class="anim-up"><span>3</span><h3>Treinamento</h3><p>Qualificamos a equipe interna para a aplicação correta.</p></li>
+        <li class="anim-up"><span>4</span><h3>Acompanhamento</h3><p>Medimos a implementação e identificamos o consumo real.</p></li>
+        <li class="anim-up"><span>5</span><h3>Suporte ativo</h3><p>Supervisão contínua, não só entrega de galão.</p></li>
+        <li class="anim-up"><span>6</span><h3>Controle de custo</h3><p>O consumo vira previsível e planejável.</p></li>
+      </ol>
+    </section>
+
+    <!-- ============ VANTAGENS CNPJ ============ -->
+    <section class="perks section" aria-labelledby="perks-title">
+      <h2 class="anim-up" id="perks-title">Por que fechar com a FIFI</h2>
+      <div class="perks-grid">
+        <article class="anim-up"><span>01</span><h3>Solução completa</h3><p>Mão de obra qualificada, supervisão ativa, produtos profissionais e consultoria técnica de diagnóstico.</p></article>
+        <article class="anim-up"><span>02</span><h3>Economia</h3><p>Tabela CNPJ com preço diferenciado e produto concentrado que praticamente elimina o enxágue.</p></article>
+        <article class="anim-up"><span>03</span><h3>Menos risco trabalhista</h3><p>Sem exposição direta ao químico: menos alergia, reação e problema respiratório na equipe.</p></article>
+        <article class="anim-up"><span>04</span><h3>Sem multa ambiental</h3><p>Descarte correto, evitando penalização por lançamento químico direto no ambiente.</p></article>
+        <article class="anim-up"><span>05</span><h3>Treinamos sua equipe</h3><p>Qualificação da mão de obra interna para aplicação correta de produto e técnica.</p></article>
+      </div>
+    </section>
+
+    <!-- ============ ESG ============ -->
+    <section class="esg section" aria-labelledby="esg-title">
+      <div class="esg-copy">
+        <p class="eyebrow anim-up"><span></span> ESG</p>
+        <h2 class="anim-up" id="esg-title">Sustentabilidade<br><em>está no DNA.</em></h2>
+        <p class="anim-up">Produtos biodegradáveis, diluição controlada e menos embalagem em circulação. A linha contribui diretamente com os Objetivos de Desenvolvimento Sustentável da ONU.</p>
+      </div>
+      <ul class="ods">
+        <li class="anim-up"><img src="img/ods/ods-06.webp" alt="ODS 6: Água potável e saneamento" width="200" height="200" loading="lazy"></li>
+        <li class="anim-up"><img src="img/ods/ods-09.webp" alt="ODS 9: Indústria, inovação e infraestrutura" width="200" height="200" loading="lazy"></li>
+        <li class="anim-up"><img src="img/ods/ods-11.webp" alt="ODS 11: Cidades e comunidades sustentáveis" width="200" height="200" loading="lazy"></li>
+        <li class="anim-up"><img src="img/ods/ods-12.webp" alt="ODS 12: Consumo e produção responsáveis" width="200" height="200" loading="lazy"></li>
+        <li class="anim-up"><img src="img/ods/ods-13.webp" alt="ODS 13: Ação contra a mudança global do clima" width="200" height="200" loading="lazy"></li>
+        <li class="anim-up"><img src="img/ods/ods-15.webp" alt="ODS 15: Vida terrestre" width="200" height="200" loading="lazy"></li>
+      </ul>
+    </section>
+
+    <!-- ============ FORMULÁRIO ============ -->
+    <section class="contact section" id="diagnostico" aria-labelledby="contact-title">
+      <div class="contact-copy">
+        <p class="eyebrow anim-up"><span></span> Comece pelo diagnóstico</p>
+        <h2 class="anim-up" id="contact-title">Vamos medir o consumo real da sua operação.</h2>
+        <p class="anim-up">Um consultor FIFI levanta áreas, rotina e consumo atual, e devolve a solução recomendada com a tabela CNPJ.</p>
+      </div>
+
+      <form class="lead-form" id="lead-form" novalidate>
+        <div class="field">
+          <label for="name">Seu nome</label>
+          <input id="name" name="name" type="text" autocomplete="name" required>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="email">E-mail</label>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="nome@empresa.com.br">
+          </div>
+          <div class="field">
+            <label for="phone">WhatsApp</label>
+            <input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="(00) 00000-0000">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="company">Empresa</label>
+            <input id="company" name="company" type="text" autocomplete="organization" required>
+          </div>
+          <div class="field">
+            <label for="cnpj">CNPJ</label>
+            <input id="cnpj" name="cnpj" type="text" inputmode="numeric" required placeholder="00.000.000/0000-00">
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="sector">Segmento</label>
+            <select id="sector" name="sector" required>
+              <option value="">Selecione</option>
+              <option>Supermercado / varejo</option>
+              <option>Indústria</option>
+              <option>Saúde</option>
+              <option>Facilities / condomínio</option>
+              <option>Outro</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="spend">Gasto mensal com produtos</label>
+            <select id="spend" name="spend" required>
+              <option value="">Selecione uma faixa</option>
+              <option>R$ 3.000 a R$ 8.000</option>
+              <option>R$ 8.000 a R$ 15.000</option>
+              <option>R$ 15.000 a R$ 30.000</option>
+              <option>Acima de R$ 30.000</option>
+            </select>
+          </div>
+        </div>
+        <label class="consent">
+          <input type="checkbox" id="consent" name="consent" required>
+          <span>Autorizo o contato da equipe comercial e o tratamento dos meus dados conforme a <a href="#" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
+        </label>
+        <button class="button button-lime" type="submit">Quero um orçamento</button>
+        <p class="form-status" role="status" aria-live="polite"></p>
+      </form>
+    </section>
+  </main>
+
+  <footer>
+    <div class="foot-top">
+      <a class="brand brand-light" href="#inicio" aria-label="FIFI Profissional, início">
+        <img class="brand-mark" src="img/logo-fifi-branco.webp" alt="FIFI" width="420" height="206">
+        <span class="brand-sub">Profissional</span>
+      </a>
+      <p class="foot-claim">Produto certo.<br>Resultado garantido.</p>
+      <nav class="foot-links" aria-label="Links institucionais">
+        <a href="https://www.fifilimpeza.com/" target="_blank" rel="noopener">Loja FIFI ↗</a>
+        <a href="https://www.instagram.com/fifilimpeza/" target="_blank" rel="noopener">Instagram ↗</a>
+        <a href="#diagnostico">Quero um orçamento</a>
+      </nav>
+    </div>
+    <small>© 2026 FIFI Profissional. Marcas de clientes exibidas mediante autorização.</small>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
+  <script src="script.js?v=51" defer></script>
+
+  <!-- ══ TYPEBOT — bubble com cara de WhatsApp ═════════════════════
+       initBubble é web component (não iframe): roda no MESMO document
+       da LP e enxerga window.gtag/fbq. Por isso a conversão da rota bot
+       sai daqui, sem precisar tocar no grafo do bot.
+       Prefill só do que já existe no load da página (UTMs e click IDs).
+       fbp/fbc/event_id/browser vêm de blocos `Set variable` client-side
+       DENTRO do bot — ver patterns/typebot-coleta-leads.md (PADRÃO 2026). -->
+  <script type="module">
+    import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0/dist/web.js';
+
+    const T = window.FIFI_TRACK;
+    const p = new URLSearchParams(location.search);
+
+    const utmKeys = ['utm_source','utm_medium','utm_campaign','utm_term','utm_content'];
+    const fromUrl = {};
+    utmKeys.forEach(k => { if (p.get(k)) fromUrl[k] = p.get(k); });
+    if (Object.keys(fromUrl).length) localStorage.setItem('_utms', JSON.stringify(fromUrl));
+    const utms = JSON.parse(localStorage.getItem('_utms') || '{}');
+
+    const clickKeys = ['fbclid','gclid','gbraid','wbraid','ttclid','msclkid'];
+    const freshIds = {};
+    clickKeys.forEach(k => { if (p.get(k)) freshIds[k] = p.get(k); });
+    if (Object.keys(freshIds).length) localStorage.setItem('_clickids', JSON.stringify(freshIds));
+    const ids = JSON.parse(localStorage.getItem('_clickids') || '{}');
+
+    Typebot.initBubble({
+      typebot: T.typebotId,
+      apiHost: 'https://typebot.co',
+      prefilledVariables: {
+        utm_source:   utms.utm_source   || 'Typebot',
+        utm_medium:   utms.utm_medium   || '',
+        utm_campaign: utms.utm_campaign || '',
+        utm_term:     utms.utm_term     || '',
+        utm_content:  utms.utm_content  || '',
+        fbclid:  ids.fbclid  || '',
+        gclid:   ids.gclid   || '',
+        gbraid:  ids.gbraid  || '',
+        wbraid:  ids.wbraid  || '',
+        ttclid:  ids.ttclid  || '',
+        msclkid: ids.msclkid || '',
+      },
+      theme: {
+        button: { backgroundColor: '#25D366', customIconSrc: '/wa-icon.svg' },
+      },
+      onEnd: () => window.fifiTrackBotLead && window.fifiTrackBotLead(),
+      onAnswer: (a) => window.fifiBotAnswer && window.fifiBotAnswer(a),
+    });
+  </script>
+</body>
+</html>
