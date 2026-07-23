@@ -334,23 +334,17 @@ h1 em, h2 em { color: var(--lime); font-style: italic; font-weight: 600; }
 .lineup-head > p:last-child { margin-top: var(--space-xl); max-width: 54ch; line-height: 1.7; color: var(--on-dark-soft); }
 /* Abas por embalagem. Preferi abas a carrossel: numa pagina de captacao o
    comprador nao arrasta, e carrossel esconde produto. Aqui tudo esta a 1 clique. */
-.prod-vazio { background: var(--green-900); }
-/* Órfão em 2 colunas: em vez de deixar um card vazio ao lado (20 produtos
-   dá fileira exata em 2 col, mas a regra fica pro caso de mudar a lista),
-   o último ocupa a fileira e centraliza o conteúdo. A classe
-   só é adicionada pelo renderLinha() quando há 2 colunas e sobra 1 célula. */
-.lineup-grid article.prod-orfao {
-  grid-column: 1 / -1; align-items: center; text-align: center;
-}
-.lineup-grid article.prod-orfao > div { max-width: 320px; }
-
-/* 3 colunas fixas: os produtos dividem exato em fileiras (mesmo motivo de .steps) */
+/* Flexbox e nao grid: 20 produtos nao dividem exato em 3 colunas (sobram 2
+   na ultima fileira). Com `flex: 1 1` os cards da ultima fileira incompleta
+   CRESCEM pra preencher a largura (2 viram metade, 1 vira inteiro) — some o
+   bloco vazio, sem filler nem caso especial, e vale em qualquer breakpoint. */
 .lineup-grid {
   margin-top: clamp(32px, 4vw, 56px);
-  display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px;
+  display: flex; flex-wrap: wrap; gap: 1px;
   background: var(--hairline); border: 1px solid var(--hairline);
 }
 .lineup-grid article {
+  flex: 1 1 calc(33.333% - 1px); min-width: 0;   /* 3 por fileira no desktop */
   padding: var(--space-xl); background: var(--green-900);
   display: flex; flex-direction: column; gap: var(--space-lg);
   position: relative; overflow: hidden; transition: background .4s var(--ease);
@@ -377,7 +371,6 @@ h1 em, h2 em { color: var(--lime); font-style: italic; font-weight: 600; }
   margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px;
   letter-spacing: 0; text-transform: none;
 }
-.prod-orfao p.prod-sizes { justify-content: center; }
 .prod-sizes span {
   font-size: .66rem; font-weight: 600; letter-spacing: .01em; line-height: 1;
   padding: 4px 9px; border-radius: 999px;
@@ -514,8 +507,7 @@ footer > small {
   .product-stage { width: min(86vw, 400px); }
   .marquee-track img { width: 128px; height: 62px; }
   .steps { grid-template-columns: 1fr; }
-  /* 9 é ímpar: em 2 colunas o último ficaria órfão — ver .prod-orfao (script.js) */
-  .lineup-grid { grid-template-columns: repeat(2, 1fr); }
+  .lineup-grid article { flex-basis: calc(50% - 1px); }   /* 2 por fileira */
   .ods { grid-template-columns: repeat(3, 1fr); }
   .field-row { grid-template-columns: 1fr; }
   .foot-links { flex-direction: column; gap: var(--space-md); }
@@ -524,9 +516,9 @@ footer > small {
 /* Faixa intermediária: o hero já empilhou (1 coluna) mas ainda sobra largura.
    Sem isto o galão fica pequeno demais no meio de um bloco vazio. */
 @media (min-width: 761px) and (max-width: 1100px) {
-  /* 2 colunas e nao 3: com 3, o card fica com ~195px uteis e nomes longos
+  /* 2 por fileira e nao 3: com 3, o card fica com ~195px uteis e nomes longos
      ("Limpador de Uso Geral") quebram em quatro linhas. */
-  .lineup-grid { grid-template-columns: repeat(2, 1fr); }
+  .lineup-grid article { flex-basis: calc(50% - 1px); }
   .perks-grid { grid-template-columns: repeat(2, 1fr); }
   .ods { grid-template-columns: repeat(6, 1fr); }
 }
@@ -535,7 +527,7 @@ footer > small {
 @media (max-width: 400px) {
   .brand-mark { height: 26px; }
   .brand-sub { display: none; }          /* o wordmark já identifica a marca */
-  .lineup-grid { grid-template-columns: 1fr; }
+  .lineup-grid article { flex-basis: 100%; }   /* 1 por fileira */
   .ods { grid-template-columns: repeat(2, 1fr); }
 }
 
