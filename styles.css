@@ -349,6 +349,13 @@ h1 em, h2 em { color: var(--lime); font-style: italic; font-weight: 600; }
   background: var(--lime); border-color: var(--lime); color: var(--green-950);
 }
 .prod-vazio { background: var(--green-900); }
+/* Órfão em 2 colunas (abas de 3 e 9 produtos): em vez de deixar um card
+   vazio ao lado, o último ocupa a fileira e centraliza o conteúdo. A classe
+   só é adicionada pelo renderLinha() quando há 2 colunas e sobra 1 célula. */
+.lineup-grid article.prod-orfao {
+  grid-column: 1 / -1; align-items: center; text-align: center;
+}
+.lineup-grid article.prod-orfao > div { max-width: 320px; }
 
 /* 3 colunas fixas: os produtos dividem exato em fileiras (mesmo motivo de .steps) */
 .lineup-grid {
@@ -502,7 +509,7 @@ footer > small {
   .product-stage { width: min(86vw, 400px); }
   .marquee-track img { width: 128px; height: 62px; }
   .steps { grid-template-columns: 1fr; }
-  /* 9 é ímpar: em 2 colunas o último ficaria órfão — ocupa a fileira inteira */
+  /* 9 é ímpar: em 2 colunas o último ficaria órfão — ver .prod-orfao (script.js) */
   .lineup-grid { grid-template-columns: repeat(2, 1fr); }
   .ods { grid-template-columns: repeat(3, 1fr); }
   .field-row { grid-template-columns: 1fr; }

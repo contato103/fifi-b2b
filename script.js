@@ -172,11 +172,17 @@ function renderLinha() {
      sobra incompleta. Sem preencher, a cor do grid vaza no buraco. */
   const colunas = getComputedStyle(saidaLinha).gridTemplateColumns.split(" ").length;
   const falta = (colunas - (cards.length % colunas)) % colunas;
-  for (let i = 0; i < falta; i++) {
-    const vazio = document.createElement("div");
-    vazio.className = "prod-vazio";
-    vazio.setAttribute("aria-hidden", "true");
-    cards.push(vazio);
+  if (colunas === 2 && falta === 1) {
+    /* Um unico orfao em 2 colunas (mobile): em vez de um card vazio ao lado,
+       o ultimo ocupa a fileira e centraliza (.prod-orfao no CSS). */
+    cards[cards.length - 1].classList.add("prod-orfao");
+  } else {
+    for (let i = 0; i < falta; i++) {
+      const vazio = document.createElement("div");
+      vazio.className = "prod-vazio";
+      vazio.setAttribute("aria-hidden", "true");
+      cards.push(vazio);
+    }
   }
   saidaLinha.replaceChildren(...cards);
 
