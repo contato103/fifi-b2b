@@ -187,24 +187,9 @@ function cardProduto(p) {
 
 function renderProdutos() {
   if (!saidaLinha) return;
-  const cards = PRODUTOS.map(cardProduto);
-
-  /* Sao 20 produtos: a ultima fileira quase sempre sobra incompleta. Sem
-     preencher, a cor do grid vaza no buraco. Em 2 colunas (mobile) um unico
-     orfao ocupa a fileira e centraliza (.prod-orfao); nos demais, celula vazia. */
-  const colunas = getComputedStyle(saidaLinha).gridTemplateColumns.split(" ").length;
-  const falta = (colunas - (cards.length % colunas)) % colunas;
-  if (colunas === 2 && falta === 1) {
-    cards[cards.length - 1].classList.add("prod-orfao");
-  } else {
-    for (let i = 0; i < falta; i++) {
-      const vazio = document.createElement("div");
-      vazio.className = "prod-vazio";
-      vazio.setAttribute("aria-hidden", "true");
-      cards.push(vazio);
-    }
-  }
-  saidaLinha.replaceChildren(...cards);
+  // A ultima fileira incompleta e centralizada pelo flexbox (flex-grow no CSS):
+  // nao precisa de filler nem caso especial de orfao.
+  saidaLinha.replaceChildren(...PRODUTOS.map(cardProduto));
 
   if (!suave && temGSAP) {
     gsap.from(saidaLinha.children, {
@@ -442,9 +427,29 @@ formulario?.addEventListener("submit", async e => {
   const botao = formulario.querySelector("button[type=submit]");
   const rotulo = botao.textContent;
   botao.disabled = true;
-  botao.textContent = "Enviando…";
+  botao.textContent = "Verificando CNPJ…";
   aviso.dataset.state = "";
   aviso.textContent = "";
+
+  // Confirma que o CNPJ existe de fato na Receita antes de contar o lead —
+  // é o que barra CPF/pessoa física. Só aborta com "nao" explícito (dígito
+  // não fecha ou 404); se a verificação cair, segue o envio, o dígito
+  // verificador já filtrou o número inventado localmente.
+  try {
+    const r = await fetch((TRACK.cnpjEndpoint || "/api/cnpj") + "?n=" + dados.cnpj.replace(/\D/g, ""));
+    if ((await r.json()).ok === "nao") {
+      f.cnpj.setAttribute("aria-invalid", "true");
+      f.cnpj.focus();
+      aviso.dataset.state = "erro";
+      aviso.textContent = "Não encontramos esse CNPJ na Receita. Confira ou use o CNPJ da empresa.";
+      enviando = false;
+      botao.disabled = false;
+      botao.textContent = rotulo;
+      return;
+    }
+  } catch { /* verificação indisponível: fail-open, não perde lead real */ }
+
+  botao.textContent = "Enviando…";
 
   // Dispara os pixels antes do await: se a rede da edge falhar, o sinal
   // client-side já saiu e o lead não some do Ads/Meta.
