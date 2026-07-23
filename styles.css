@@ -501,10 +501,13 @@ footer > small {
   .site-header { height: 66px; }
   .mobile-menu { top: 66px; }
   .section { padding-block: 72px; }
-  .hero { min-height: auto; padding-top: 56px; background: var(--green-900); }
+  .hero { min-height: auto; padding-top: 56px; background: var(--green-900); gap: 20px; }
   .hero-actions { align-items: stretch; flex-direction: column; }
   .hero-actions .button { width: 100%; }
-  .hero-visual { min-height: 400px; }
+  /* min-height 0: empilhado, o palco (quadrado, galões ancorados embaixo) já
+     traz altura de sobra. Os 400px de antes centravam o palco e abriam um vão
+     grande entre o CTA e os galões. */
+  .hero-visual { min-height: 0; }
   .hero-visual::before { width: 90vw; }
   .product-stage { width: min(86vw, 400px); }
   .marquee-track img { width: 128px; height: 62px; }
