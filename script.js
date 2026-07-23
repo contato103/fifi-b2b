@@ -384,6 +384,27 @@ mascara(document.querySelector("#cnpj"), v => {
     .replace(/(\d{4})(\d)/, "$1-$2");
 });
 
+/* Dígitos verificadores do CNPJ (módulo 11, pesos 5..2 e 6..2). Barra CNPJ
+   inventado/incompleto no submit — lead sem empresa não entra na planilha.
+   Só numérico: o CNPJ alfanumérico da Receita começou a ser emitido em
+   07/2026, empresa com ele tem dias de vida — fora do perfil B2B da FIFI. */
+function validarCnpj(valor) {
+  const d = (valor || "").replace(/\D/g, "");
+  if (d.length !== 14 || /^(\d)\1{13}$/.test(d)) return false;
+  const dv = base => {
+    let peso = base.length - 7, soma = 0;
+    for (const c of base) { soma += c * peso; peso = peso === 2 ? 9 : peso - 1; }
+    const resto = soma % 11;
+    return resto < 2 ? 0 : 11 - resto;
+  };
+  return dv(d.slice(0, 12)) === +d[12] && dv(d.slice(0, 13)) === +d[13];
+}
+campoCnpj?.addEventListener("input", () => {
+  campoCnpj.setCustomValidity(
+    !campoCnpj.value || validarCnpj(campoCnpj.value) ? "" : "CNPJ inválido"
+  );
+});
+
 formulario?.addEventListener("submit", async e => {
   e.preventDefault();
   if (enviando) return;
@@ -395,7 +416,9 @@ formulario?.addEventListener("submit", async e => {
     invalidos.forEach(c => c.setAttribute("aria-invalid", "true"));
     invalidos[0].focus();
     aviso.dataset.state = "erro";
-    aviso.textContent = "Confira os campos destacados antes de enviar.";
+    aviso.textContent = invalidos.some(c => c.validity.customError)
+      ? "CNPJ inválido — confira os números digitados."
+      : "Confira os campos destacados antes de enviar.";
     return;
   }
 
