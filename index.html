@@ -14,7 +14,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=57">
+  <link rel="stylesheet" href="styles.css?v=58">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="FIFI Profissional: linha concentrada para empresas">
@@ -137,22 +137,15 @@
       </div>
     </section>
 
-        <!-- ============ LINHA DE PRODUTOS (abas por embalagem) ============ -->
+        <!-- ============ LINHA DE PRODUTOS (um card por produto) ============ -->
     <section class="lineup section" id="linha" aria-labelledby="line-title">
       <div class="lineup-head">
         <p class="eyebrow anim-up"><span></span> Linha profissional</p>
         <h2 class="anim-up" id="line-title">A linha completa.<br><em>Uma solução por operação.</em></h2>
-        <p class="anim-up">Produtos biodegradáveis para diferentes níveis de sujidade, superfícies e protocolos. A combinação é definida no diagnóstico.</p>
+        <p class="anim-up">Produtos biodegradáveis para diferentes níveis de sujidade, superfícies e protocolos. Cada um disponível nos tamanhos indicados no card. A combinação é definida no diagnóstico.</p>
       </div>
 
-      <div class="lineup-tabs" role="tablist" aria-label="Embalagens disponíveis">
-        <button role="tab" aria-selected="true"  id="tab-5l"    aria-controls="linha-out" data-linha="5l">5&nbsp;litros</button>
-        <button role="tab" aria-selected="false" id="tab-1l"    aria-controls="linha-out" data-linha="1l"    tabindex="-1">1&nbsp;litro</button>
-        <button role="tab" aria-selected="false" id="tab-500ml" aria-controls="linha-out" data-linha="500ml" tabindex="-1">500&nbsp;ml</button>
-        <button role="tab" aria-selected="false" id="tab-350ml" aria-controls="linha-out" data-linha="350ml" tabindex="-1">350&nbsp;ml</button>
-      </div>
-
-      <div class="lineup-grid" id="linha-out" role="tabpanel" aria-labelledby="tab-5l" tabindex="0"></div>
+      <div class="lineup-grid" id="linha-out" aria-label="Produtos FIFI Profissional"></div>
 
     </section>
 
@@ -330,7 +323,7 @@
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
-  <script src="script.js?v=57" defer></script>
+  <script src="script.js?v=58" defer></script>
 
   <!-- ══ TYPEBOT — bubble com cara de WhatsApp ═════════════════════
        initBubble é web component (não iframe): roda no MESMO document

@@ -142,39 +142,59 @@ const LINHAS = {
     ["limao-hortela","Aromatizante Limão e Hortelã","Odorizante","Refresca o ambiente com energia cítrica."]
   ]
 };
-const ROTULO = { "5l":"5 litros", "1l":"1 litro", "500ml":"500 ml", "350ml":"350 ml" };
+const ROTULO = { "5l":"5L", "1l":"1L", "500ml":"500ml", "350ml":"350ml" };
+const ORDEM_TAM = ["5l", "1l", "500ml", "350ml"];
 
-const abasLinha = [...document.querySelectorAll(".lineup-tabs button")];
 const saidaLinha = document.getElementById("linha-out");
-let linhaAtual = "5l";
 
-function cardProduto([slug, nome, tag, desc], linha) {
+/* Um card por PRODUTO (nao mais por embalagem). Pedido da Ivonete (23/07):
+   cada card mostra os tamanhos em que o produto e vendido. Consolida as 4
+   litragens de LINHAS: a primeira ocorrencia (maior litragem que o produto
+   tem) define nome/categoria/descricao/imagem; os tamanhos vao se somando.
+   Produto que nao tem 5L usa a imagem da maior litragem que existe. */
+const PRODUTOS = (() => {
+  const mapa = new Map();
+  for (const tam of ORDEM_TAM) {
+    for (const [slug, nome, tag, desc] of (LINHAS[tam] || [])) {
+      if (!mapa.has(slug)) mapa.set(slug, { slug, nome, tag, desc, img: `${tam}-${slug}`, tamanhos: [] });
+      mapa.get(slug).tamanhos.push(tam);
+    }
+  }
+  return [...mapa.values()];
+})();
+
+function cardProduto(p) {
   const art = document.createElement("article");
   const shot = document.createElement("div");
   shot.className = "prod-shot";
   const img = document.createElement("img");
-  img.src = `img/${linha}-${slug}.webp`;
-  img.alt = `FIFI ${nome} ${ROTULO[linha]}`;
+  img.src = `img/${p.img}.webp`;
+  img.alt = `FIFI ${p.nome}`;
   img.loading = "lazy";
   img.addEventListener("error", () => art.remove(), { once: true });
   shot.appendChild(img);
+
+  const selos = p.tamanhos.map(t => `<span>${ROTULO[t]}</span>`).join("");
   const txt = document.createElement("div");
-  txt.innerHTML = `<p>${tag}</p><h3>${nome}</h3><p class="prod-desc">${desc}</p>`;
+  txt.innerHTML =
+    `<p>${p.tag}</p>` +
+    `<h3>${p.nome}</h3>` +
+    `<p class="prod-sizes" aria-label="Tamanhos disponíveis">${selos}</p>` +
+    `<p class="prod-desc">${p.desc}</p>`;
   art.append(shot, txt);
   return art;
 }
 
-function renderLinha() {
-  const itens = LINHAS[linhaAtual];
-  const cards = itens.map(p => cardProduto(p, linhaAtual));
+function renderProdutos() {
+  if (!saidaLinha) return;
+  const cards = PRODUTOS.map(cardProduto);
 
-  /* A contagem muda por aba (9, 8, 10, 3), entao a ultima fileira quase sempre
-     sobra incompleta. Sem preencher, a cor do grid vaza no buraco. */
+  /* Sao 20 produtos: a ultima fileira quase sempre sobra incompleta. Sem
+     preencher, a cor do grid vaza no buraco. Em 2 colunas (mobile) um unico
+     orfao ocupa a fileira e centraliza (.prod-orfao); nos demais, celula vazia. */
   const colunas = getComputedStyle(saidaLinha).gridTemplateColumns.split(" ").length;
   const falta = (colunas - (cards.length % colunas)) % colunas;
   if (colunas === 2 && falta === 1) {
-    /* Um unico orfao em 2 colunas (mobile): em vez de um card vazio ao lado,
-       o ultimo ocupa a fileira e centraliza (.prod-orfao no CSS). */
     cards[cards.length - 1].classList.add("prod-orfao");
   } else {
     for (let i = 0; i < falta; i++) {
@@ -188,30 +208,12 @@ function renderLinha() {
 
   if (!suave && temGSAP) {
     gsap.from(saidaLinha.children, {
-      opacity: 0, y: 14, duration: .45, stagger: .04, ease: "power2.out", overwrite: true
+      opacity: 0, y: 14, duration: .45, stagger: .03, ease: "power2.out", overwrite: true
     });
   }
 }
 
-abasLinha.forEach((aba, i) => {
-  aba.addEventListener("click", () => {
-    abasLinha.forEach(o => { o.setAttribute("aria-selected", "false"); o.tabIndex = -1; });
-    aba.setAttribute("aria-selected", "true");
-    aba.tabIndex = 0;
-    saidaLinha.setAttribute("aria-labelledby", aba.id);
-    linhaAtual = aba.dataset.linha;
-    renderLinha();
-  });
-  aba.addEventListener("keydown", e => {
-    const passo = e.key === "ArrowRight" ? 1 : e.key === "ArrowLeft" ? -1 : 0;
-    if (!passo) return;
-    e.preventDefault();
-    const prox = abasLinha[(i + passo + abasLinha.length) % abasLinha.length];
-    prox.focus(); prox.click();
-  });
-});
-
-if (abasLinha.length) renderLinha();
+renderProdutos();
 
 /* ---------- 4. Máscara de telefone -------------------------------------- */
 const campoTelefone = document.querySelector("#phone");
