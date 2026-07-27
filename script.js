@@ -16,7 +16,7 @@ const temGSAP = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefin
    hash no nome, trocar o conteudo de um packshot nao chega em quem ja visitou a pagina.
    Este selo entra na URL e vira uma chave de cache nova. Incrementar SEMPRE que um
    asset de img/ for substituido mantendo o mesmo nome. */
-const ASSETS_V = "3";
+const ASSETS_V = "4";
 const asset = caminho => `${caminho}?v=${ASSETS_V}`;
 
 /* ---------- 1. Marquee de clientes ---------------------------------------
@@ -34,7 +34,7 @@ if (trilho) {
   const nomes = CLIENTES.filter(n => n !== "grupo-pereira"); // sem asset próprio
   const criar = () => nomes.map(n => {
     const img = document.createElement("img");
-    img.src = `img/clientes/${n}.webp`;
+    img.src = asset(`img/clientes/${n}.webp`);
     img.alt = "";               // decorativo: o rótulo da seção já nomeia o conjunto
     img.loading = "lazy";
     img.width = 158; img.height = 74;
@@ -170,6 +170,31 @@ const PRODUTOS = (() => {
   return [...mapa.values()];
 })();
 
+/* Dimensoes reais dos webp, para o navegador reservar a caixa antes de baixar.
+   Gerado dos arquivos em img/ — se trocar um packshot, conferir aqui. */
+const DIMENSOES = {
+  "5l-espuma-pro": [620, 620],
+  "5l-citrus-5d": [620, 620],
+  "5l-hp": [620, 814],
+  "5l-dia-a-dia": [366, 520],
+  "5l-limpador-uso-geral": [620, 620],
+  "5l-big-maq": [620, 620],
+  "5l-organic-pro": [620, 620],
+  "5l-pos-obra": [620, 620],
+  "5l-limpa-musgo": [620, 620],
+  "1l-limpa-mofo": [417, 800],
+  "1l-vidro-vip": [417, 800],
+  "500ml-odor-vip": [339, 800],
+  "500ml-limpa-rejunte": [339, 800],
+  "500ml-bye-manchas": [339, 800],
+  "500ml-bye-ferrugem": [339, 800],
+  "500ml-protege-tecido": [339, 800],
+  "500ml-madeira-nova": [339, 800],
+  "350ml-capim-limao": [339, 800],
+  "350ml-cereja-avela": [339, 800],
+  "350ml-limao-hortela": [339, 800],
+};
+
 function cardProduto(p) {
   const art = document.createElement("article");
   const shot = document.createElement("div");
@@ -178,6 +203,13 @@ function cardProduto(p) {
   img.src = asset(`img/${p.img}.webp`);
   img.alt = `FIFI ${p.nome}`;
   img.loading = "lazy";
+  // width/height explicitos: sem eles o navegador so sabe a proporcao depois
+  // que o webp chega, e reserva 0 de altura ate la. Sao 20 cards numa grade —
+  // o reflow de cada um custa CLS e trabalho de layout a toa. Os valores reais
+  // vem do proprio arquivo; o CSS (`height: 100%; width: auto`) manda no
+  // tamanho final, estes so dao a proporcao antecipada.
+  const dim = DIMENSOES[p.img];
+  if (dim) { img.width = dim[0]; img.height = dim[1]; }
   img.addEventListener("error", () => art.remove(), { once: true });
   shot.appendChild(img);
 

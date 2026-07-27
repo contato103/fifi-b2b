@@ -11,10 +11,12 @@
   <link rel="icon" href="img/favicon.png" type="image/png" sizes="256x256">
   <link rel="apple-touch-icon" href="img/favicon.png">
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@100..900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=59">
+  <!-- Fonte servida daqui, nao do Google. O preload sobe junto com o CSS: sem
+       ele o woff2 so seria descoberto depois de o styles.css baixar e parsear.
+       `crossorigin` e obrigatorio mesmo em mesma origem — fonte busca sempre
+       em modo CORS, e sem o atributo o preload nao casa e baixa duas vezes. -->
+  <link rel="preload" href="fonts/outfit-v15-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="styles.css?v=60">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="FIFI Profissional: linha concentrada para empresas">
@@ -121,9 +123,9 @@
         <div class="orbit orbit-one"></div>
         <div class="orbit orbit-two"></div>
         <div class="product-stage">
-          <img class="product product-back" src="img/5l-limpa-musgo.webp" alt="Galão FIFI Limpa Musgo 5 litros" width="620" height="620">
-          <img class="product product-front" src="img/5l-citrus-5d.webp" alt="Galão FIFI Citrus 5D 5 litros" width="620" height="620">
-          <img class="product product-main" src="img/5l-organic-pro.webp" alt="Galão FIFI Organic Pro 5 litros" width="620" height="620" fetchpriority="high">
+          <img class="product product-back" src="img/5l-limpa-musgo.webp?v=4" alt="Galão FIFI Limpa Musgo 5 litros" width="620" height="620">
+          <img class="product product-front" src="img/5l-citrus-5d.webp?v=4" alt="Galão FIFI Citrus 5D 5 litros" width="620" height="620">
+          <img class="product product-main" src="img/5l-organic-pro.webp?v=4" alt="Galão FIFI Organic Pro 5 litros" width="620" height="620" fetchpriority="high">
         </div>
       </div>
 
@@ -320,10 +322,13 @@
     </video>
   </dialog>
 
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
-  <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.14/dist/lenis.min.js" defer></script>
-  <script src="script.js?v=59" defer></script>
+  <!-- GSAP/ScrollTrigger/Lenis servidos daqui, nao do jsDelivr: some uma origem
+       de terceiro (DNS + TLS antes do primeiro byte) e o cache passa a ser o
+       nosso `immutable` em vez do TTL curto do CDN. Versao no nome do arquivo. -->
+  <script src="vendor/gsap-3.12.5.min.js" defer></script>
+  <script src="vendor/scrolltrigger-3.12.5.min.js" defer></script>
+  <script src="vendor/lenis-1.1.14.min.js" defer></script>
+  <script src="script.js?v=60" defer></script>
 
   <!-- ══ TYPEBOT — bubble com cara de WhatsApp ═════════════════════
        initBubble é web component (não iframe): roda no MESMO document
@@ -333,7 +338,18 @@
        fbp/fbc/event_id/browser vêm de blocos `Set variable` client-side
        DENTRO do bot — ver patterns/typebot-coleta-leads.md (PADRÃO 2026). -->
   <script type="module">
-    import Typebot from 'https://cdn.jsdelivr.net/npm/@typebot.io/js@0/dist/web.js';
+    /* `import` estatico baixava os 190 KB do bundle do Typebot no load, so pra
+       desenhar o balao flutuante — o maior peso isolado da pagina, e no caminho
+       critico. Import dinamico, disparado no PRIMEIRO de: interacao do usuario,
+       ocioso, ou 4s de teto. O teto e o que garante que o balao aparece sempre,
+       inclusive em aba de fundo, onde requestIdleCallback pode nunca rodar.
+       Ninguem clica num balao de chat nos primeiros segundos, entao nao ha
+       perda de conversao — mas a rota do bot nao pode depender de interacao
+       pra existir, por isso os tres gatilhos e nao so o clique. */
+    const carregarTypebot = async () => {
+      const Typebot = (await import('https://cdn.jsdelivr.net/npm/@typebot.io/js@0/dist/web.js')).default;
+      iniciarBolha(Typebot);
+    };
 
     const T = window.FIFI_TRACK;
     const p = new URLSearchParams(location.search);
@@ -350,6 +366,7 @@
     if (Object.keys(freshIds).length) localStorage.setItem('_clickids', JSON.stringify(freshIds));
     const ids = JSON.parse(localStorage.getItem('_clickids') || '{}');
 
+    function iniciarBolha(Typebot) {
     Typebot.initBubble({
       typebot: T.typebotId,
       apiHost: 'https://typebot.co',
@@ -380,6 +397,20 @@
       onEnd: () => window.fifiTrackBotLead && window.fifiTrackBotLead(),
       onAnswer: (a) => window.fifiBotAnswer && window.fifiBotAnswer(a),
     });
+    }
+
+    // Um disparo so, venha de onde vier.
+    let armado = false;
+    const disparar = () => {
+      if (armado) return;
+      armado = true;
+      eventos.forEach(e => removeEventListener(e, disparar));
+      carregarTypebot();
+    };
+    const eventos = ['pointerdown', 'keydown', 'scroll', 'touchstart'];
+    eventos.forEach(e => addEventListener(e, disparar, { passive: true, once: true }));
+    (window.requestIdleCallback || (cb => setTimeout(cb, 2000)))(disparar, { timeout: 4000 });
+    setTimeout(disparar, 4000);
   </script>
 </body>
 </html>
