@@ -12,6 +12,13 @@ if (forcaCompleto) document.documentElement.classList.add("motion-full");
 const suave = !forcaCompleto && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 const temGSAP = typeof gsap !== "undefined" && typeof ScrollTrigger !== "undefined";
 
+/* O vercel.json serve /img/ com `immutable, max-age=1 ano`. Como os arquivos nao tem
+   hash no nome, trocar o conteudo de um packshot nao chega em quem ja visitou a pagina.
+   Este selo entra na URL e vira uma chave de cache nova. Incrementar SEMPRE que um
+   asset de img/ for substituido mantendo o mesmo nome. */
+const ASSETS_V = "2";
+const asset = caminho => `${caminho}?v=${ASSETS_V}`;
+
 /* ---------- 1. Marquee de clientes ---------------------------------------
    31 logos reais do deck. Os assets são recortados sem sangria, por isso a
    pastilha clara com padding — sem ela logos escuras encostam na borda.      */
@@ -171,7 +178,7 @@ function cardProduto(p) {
   const shot = document.createElement("div");
   shot.className = "prod-shot";
   const img = document.createElement("img");
-  img.src = `img/${p.img}.webp`;
+  img.src = asset(`img/${p.img}.webp`);
   img.alt = `FIFI ${p.nome}`;
   img.loading = "lazy";
   img.addEventListener("error", () => art.remove(), { once: true });
