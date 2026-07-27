@@ -133,7 +133,10 @@ const LINHAS = {
     ["limpa-rejunte","Limpa Rejunte","Rejunte · pastilhas","Limpador de rejunte e pastilhas. Realça a cor."],
     ["bye-manchas","Bye Manchas","Tecidos · superfícies","Tira manchas universal, com alto poder de limpeza."],
     ["bye-ferrugem","Bye Ferrugem","Ferrugem","Removedor de ferrugem. Limpa e revitaliza superfícies."],
-    ["protege-tecido","Protege Tecido","Tecidos","Impermeabilizante de tecidos. Protege e prolonga a vida útil."],
+    // Protege Tecido fora (27/07): saiu do fifilimpeza.com e do empresas.fifilimpeza.com,
+    // e o unico packshot que tinhamos era o recorte quebrado. Confirmar com a FIFI se o
+    // produto ainda existe; se sim, pedir a foto e reativar a linha abaixo.
+    // ["protege-tecido","Protege Tecido","Tecidos","Impermeabilizante de tecidos. Protege e prolonga a vida útil."],
     ["madeira-nova","Madeira Nova","Madeira · deck","Revitalizador de madeira. Restaura decks, bambus e fibras naturais."]
   ],
   "350ml": [
