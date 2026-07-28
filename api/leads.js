@@ -183,7 +183,48 @@ async function sendLeadCAPI(d, ip, geo) {
     headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + TOKEN },
     body:    JSON.stringify(payload),
   });
+
+  // Antes esta função devolvia `{status: res.status}` e pronto. Como não
+  // lançava, o try/catch de quem chama nunca rodava e um 400 do Meta passava
+  // sem UMA linha de log. Foi assim que o CAPI ficou 6 dias fora do ar sem
+  // ninguém ver: o lead salvava na planilha, o pixel do navegador disparava,
+  // e o lado server-side simplesmente não existia.
+  // Continua não bloqueando o lead — só para de ser mudo.
+  if (!res.ok) {
+    const corpo = await res.text().catch(() => '');
+    throw new Error(`CAPI ${res.status} pixel=${PIXEL}: ${corpo.slice(0, 300)}`);
+  }
   return { status: res.status };
+}
+
+// Confere se o token do CAPI consegue MESMO enviar evento, sem enviar nenhum.
+// `debug_token` é read-only. Um token gerado em Events Manager → API de
+// Conversões vem com `ads_management`; sem esse escopo o POST /events é
+// recusado, que é exatamente o que estava acontecendo.
+async function checarCredenciaisMeta() {
+  const PIXEL = process.env.META_PIXEL_ID;
+  const TOKEN = process.env.META_ACCESS_TOKEN;
+  if (!PIXEL || !TOKEN) return { ok: false, motivo: 'META_PIXEL_ID ou META_ACCESS_TOKEN ausente' };
+
+  try {
+    const r = await fetch(`https://graph.facebook.com/v19.0/debug_token?input_token=${TOKEN}&access_token=${TOKEN}`);
+    const d = (await r.json()).data || {};
+    if (!d.is_valid) return { ok: false, pixel: PIXEL, motivo: 'token inválido ou expirado' };
+
+    const escopos = d.scopes || [];
+    const podeEnviar = escopos.includes('ads_management');
+    return {
+      ok: podeEnviar,
+      pixel: PIXEL,
+      tipo: d.type,
+      escopos,
+      motivo: podeEnviar ? undefined
+        : 'token válido mas sem `ads_management` — não consegue POST /events. '
+        + 'Gerar em Events Manager → o pixel → Configurações → API de Conversões → Gerar token de acesso.',
+    };
+  } catch (e) {
+    return { ok: false, pixel: PIXEL, motivo: String(e && e.message || e) };
+  }
 }
 
 export default async function handler(req) {
@@ -201,7 +242,12 @@ export default async function handler(req) {
       if (!hr.ok) return new Response(JSON.stringify({ ok: false, stage: 'headers', status: hr.status, sheet: SHEET_NAME }), { status: 500, headers: { 'Content-Type': 'application/json' } });
       const hd = await hr.json();
       const columns = (hd.values?.[0] || []).length;
-      return new Response(JSON.stringify({ ok: true, sheet: SHEET_NAME, columns }), { status: 200, headers: { 'Content-Type': 'application/json' } });
+      // O CAPI entra no health-check porque ele falha CALADO: o lead salva, o
+      // pixel do navegador dispara, e ninguém percebe que o lado server-side
+      // sumiu. `ok` continua refletindo só a planilha para não quebrar quem já
+      // consome este endpoint; o CAPI vai em campo próprio.
+      const meta = await checarCredenciaisMeta();
+      return new Response(JSON.stringify({ ok: true, sheet: SHEET_NAME, columns, capi: meta }), { status: 200, headers: { 'Content-Type': 'application/json' } });
     } catch (e) {
       return new Response(JSON.stringify({ ok: false, stage: 'token', error: String(e && e.message || e) }), { status: 500, headers: { 'Content-Type': 'application/json' } });
     }
