@@ -18,7 +18,7 @@
        e sem o atributo o preload não casa e o arquivo baixa duas vezes. -->
   <link rel="preload" href="fonts/plus-jakarta-sans-v12-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="img/hero-fundo.webp" as="image" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=1">
+  <link rel="stylesheet" href="styles.css?v=2">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="FIFI Limpeza — Produtos de limpeza corporativa">
@@ -370,9 +370,17 @@
                 </select>
               </div>
             </div>
+            <!-- O href aponta para a política que a própria FIFI já publica.
+                 Na LP `/` este link está vazio (`#`) e o CHECKLIST-TRACKING
+                 lista isso como pendência: sem página publicada o
+                 consentimento não se sustenta. Aqui já fica resolvido. -->
+            <label class="consentimento">
+              <input type="checkbox" id="consent" name="consent" required>
+              <span>Autorizo o contato da equipe comercial e o tratamento dos meus dados conforme a
+                <a href="https://empresas.fifilimpeza.com/politica-de-privacidade/" target="_blank" rel="noopener">Política de Privacidade</a>.</span>
+            </label>
             <button class="btn btn--verde" type="submit">Quero minha proposta</button>
             <p class="form__aviso" role="status" aria-live="polite"></p>
-            <p class="form__legal">Ao enviar você autoriza o contato da equipe comercial da FIFI.</p>
           </form>
         </div>
       </div>
@@ -408,6 +416,6 @@
     <video controls playsinline preload="none"></video>
   </dialog>
 
-  <script src="script.js?v=1" defer></script>
+  <script src="script.js?v=2" defer></script>
 </body>
 </html>

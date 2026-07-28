@@ -146,6 +146,15 @@ function getClickIds() {
   return JSON.parse(localStorage.getItem("_clickids") || "{}");
 }
 
+/* Grava UTM e click ID JÁ NO LOAD, não só no submit. É o único jeito de o
+   first-touch ser mesmo o primeiro toque: se o visitante entrar por
+   `?gclid=…`, sair para o WhatsApp e voltar pela URL limpa, no modelo
+   antigo (ler só no submit) o lead chegaria sem gclid e a conversão não
+   casaria com o clique no Ads. Os valores enviados são os mesmos — muda
+   só o momento de guardar, então não altera nada do que o A/B mede.     */
+getUtms();
+getClickIds();
+
 /* Lê cookie NA HORA DO ENVIO, nunca no load: o fbevents.js carrega async e
    o _fbp ainda não existe quando a página monta.                          */
 function dadosDoBrowser(nomeCompleto) {
@@ -208,20 +217,31 @@ function enviarLead(payload) {
 }
 
 /* ---------- 5. Cliques de WhatsApp ---------------------------------------
-   Dispara Lead no Meta e a conversão no Google, mas NÃO chama /api/leads:
-   um clique de WhatsApp não tem nome, e-mail nem CNPJ, e escrever isso na
-   planilha geraria linha vazia no funil real do cliente. Quem qualifica
-   essa perna é a conversa no WhatsApp, não a planilha.                   */
+   Duas coisas que este bloco NÃO faz, ambas de propósito:
+
+   1. NÃO chama /api/leads. Um clique não tem nome, e-mail nem CNPJ e
+      geraria linha vazia na planilha real do cliente. Quem qualifica essa
+      perna é a conversa no WhatsApp.
+
+   2. NÃO dispara a conversão do Google. Ela é a MESMA ação da LP `/`, que
+      só conta lead qualificado (formulário com CNPJ conferido na Receita
+      ou Typebot completo). Contar clique de link ali teria três efeitos,
+      todos ruins: infla a contagem, envenena o Smart Bidding da conta
+      inteira porque a ação é compartilhada, e faria o /v2 "ganhar" o teste
+      A/B só por contar uma coisa mais barata que a `/` conta.
+      Se um dia quiser medir clique de WhatsApp no Google, tem de ser uma
+      ação SECUNDÁRIA própria (não entra no lance) — ver CHECKLIST-TRACKING.
+
+   O que ele faz: `Contact` no Meta. É evento distinto de `Lead`, então não
+   entra na otimização de quem está comprando Lead, e serve para público de
+   remarketing e para comparar intenção entre as duas páginas.           */
 document.querySelectorAll(".zap-link").forEach(link => {
   link.addEventListener("click", () => {
-    const eventId = gerarEventId();
-    if (typeof fbq === "function") {
-      fbq("track", "Contact", {
-        content_name: "WhatsApp — " + (link.dataset.zap || "link"),
-        variante: VARIANTE,
-      }, { eventID: eventId });
-    }
-    dispararGoogle({}, eventId, TRACK.convLabel);
+    if (typeof fbq !== "function") return;
+    fbq("track", "Contact", {
+      content_name: "WhatsApp — " + (link.dataset.zap || "link"),
+      variante: VARIANTE,
+    }, { eventID: gerarEventId() });
   }, { passive: true });
 });
 

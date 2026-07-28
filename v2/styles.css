@@ -387,7 +387,17 @@ p { margin: 0; }
 .form__aviso { font-size: .88rem; min-height: 1.2em; }
 .form__aviso[data-estado="erro"] { color: #C0392B; font-weight: 700; }
 .form__aviso[data-estado="ok"]   { color: var(--verde); font-weight: 700; }
-.form__legal { font-size: .78rem; color: var(--tinta-suave); }
+
+.consentimento {
+  display: flex; gap: .6rem; align-items: start;
+  font-size: .82rem; color: var(--tinta-suave); line-height: 1.45;
+  cursor: pointer;
+}
+.consentimento input {
+  flex: none; width: 20px; height: 20px; margin: 1px 0 0;
+  accent-color: var(--verde); cursor: pointer;
+}
+.consentimento a { color: var(--verde); font-weight: 700; }
 
 /* ---------------- rodapé ---------------- */
 .rodape { background: var(--verde-rodape); color: #fff; padding: 3rem 0 2rem; }
