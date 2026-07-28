@@ -140,6 +140,80 @@ Sem página publicada, o consentimento não se sustenta.
    console.log(cap); window.gtag = real;
    ```
 
+---
+
+## 🅱️ `/v2` — variante do teste A/B (clone de `empresas.fifilimpeza.com`)
+
+Validado em produção em 28/07/2026. Compartilha `api/leads.js`, `api/cnpj.js`,
+a planilha, o pixel e a ação de conversão com a `/`.
+
+### O que foi conferido no ar
+
+| Checagem | Resultado |
+|---|---|
+| `GET /api/leads?health=1` | `{"ok":true,"sheet":"Leads","columns":38}` |
+| `GET /api/cnpj?n=<real>` | `{"ok":"sim"}` · sequência repetida → `{"ok":"nao","reason":"digito"}` |
+| CORS `OPTIONS /api/leads` com `Origin: fifi-lp.vercel.app` | liberado |
+| Cookie `_fbp` | criado (o `track PageView` roda) |
+| Cookie `_fbc` | criado a partir do `fbclid` da URL |
+| Cookie `_gcl_aw` | criado a partir do `gclid` (Conversion Linker) |
+| `fbq('track','Lead')` no submit | com `content_category` = segmento e `variante: v2` |
+| `gtag('event','conversion')` no submit | `transaction_id` **igual** ao `eventID` do pixel |
+| Enhanced conversions | `user_data` com e-mail minúsculo, telefone `+55…`, nome/sobrenome |
+| Payload → `/api/leads` | `event_id` igual ao do pixel (dedup do CAPI), `fbp`, `fbc`, `gclid`, UTMs |
+| `origem` na planilha | `Formulário v2` |
+| Consentimento | obrigatório; sem marcar, o submit não sai |
+
+**A perna CAPI server-side não foi testada isoladamente** porque só dispara depois
+de gravar na planilha, e um teste real criaria linha lixo no funil do cliente
+(ver `feedback-sondar-endpoint-captura`). Não é lacuna: o `/v2` chama o **mesmo**
+`/api/leads` da `/`, que já está em produção — é literalmente o mesmo código.
+Se quiser confirmar mesmo assim, setar `META_TEST_CODE` na Vercel e olhar o
+Events Manager → Testar eventos.
+
+### Atribuição — conferida com 3 navegações seguidas
+- **UTM = first-touch.** Entrou por `primeiro_toque`, voltou por `segundo_toque`,
+  a planilha continua recebendo `primeiro_toque`.
+- **Click ID = last-touch.** `GCLID_A` → `GCLID_B`. Tem de ser assim, senão a
+  conversão não casa com o clique cobrado no Ads.
+- Os dois são gravados **no load**, não no submit. Quem entra por `?gclid=`, sai
+  para o WhatsApp e volta pela URL limpa continua com o click ID.
+
+### ⛔ Clique de WhatsApp NÃO dispara conversão do Google
+Regra dura, e foi bug real corrigido em 28/07. A ação `K-x6CPngztQcEKK577Q-` é
+**compartilhada** com a `/`, que só a dispara para lead qualificado (CNPJ conferido
+na Receita ou Typebot completo). Contar clique de link ali infla a contagem,
+envenena o Smart Bidding da conta inteira e faria o `/v2` "ganhar" o A/B por
+contar coisa mais barata.
+
+O clique dispara só `Contact` no Meta — evento distinto de `Lead`, não entra na
+otimização de quem compra Lead.
+
+**Se um dia quiser medir clique de WhatsApp no Google:** criar ação própria em
+Metas → Conversões, tipo manual/gtag, e marcá-la como **Secundária** ("Não
+otimizar"). Aí sim passar o label novo num campo separado do `FIFI_TRACK` —
+nunca reusar `convLabel`.
+
+### ⚠️ As duas páginas não têm as mesmas rotas de lead
+| | `/` | `/v2` |
+|---|---|---|
+| Formulário → planilha | ✅ `Origem: Formulário` | ✅ `Origem: Formulário v2` |
+| Typebot → planilha | ✅ `Origem: Typebot` | ❌ não tem |
+| WhatsApp direto | ❌ não tem | ✅ 5 links + botão flutuante |
+
+Isso é **da natureza do teste** — a página da FIFI é WhatsApp-first e a nossa é
+formulário+bot. Mas muda como ler o resultado:
+
+- **Métrica primária: lead de formulário.** É a única que as duas gravam na mesma
+  planilha, com CNPJ conferido, e dá para comparar CPL no mesmo denominador.
+- **Clique de WhatsApp é métrica secundária**, só visível no Meta pelo `Contact`.
+  Não entra na conta de CPL, porque não vira linha na planilha e não passa por
+  qualificação nenhuma.
+- Se quiser as duas páginas com rotas idênticas, aí é embutir o Typebot no `/v2`.
+  Dois problemas: o balão do bot ocupa o mesmo canto do botão flutuante de
+  WhatsApp, e o bot é **um só** para as duas LPs — para separar na planilha seria
+  preciso prefill de variável e mexer no grafo compartilhado, o que afeta a `/`.
+
 ## ⚠️ Armadilhas já cobertas neste código
 
 - `valueInputOption=RAW` no append — com `USER_ENTERED` o Sheets come o `+` do telefone.
