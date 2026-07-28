@@ -36,11 +36,20 @@
   --tinta-suave: #4A5A50;
   --branco:      #FFFFFF;
 
-  /* Texto sobre a lima. O original usa branco puro, que dá 1,7:1 contra
-     #BCCC00 — reprova em qualquer critério e é o bloco mais denso de
-     leitura da página. Verde escuro dá 6,3:1 com o mesmo desenho.
-     Para voltar ao original é só trocar esta variável por #FFF. */
+  /* ── Dois desvios de contraste em relação ao original, ambos medidos ──
+     Para restaurar o visual exato da página da FIFI basta trocar as duas
+     variáveis abaixo por #FFF e var(--lima).
+
+     1. Texto sobre a faixa lima. O original usa branco puro: 1,78:1
+        contra #BCCC00. É o bloco mais denso de leitura da página.
+        Verde escuro dá 6,75:1 sem mudar o desenho.                     */
   --sobre-lima:  #0B3F1F;
+  /* 2. Lima como cor de TEXTO em seção clara (os títulos de dois tons).
+        #BCCC00 sobre branco também dá 1,78:1 — o mínimo para texto
+        grande é 3:1. #8A9600 dá 3,26:1 e continua lendo como a lima da
+        marca. Sobre os verdes escuros o lima puro vai de 3,98:1 a
+        10:1, então lá ele fica como está.                              */
+  --lima-texto:  #8A9600;
 
   --raio:      18px;
   --raio-g:    28px;
@@ -168,8 +177,10 @@ p { margin: 0; }
   font-size: clamp(1.9rem, 4.2vw, 3rem);
   margin-bottom: 2.5rem;
 }
-.titulo span { color: var(--lima); }
+.titulo span { color: var(--lima-texto); }
 .titulo--claro { color: #fff; }
+/* Em seção escura o lima puro passa com folga — só o de fundo claro desce. */
+.titulo--claro span { color: var(--lima); }
 .titulo--centro { text-align: center; }
 
 /* ---------------- produtos ---------------- */
@@ -257,7 +268,7 @@ p { margin: 0; }
   display: grid; grid-template-columns: 1fr 1fr;
   gap: clamp(1.5rem, 3vw, 2.75rem);
 }
-.vantagem h4 { font-size: 1.05rem; margin-bottom: .5rem; }
+.vantagem h3 { font-size: 1.05rem; margin-bottom: .5rem; }
 .vantagem p  { font-size: .95rem; line-height: 1.5; }
 .vantagem .marca { display: block; margin-bottom: .9rem; color: var(--verde); }
 
