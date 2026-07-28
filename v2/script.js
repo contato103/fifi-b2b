@@ -216,34 +216,52 @@ function enviarLead(payload) {
   });
 }
 
-/* ---------- 5. Cliques de WhatsApp ---------------------------------------
-   Duas coisas que este bloco NÃO faz, ambas de propósito:
+/* ---------- 5. Caminho escolhido no hero ---------------------------------
+   Os dois botões do hero são a única segmentação da página original
+   ("tenho equipe própria" x "quero implantação"). Vira evento próprio no
+   Meta, não campo no formulário: campo novo quebraria a paridade com o
+   form da LP `/` e o A/B deixaria de comparar a mesma coisa.
 
-   1. NÃO chama /api/leads. Um clique não tem nome, e-mail nem CNPJ e
-      geraria linha vazia na planilha real do cliente. Quem qualifica essa
-      perna é a conversa no WhatsApp.
-
-   2. NÃO dispara a conversão do Google. Ela é a MESMA ação da LP `/`, que
-      só conta lead qualificado (formulário com CNPJ conferido na Receita
-      ou Typebot completo). Contar clique de link ali teria três efeitos,
-      todos ruins: infla a contagem, envenena o Smart Bidding da conta
-      inteira porque a ação é compartilhada, e faria o /v2 "ganhar" o teste
-      A/B só por contar uma coisa mais barata que a `/` conta.
-      Se um dia quiser medir clique de WhatsApp no Google, tem de ser uma
-      ação SECUNDÁRIA própria (não entra no lance) — ver CHECKLIST-TRACKING.
-
-   O que ele faz: `Contact` no Meta. É evento distinto de `Lead`, então não
-   entra na otimização de quem está comprando Lead, e serve para público de
-   remarketing e para comparar intenção entre as duas páginas.           */
-document.querySelectorAll(".zap-link").forEach(link => {
+   `trackCustom` e não `Lead`: é sinal de intenção, não conversão. Não
+   entra na otimização de quem está comprando Lead.                      */
+document.querySelectorAll(".caminho").forEach(link => {
   link.addEventListener("click", () => {
     if (typeof fbq !== "function") return;
-    fbq("track", "Contact", {
-      content_name: "WhatsApp — " + (link.dataset.zap || "link"),
+    fbq("trackCustom", "EscolheuCaminho", {
+      content_name: link.dataset.caminho || "",
       variante: VARIANTE,
-    }, { eventID: gerarEventId() });
+    });
   }, { passive: true });
 });
+
+/* ---------- 5b. Rota Typebot ---------------------------------------------
+   O bot grava o lead sozinho (bloco Webhook client-side → /api/leads, com
+   o event_id DELE) e a edge manda o CAPI. Falta só a perna Google: o
+   `initBubble` roda no mesmo document, então dá para disparar a conversão
+   sem tocar no grafo compartilhado.
+
+   onAnswer coleta e-mail/telefone por heurística para enhanced conversions.
+   onEnd dispara uma vez só — a prop é chamada duas vezes pelo bundle.    */
+const respostasBot = { name: "", email: "", phone: "" };
+let botFinalizado = false;
+
+window.fifiBotAnswer = resposta => {
+  const txt = String(resposta && (resposta.message ?? resposta) || "").trim();
+  if (!txt) return;
+  if (/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(txt)) { respostasBot.email = txt.toLowerCase(); return; }
+  const digitos = txt.replace(/\D/g, "");
+  // 14 dígitos = CNPJ, não telefone
+  if (digitos.length >= 10 && digitos.length <= 13) { respostasBot.phone = txt; return; }
+  if (!respostasBot.name && /[a-zà-ú]/i.test(txt) && !digitos.length) respostasBot.name = txt;
+};
+
+window.fifiTrackBotLead = () => {
+  if (botFinalizado) return;
+  botFinalizado = true;
+  // event_id próprio: o CAPI deste lead sai do bot com o event_id dele, então
+  // aqui só interessa que o transaction_id seja único por sessão.
+  dispararGoogle(respostasBot, gerarEventId(), TRACK.convLabel);
+};
 
 /* ---------- 6. Formulário ------------------------------------------------ */
 const formulario = document.querySelector("#lead-form");

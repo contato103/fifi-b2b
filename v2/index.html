@@ -18,7 +18,7 @@
        e sem o atributo o preload não casa e o arquivo baixa duas vezes. -->
   <link rel="preload" href="fonts/plus-jakarta-sans-v12-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="img/hero-fundo.webp" as="image" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=3">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="FIFI Limpeza — Produtos de limpeza corporativa">
@@ -81,9 +81,7 @@
       <a href="#inicio" aria-label="FIFI Limpeza, início">
         <img class="topo__logo" src="img/logo-fifi.webp" alt="FIFI" width="280" height="138" fetchpriority="high">
       </a>
-      <a class="btn btn--lima zap-link" data-zap="topo"
-         href="https://api.whatsapp.com/send/?phone=554733502545&text=Ol%C3%A1%2C%20quero%20saber%20mais%20informa%C3%A7%C3%B5es"
-         target="_blank" rel="noopener">Saiba mais</a>
+      <a class="btn btn--lima" href="#proposta">Saiba mais</a>
     </div>
   </header>
 
@@ -107,16 +105,18 @@
         <h2>Chegou a linha FIFI para empresas que querem limpeza de verdade</h2>
         <p class="hero__sub">Seu problema não é só produto. Nem só equipe.</p>
 
+        <!-- Os dois caminhos são a única segmentação que a página original
+             tem, e a copy fica. Só o destino muda: antes iam para o
+             WhatsApp com a frase já escrita, agora levam ao formulário.
+             O caminho escolhido é registrado em `data-caminho` e vai como
+             evento próprio no Meta — sem virar campo novo no form, que
+             quebraria a paridade com a LP `/`. -->
         <div class="hero__acoes">
-          <a class="btn btn--vazado zap-link" data-zap="equipe-propria"
-             href="https://wa.me/554733502545?text=Ol%C3%A1%2C%20Tenho%20equipe%20pr%C3%B3pria%20e%20preciso%20s%C3%B3%20dos%20produtos%20certos"
-             target="_blank" rel="noopener">
+          <a class="btn btn--vazado caminho" data-caminho="equipe-propria" href="#proposta">
             Tenho equipe própria e preciso só dos produtos certos
             <span class="seta" aria-hidden="true">→</span>
           </a>
-          <a class="btn btn--lima zap-link" data-zap="quero-implantar"
-             href="https://wa.me/554733502545?text=Ol%C3%A1%2C%20Quero%20ajuda%20para%20implantar%20novos%20produtos%2C%20obter%20treinamento%20e%20suporte%20t%C3%A9cnico"
-             target="_blank" rel="noopener">
+          <a class="btn btn--lima caminho" data-caminho="quero-implantar" href="#proposta">
             Quero ajuda para implantar novos produtos com treinamento e suporte técnico
             <span class="seta" aria-hidden="true">→</span>
           </a>
@@ -129,9 +129,7 @@
       <div class="env">
         <div class="produtos__topo revela">
           <h2 class="titulo" id="t-produtos">Confira nossos <span>produtos para:</span></h2>
-          <a class="btn btn--verde zap-link" data-zap="produtos"
-             href="https://wa.me/554733502545?text=Ol%C3%A1%2C%20vim%20pela%20campanha%20do%20corporativo"
-             target="_blank" rel="noopener">Saiba mais</a>
+          <a class="btn btn--verde" href="#proposta">Saiba mais</a>
         </div>
 
         <div class="cards revela">
@@ -303,12 +301,12 @@
             <p>Preencha os dados e a equipe comercial retorna com uma proposta para a realidade da sua operação: volume, áreas atendidas e o que você já usa hoje.</p>
 
             <div class="fechamento__ou">
-              <a class="btn btn--lima zap-link" data-zap="fechamento"
-                 href="https://api.whatsapp.com/send/?phone=554733502545&text=Ol%C3%A1%2C%20quero%20saber%20mais%20informa%C3%A7%C3%B5es"
-                 target="_blank" rel="noopener">
+              <!-- Assume o papel que o "Entrar em Contato" do WhatsApp tinha:
+                   falar com alguém agora, em vez de preencher o form. -->
+              <button class="btn btn--lima" type="button" id="abrir-bot">
                 Entrar em Contato
                 <span class="seta" aria-hidden="true">→</span>
-              </a>
+              </button>
               <div class="fechamento__contato">
                 <a href="tel:+554733502545">(47) 3350-2545</a>
                 <a href="mailto:fifiprofissional@fifilimpeza.com">fifiprofissional@fifilimpeza.com</a>
@@ -403,19 +401,96 @@
     </div>
   </footer>
 
-  <a class="zap zap-link" data-zap="flutuante"
-     href="https://api.whatsapp.com/send/?phone=554733502545&text=Ol%C3%A1%2C%20quero%20saber%20mais%20informa%C3%A7%C3%B5es"
-     target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
-    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
-      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm5.8 14.16c-.24.68-1.42 1.3-1.95 1.35-.5.05-.98.24-3.3-.69-2.78-1.1-4.55-3.94-4.69-4.12-.14-.19-1.12-1.49-1.12-2.85 0-1.35.71-2.02.96-2.29.25-.28.55-.35.73-.35h.53c.17 0 .4-.06.63.48.24.58.8 2 .87 2.14.07.14.12.31.02.5-.1.19-.14.31-.28.48-.14.17-.3.37-.42.5-.14.14-.29.29-.12.57.16.28.73 1.2 1.56 1.95 1.08.96 1.98 1.26 2.26 1.4.28.14.45.12.61-.07.17-.19.71-.83.9-1.11.19-.28.37-.24.63-.14.25.09 1.6.76 1.88.9.28.14.46.21.53.33.07.11.07.65-.17 1.33Z"/>
-    </svg>
-  </a>
-
   <dialog class="visor" id="visor">
     <button class="visor__fechar" type="button" aria-label="Fechar vídeo">&times;</button>
     <video controls playsinline preload="none"></video>
   </dialog>
 
-  <script src="script.js?v=2" defer></script>
+  <script src="script.js?v=3" defer></script>
+
+  <!-- ══ TYPEBOT ═════════════════════════════════════════════════════
+       Mesmo bot da LP `/` (`fifi-profissional`) — um só grafo para as duas
+       páginas, sem duplicata para manter em sincronia.
+
+       ⚠️ O corpo do webhook do bot tem `"origem": "Typebot"` FIXO, não é
+       variável, então prefill não separa as duas LPs nessa coluna. Quem
+       separa é a coluna `Pagina` da planilha, que vem de `page_url` e traz
+       `/v2/`. Para ter `Origem` distinta seria preciso trocar o literal por
+       `{{origem}}` no grafo compartilhado E passar o prefill nas DUAS LPs —
+       mexer só no bot faria os leads da `/` caírem como "Formulário", que é
+       o fallback da edge quando `origem` vem vazio.
+
+       initBubble é web component (não iframe): roda no MESMO document e
+       enxerga window.gtag/fbq, então a perna Google sai daqui sem tocar no
+       grafo. fbp/fbc/event_id vêm de blocos `Set variable` dentro do bot. -->
+  <script type="module">
+    /* `import` estatico baixaria os 190 KB do bundle no load so pra desenhar
+       o balao. Import dinamico no PRIMEIRO de: interacao, ocioso, ou 4s de
+       teto. O teto e o que garante o balao em aba de fundo, onde o
+       requestIdleCallback pode nunca rodar — e a rota do bot nao pode
+       depender de interacao para existir. */
+    const T = window.FIFI_TRACK;
+    const p = new URLSearchParams(location.search);
+
+    const utms = JSON.parse(localStorage.getItem('_utms') || '{}');
+    const ids  = JSON.parse(localStorage.getItem('_clickids') || '{}');
+
+    let carregando = null;
+    const carregarTypebot = () => {
+      if (carregando) return carregando;
+      carregando = import('https://cdn.jsdelivr.net/npm/@typebot.io/js@0/dist/web.js')
+        .then(m => { iniciarBolha(m.default); return m.default; });
+      return carregando;
+    };
+
+    function iniciarBolha(Typebot) {
+      Typebot.initBubble({
+        typebot: T.typebotId,
+        apiHost: 'https://typebot.co',
+        prefilledVariables: {
+          utm_source:   utms.utm_source   || 'Typebot',
+          utm_medium:   utms.utm_medium   || '',
+          utm_campaign: utms.utm_campaign || '',
+          utm_term:     utms.utm_term     || '',
+          utm_content:  utms.utm_content  || '',
+          fbclid:  ids.fbclid  || '',
+          gclid:   ids.gclid   || '',
+          gbraid:  ids.gbraid  || '',
+          wbraid:  ids.wbraid  || '',
+          ttclid:  ids.ttclid  || '',
+          msclkid: ids.msclkid || '',
+        },
+        theme: {
+          button: {
+            backgroundColor: '#25D366',
+            // data URI, nao caminho relativo: o bundle valida com
+            // `src.startsWith('http') || src.startsWith('data:image/svg+xml')`.
+            // Caminho relativo reprova e ele renderiza a string como TEXTO no
+            // botao, sem erro e sem request.
+            customIconSrc: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTcuNDcyIDE0LjM4MmMtLjI5Ny0uMTQ5LTEuNzU4LS44NjctMi4wMy0uOTY3LS4yNzMtLjA5OS0uNDcxLS4xNDgtLjY3LjE1LS4xOTcuMjk3LS43NjcuOTY2LS45NCAxLjE2NC0uMTczLjE5OS0uMzQ3LjIyMy0uNjQ0LjA3NS0uMjk3LS4xNS0xLjI1NS0uNDYzLTIuMzktMS40NzUtLjg4My0uNzg4LTEuNDgtMS43NjEtMS42NTMtMi4wNTktLjE3My0uMjk3LS4wMTgtLjQ1OC4xMy0uNjA2LjEzNC0uMTMzLjI5OC0uMzQ3LjQ0Ni0uNTIuMTQ5LS4xNzQuMTk4LS4yOTguMjk4LS40OTcuMDk5LS4xOTguMDUtLjM3MS0uMDI1LS41Mi0uMDc1LS4xNDktLjY2OS0xLjYxMi0uOTE2LTIuMjA3LS4yNDItLjU3OS0uNDg3LS41LS42NjktLjUxLS4xNzMtLjAwOC0uMzcxLS4wMS0uNTctLjAxLS4xOTggMC0uNTIuMDc0LS43OTIuMzcyLS4yNzIuMjk3LTEuMDQgMS4wMTYtMS4wNCAyLjQ3OSAwIDEuNDYyIDEuMDY1IDIuODc1IDEuMjEzIDMuMDc0LjE0OS4xOTggMi4wOTYgMy4yIDUuMDc3IDQuNDg3LjcxLjMwNiAxLjI2My40ODkgMS42OTQuNjI1LjcxMi4yMjcgMS4zNi4xOTUgMS44NzEuMTE4LjU3MS0uMDg1IDEuNzU4LS43MTkgMi4wMDYtMS40MTMuMjQ4LS42OTQuMjQ4LTEuMjg5LjE3My0xLjQxMy0uMDc0LS4xMjQtLjI3Mi0uMTk4LS41Ny0uMzQ3bS01LjQyMSA3LjQwM2gtLjAwNGE5Ljg3IDkuODcgMCAwMS01LjAzMS0xLjM3OGwtLjM2MS0uMjE0LTMuNzQxLjk4Mi45OTgtMy42NDgtLjIzNS0uMzc0YTkuODYgOS44NiAwIDAxLTEuNTEtNS4yNmMuMDAxLTUuNDUgNC40MzYtOS44ODQgOS44ODgtOS44ODQgMi42NCAwIDUuMTIyIDEuMDMgNi45ODggMi44OThhOS44MjUgOS44MjUgMCAwMTIuODkzIDYuOTk0Yy0uMDAzIDUuNDUtNC40MzcgOS44ODUtOS44ODUgOS44ODVNMjAuNTIgMy40NDlDMTguMjQgMS4yNDUgMTUuMjQgMCAxMi4wNDUgMCA1LjQ2MyAwIC4xMDQgNS4zMzQuMTAxIDExLjg5MmMwIDIuMDk2LjU0OSA0LjE0IDEuNTk1IDUuOTQ1TDAgMjRsNi4zMzUtMS42NTJhMTIuMDYyIDEyLjA2MiAwIDAwNS43MSAxLjQ0N2guMDA2YzYuNTg1IDAgMTEuOTQ2LTUuMzM1IDExLjk0OS0xMS44OTNhMTEuODIxIDExLjgyMSAwIDAwLTMuNDgtOC40MTN6Ii8+PC9zdmc+Cg==',
+          },
+        },
+        onEnd: () => window.fifiTrackBotLead && window.fifiTrackBotLead(),
+        onAnswer: (a) => window.fifiBotAnswer && window.fifiBotAnswer(a),
+      });
+    }
+
+    let subiu = false;
+    const agendar = () => {
+      if (subiu) return; subiu = true;
+      carregarTypebot();
+    };
+    ['pointerdown', 'keydown', 'scroll'].forEach(ev =>
+      addEventListener(ev, agendar, { once: true, passive: true }));
+    if (window.requestIdleCallback) requestIdleCallback(agendar, { timeout: 4000 });
+    else setTimeout(agendar, 2500);
+
+    // "Entrar em Contato" abre o bot. Se ainda não subiu, sobe e abre —
+    // clique explícito não pode esperar o ocioso.
+    document.querySelector('#abrir-bot')?.addEventListener('click', async () => {
+      const Typebot = await carregarTypebot();
+      Typebot.open();
+    });
+  </script>
 </body>
 </html>
