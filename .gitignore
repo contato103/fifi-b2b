@@ -5,3 +5,7 @@
 
 # backups de versoes anteriores
 *.bak
+
+# originais baixados do empresas.fifilimpeza.com antes do transcode (226 MB).
+# So os otimizados em v2/ vao pro repo.
+_raw-v2/

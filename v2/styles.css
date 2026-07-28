@@ -1,0 +1,434 @@
+/* ════════════════════════════════════════════════════════════════════
+   FIFI Profissional — LP /v2
+   Clone de empresas.fifilimpeza.com (WordPress + Elementor) reescrito
+   à mão. Mesma copy, mesma estrutura, mesma paleta; sem o runtime do
+   Elementor, sem jQuery e sem Google Fonts remoto.
+
+   Paleta amostrada da página original com getComputedStyle, não
+   estimada da imagem:
+     lima      rgb(188, 204, 0)   → #BCCC00
+     verde     rgb(8, 102, 50)    → #086632
+     azul-gelo rgb(240, 245, 251) → #F0F5FB
+   ════════════════════════════════════════════════════════════════════ */
+
+@font-face {
+  font-family: "Plus Jakarta Sans";
+  font-style: normal;
+  font-weight: 400 800;
+  font-display: swap;
+  src: url("fonts/plus-jakarta-sans-v12-latin.woff2") format("woff2");
+  /* Só o subset `latin`. Conferido antes de cortar: todo acento do
+     português (ç ã õ á é í ó ú â ê ô) cai em U+00C0–U+00FF, que está
+     aqui dentro. O latin-ext seria uma segunda viagem sem glifo novo. */
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6,
+                 U+02DA, U+02DC, U+2000-206F, U+20AC, U+2122, U+2191,
+                 U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  --lima:        #BCCC00;
+  --lima-escura: #A8B700;
+  --verde:       #086632;
+  --verde-fundo: #075A2C;   /* faixa do CTA final */
+  --verde-rodape:#064E26;
+  --gelo:        #F0F5FB;
+  --tinta:       #14251B;   /* texto corrido */
+  --tinta-suave: #4A5A50;
+  --branco:      #FFFFFF;
+
+  /* Texto sobre a lima. O original usa branco puro, que dá 1,7:1 contra
+     #BCCC00 — reprova em qualquer critério e é o bloco mais denso de
+     leitura da página. Verde escuro dá 6,3:1 com o mesmo desenho.
+     Para voltar ao original é só trocar esta variável por #FFF. */
+  --sobre-lima:  #0B3F1F;
+
+  --raio:      18px;
+  --raio-g:    28px;
+  --borda-max: 1240px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+}
+
+body {
+  margin: 0;
+  font-family: "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
+  color: var(--tinta);
+  background: var(--branco);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+img, video { max-width: 100%; display: block; }
+/* Os atributos width/height no HTML reservam a caixa e zeram o CLS; sem
+   height:auto o CSS congelaria a altura do atributo e distorceria. */
+img { height: auto; }
+
+a { color: inherit; }
+
+h1, h2, h3, h4 { margin: 0; line-height: 1.15; font-weight: 800; letter-spacing: -0.02em; }
+p { margin: 0; }
+
+.env { width: min(100% - 2.5rem, var(--borda-max)); margin-inline: auto; }
+
+.pular {
+  position: absolute; left: -9999px; top: 0; z-index: 100;
+  background: var(--verde); color: #fff; padding: .75rem 1.25rem; border-radius: 0 0 8px 0;
+}
+.pular:focus { left: 0; }
+
+/* ---------------- botões ---------------- */
+.btn {
+  display: inline-flex; align-items: center; gap: .6rem;
+  padding: 1rem 1.75rem;
+  border: 0; border-radius: 999px;
+  font: inherit; font-weight: 700; font-size: .98rem;
+  text-decoration: none; cursor: pointer;
+  transition: transform .18s ease, background-color .18s ease, box-shadow .18s ease;
+  /* 48px de alvo de toque mesmo quando o rótulo é curto */
+  min-height: 48px;
+}
+.btn:hover  { transform: translateY(-2px); }
+.btn:active { transform: translateY(0); }
+.btn:focus-visible { outline: 3px solid var(--verde); outline-offset: 3px; }
+
+.btn--lima    { background: var(--lima); color: var(--sobre-lima); }
+.btn--lima:hover { background: var(--lima-escura); }
+.btn--vazado  { background: transparent; color: #fff; border: 1.5px solid rgba(255,255,255,.6); }
+.btn--vazado:hover { background: rgba(255,255,255,.12); border-color: #fff; }
+.btn--verde   { background: var(--verde); color: #fff; }
+.btn--verde:hover { background: #0a7a3c; }
+.btn .seta { flex: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .btn:hover { transform: none; }
+}
+
+/* ---------------- cabeçalho ---------------- */
+.topo {
+  position: absolute; inset: 0 0 auto 0; z-index: 20;
+  padding: 1.25rem 0;
+}
+.topo__linha { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.topo__logo  { width: 130px; height: auto; }
+
+/* ---------------- hero ---------------- */
+.hero {
+  position: relative;
+  min-height: min(100svh, 860px);
+  display: grid; place-items: center;
+  padding: 8rem 0 4rem;
+  overflow: hidden;
+  isolation: isolate;
+}
+/* A imagem é o LCP: entra eager e com fetchpriority alto. O vídeo é
+   enfeite e sobe depois (ver script.js) — na página original o
+   headline-LP.mp4 tinha 92 MB em HEVC e disputava a largura de banda
+   com o próprio texto do hero. */
+.hero__fundo, .hero__video {
+  position: absolute; inset: 0; z-index: -2;
+  width: 100%; height: 100%; object-fit: cover;
+}
+.hero__video { z-index: -1; opacity: 0; transition: opacity .8s ease; }
+.hero__video.pronto { opacity: 1; }
+.hero::after {
+  content: ""; position: absolute; inset: 0; z-index: -1;
+  background: linear-gradient(180deg, rgba(4,26,14,.62) 0%, rgba(4,26,14,.52) 45%, rgba(4,26,14,.78) 100%);
+}
+.hero__conteudo { text-align: center; color: #fff; max-width: 1080px; margin-inline: auto; }
+.hero h1 {
+  font-size: clamp(2.1rem, 5.6vw, 4.25rem);
+  text-wrap: balance;
+}
+.hero h2 {
+  margin-top: .85rem;
+  color: var(--lima);
+  font-size: clamp(1.15rem, 2.6vw, 2rem);
+  text-wrap: balance;
+}
+.hero__sub {
+  margin-top: 1.6rem;
+  font-size: clamp(.95rem, 1.4vw, 1.05rem);
+  color: rgba(255,255,255,.9);
+}
+.hero__acoes {
+  margin-top: 2rem;
+  display: flex; flex-direction: column; align-items: center; gap: .85rem;
+}
+.hero__acoes .btn { max-width: 100%; text-align: left; }
+
+/* ---------------- títulos de seção ---------------- */
+.secao { padding: clamp(3.5rem, 7vw, 6rem) 0; }
+.titulo {
+  font-size: clamp(1.9rem, 4.2vw, 3rem);
+  margin-bottom: 2.5rem;
+}
+.titulo span { color: var(--lima); }
+.titulo--claro { color: #fff; }
+.titulo--centro { text-align: center; }
+
+/* ---------------- produtos ---------------- */
+.produtos { background: var(--branco); }
+.produtos__topo {
+  display: flex; align-items: end; justify-content: space-between;
+  gap: 1.5rem; flex-wrap: wrap; margin-bottom: 2.5rem;
+}
+.produtos__topo .titulo { margin-bottom: 0; }
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 1.25rem;
+}
+/* grid e não flex: a trilha é calculada uma vez e as colunas alinham em
+   todas as fileiras. Foi o que resolveu a grade de produtos da LP `/`. */
+@media (max-width: 1060px) { .cards { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px)  { .cards { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 430px)  { .cards { grid-template-columns: 1fr; } }
+
+.card {
+  position: relative;
+  border: 0; padding: 0; margin: 0;
+  aspect-ratio: 240 / 423;
+  border-radius: var(--raio);
+  overflow: hidden;
+  background: #0d2417;
+  color: #fff;
+  text-align: left;
+  font: inherit;
+  cursor: default;
+  display: block; width: 100%;
+}
+.card--tem-video { cursor: pointer; }
+.card__img {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .5s ease;
+}
+.card--tem-video:hover .card__img { transform: scale(1.05); }
+.card::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(0,0,0,.15) 35%, rgba(0,0,0,.72) 100%);
+}
+.card__play {
+  position: absolute; top: 50%; left: 50%; translate: -50% -50%;
+  z-index: 2;
+  width: 58px; height: 58px; border-radius: 50%;
+  border: 2.5px solid rgba(255,255,255,.95);
+  display: grid; place-items: center;
+  background: rgba(0,0,0,.18);
+  transition: background-color .2s ease, scale .2s ease;
+}
+.card--tem-video:hover .card__play { background: rgba(0,0,0,.4); scale: 1.08; }
+.card__titulo {
+  position: absolute; z-index: 2; left: 1.1rem; right: 1.1rem; bottom: 1.1rem;
+  font-size: 1.05rem; font-weight: 800; line-height: 1.25;
+}
+.card:focus-visible { outline: 3px solid var(--verde); outline-offset: 3px; }
+
+/* ---------------- vantagens ---------------- */
+.vantagens {
+  background: var(--gelo);
+  position: relative; overflow: hidden;
+}
+.vantagens__grade {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+  align-items: center;
+}
+.vantagens__foto {
+  border-radius: var(--raio-g);
+  aspect-ratio: 711 / 548;
+  object-fit: cover;
+  width: 100%;
+}
+.vantagens__card {
+  background: var(--lima);
+  color: var(--sobre-lima);
+  border-radius: var(--raio-g);
+  padding: clamp(1.75rem, 3vw, 3rem);
+  /* sobreposição sobre a foto, como no original */
+  margin-left: -8%;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: clamp(1.5rem, 3vw, 2.75rem);
+}
+.vantagem h4 { font-size: 1.05rem; margin-bottom: .5rem; }
+.vantagem p  { font-size: .95rem; line-height: 1.5; }
+.vantagem .marca { display: block; margin-bottom: .9rem; color: var(--verde); }
+
+@media (max-width: 900px) {
+  .vantagens__grade { grid-template-columns: 1fr; }
+  .vantagens__card  { margin-left: 0; margin-top: -2.5rem; }
+}
+@media (max-width: 560px) {
+  .vantagens__card { grid-template-columns: 1fr; }
+}
+
+/* ---------------- clientes ---------------- */
+.clientes { background: var(--branco); }
+.logos {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: clamp(1.25rem, 3vw, 2.5rem) 1.25rem;
+  list-style: none; padding: 0; margin: 0;
+}
+/* A célula manda, não o conteúdo. Com `justify-items:center` no grid a <li>
+   encolhia até o logo e cada fileira ficava com altura e origem próprias —
+   parece alinhado por acaso e quebra assim que entra um logo de outra
+   proporção. Aqui a <li> ocupa a trilha inteira e centraliza por dentro. */
+.logos li {
+  width: 100%; height: 85px;
+  display: grid; place-items: center;
+}
+.logos img {
+  max-width: 138px; max-height: 85px;
+  width: auto; height: auto;
+  object-fit: contain;
+}
+@media (max-width: 1000px) { .logos { grid-template-columns: repeat(5, 1fr); } }
+@media (max-width: 700px)  { .logos { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 420px)  { .logos { grid-template-columns: repeat(2, 1fr); } }
+
+/* ---------------- depoimentos ---------------- */
+.depoimentos { background: var(--verde); color: #fff; }
+.depo-grade {
+  display: grid; grid-template-columns: repeat(2, 1fr);
+  gap: clamp(2rem, 4vw, 3.5rem);
+  border-top: 1px solid rgba(255,255,255,.22);
+  padding-top: clamp(2rem, 4vw, 3.5rem);
+}
+@media (max-width: 780px) { .depo-grade { grid-template-columns: 1fr; } }
+.depo__aspas {
+  display: block; color: var(--lima);
+  font-size: 2.6rem; line-height: 1; font-weight: 800;
+  margin-bottom: .75rem;
+}
+.depo blockquote { margin: 0; font-size: 1.02rem; font-weight: 700; line-height: 1.45; }
+.depo figcaption { margin-top: 1.1rem; font-size: .92rem; }
+.depo figcaption b { display: block; }
+.depo figcaption span { color: rgba(255,255,255,.82); }
+
+/* ---------------- quem somos ---------------- */
+.quem { background: var(--branco); }
+.quem__grade {
+  display: grid; grid-template-columns: minmax(0,1fr) minmax(0,.72fr);
+  gap: clamp(2rem, 5vw, 4.5rem); align-items: center;
+}
+@media (max-width: 860px) { .quem__grade { grid-template-columns: 1fr; } }
+.quem p { color: var(--tinta-suave); font-size: 1.02rem; max-width: 46ch; }
+.quem__mascote { border-radius: var(--raio-g); width: 100%; height: auto; }
+
+/* ---------------- CTA final + formulário ---------------- */
+.fechamento { background: var(--verde-fundo); color: #fff; }
+.fechamento .titulo { text-align: center; }
+.fechamento__grade {
+  display: grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr);
+  gap: clamp(2rem, 4vw, 3.5rem); align-items: start;
+}
+@media (max-width: 860px) { .fechamento__grade { grid-template-columns: 1fr; } }
+.fechamento__lado p { color: rgba(255,255,255,.86); margin-top: 1rem; }
+.fechamento__ou {
+  margin-top: 2rem; padding-top: 1.75rem;
+  border-top: 1px solid rgba(255,255,255,.2);
+}
+.fechamento__contato { margin-top: .75rem; display: grid; font-size: .95rem; }
+/* padding e não margin: o alvo de toque precisa dos 44px, e margem não
+   entra na área clicável. */
+.fechamento__contato a {
+  text-decoration: none;
+  padding: .6rem 0; min-height: 44px;
+  display: flex; align-items: center;
+}
+.fechamento__contato a:hover { text-decoration: underline; }
+
+.form {
+  background: #fff; color: var(--tinta);
+  border-radius: var(--raio-g);
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  display: grid; gap: 1rem;
+}
+.form h3 { font-size: 1.25rem; }
+.form__dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 520px) { .form__dupla { grid-template-columns: 1fr; } }
+.campo { display: grid; gap: .35rem; }
+.campo label { font-size: .82rem; font-weight: 700; color: var(--tinta-suave); }
+.campo input, .campo select {
+  font: inherit; font-size: .95rem;
+  padding: .75rem .9rem;
+  min-height: 48px;            /* alvo de toque */
+  border: 1.5px solid #D4DDD8; border-radius: 12px;
+  background: #fff; color: var(--tinta);
+  width: 100%;
+}
+.campo input:focus, .campo select:focus {
+  outline: none; border-color: var(--verde);
+  box-shadow: 0 0 0 3px rgba(8,102,50,.15);
+}
+.campo input[aria-invalid="true"] { border-color: #C0392B; }
+.form button { width: 100%; justify-content: center; }
+.form__aviso { font-size: .88rem; min-height: 1.2em; }
+.form__aviso[data-estado="erro"] { color: #C0392B; font-weight: 700; }
+.form__aviso[data-estado="ok"]   { color: var(--verde); font-weight: 700; }
+.form__legal { font-size: .78rem; color: var(--tinta-suave); }
+
+/* ---------------- rodapé ---------------- */
+.rodape { background: var(--verde-rodape); color: #fff; padding: 3rem 0 2rem; }
+.rodape__linha {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1.5rem; flex-wrap: wrap;
+  padding-bottom: 1.75rem; border-bottom: 1px solid rgba(255,255,255,.18);
+}
+.rodape__logo { width: 120px; }
+.rodape__social { display: flex; gap: .75rem; }
+.rodape__social a {
+  width: 44px; height: 44px; border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  display: grid; place-items: center;
+  transition: background-color .2s ease;
+}
+.rodape__social a:hover { background: rgba(255,255,255,.25); }
+.rodape__fim { margin-top: 1.5rem; text-align: center; font-size: .85rem; color: rgba(255,255,255,.75); }
+
+/* ---------------- lightbox de vídeo ---------------- */
+.visor {
+  border: 0; padding: 0; background: transparent;
+  max-width: min(92vw, 460px); max-height: 92svh;
+  border-radius: var(--raio); overflow: hidden;
+}
+.visor::backdrop { background: rgba(0,0,0,.82); }
+.visor video { width: 100%; height: auto; display: block; background: #000; }
+.visor__fechar {
+  position: absolute; top: .6rem; right: .6rem; z-index: 2;
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 0; background: rgba(0,0,0,.55); color: #fff;
+  font-size: 1.4rem; line-height: 1; cursor: pointer;
+}
+.visor__fechar:hover { background: rgba(0,0,0,.8); }
+
+/* ---------------- revelação no scroll ---------------- */
+/* IntersectionObserver puro, sem GSAP nem Lenis: a página original não
+   tem animação de scroll e carregar 3 bibliotecas para imitar nada
+   custaria TBT à toa. */
+.revela { opacity: 0; transform: translateY(18px); }
+.revela.visivel {
+  opacity: 1; transform: none;
+  transition: opacity .55s ease, transform .55s ease;
+}
+@media (prefers-reduced-motion: reduce) {
+  .revela { opacity: 1; transform: none; transition: none; }
+}
+
+/* ---------------- WhatsApp flutuante ---------------- */
+.zap {
+  position: fixed; right: 1rem; bottom: 1rem; z-index: 40;
+  width: 56px; height: 56px; border-radius: 50%;
+  background: #25D366; display: grid; place-items: center;
+  box-shadow: 0 8px 24px rgba(0,0,0,.28);
+  transition: transform .2s ease;
+}
+.zap:hover { transform: scale(1.07); }

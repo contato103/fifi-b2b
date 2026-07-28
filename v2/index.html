@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A linha FIFI para empresas que querem limpeza de verdade. Produtos concentrados, sustentáveis e de alta diluição, com treinamento e suporte técnico.">
+  <meta name="theme-color" content="#086632">
+  <title>FIFI Limpeza | Chega de produtos que não resolvem</title>
+
+  <link rel="icon" href="../img/favicon.ico" sizes="32x32">
+  <link rel="icon" href="../img/favicon.png" type="image/png" sizes="256x256">
+  <link rel="apple-touch-icon" href="../img/favicon.png">
+
+  <!-- A fonte vem daqui, não do Google. O <link> remoto custava três
+       viagens antes do primeiro texto (DNS+TLS em fonts.googleapis.com,
+       o CSS, e só então o woff2 num SEGUNDO domínio). `crossorigin` é
+       obrigatório mesmo em mesma origem: fonte busca sempre em modo CORS
+       e sem o atributo o preload não casa e o arquivo baixa duas vezes. -->
+  <link rel="preload" href="fonts/plus-jakarta-sans-v12-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="img/hero-fundo.webp" as="image" fetchpriority="high">
+  <link rel="stylesheet" href="styles.css?v=1">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="FIFI Limpeza — Produtos de limpeza corporativa">
+  <meta property="og:description" content="Chegou a linha FIFI para empresas que querem limpeza de verdade.">
+  <meta property="og:image" content="img/hero-fundo.webp">
+  <meta property="og:locale" content="pt_BR">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <!-- ══ TRACKING ═══════════════════════════════════════════════════
+       Mesmos IDs e MESMA ação de conversão da LP `/`. Isso é de
+       propósito: dividir a ação partiria o sinal do Smart Bidding em
+       duas de volume baixo. Quem separa as duas páginas do teste A/B é
+       `variante` — que vai no parâmetro do evento e na coluna `Origem`
+       da planilha, não numa segunda ação de conversão.                -->
+  <script>
+    window.FIFI_TRACK = {
+      metaPixelId:  '3538639579767084',
+      googleAdsId:  'AW-16753876130',
+      ga4Id:        '',
+      convLabel:    'K-x6CPngztQcEKK577Q-',
+      typebotId:    'fifi-profissional',
+      endpoint:     '/api/leads',
+      cnpjEndpoint: '/api/cnpj',
+      variante:     'v2',
+    };
+  </script>
+
+  <!-- Meta Pixel -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}
+    (window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', window.FIFI_TRACK.metaPixelId);
+    // É o `track` que faz nascer o cookie _fbp — o `init` sozinho NÃO cria,
+    // e sem ele o Advanced Matching degrada em silêncio.
+    window.FIFI_PAGEVIEW_ID = (crypto.randomUUID && crypto.randomUUID()) ||
+      String(Date.now()) + Math.random().toString(16).slice(2);
+    fbq('track', 'PageView', { content_category: 'lp-v2' }, { eventID: window.FIFI_PAGEVIEW_ID });
+  </script>
+  <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=3538639579767084&ev=PageView&noscript=1" alt=""></noscript>
+
+  <!-- Google gtag (Ads + GA4, direto no código — sem GTM) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16753876130"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', window.FIFI_TRACK.googleAdsId);   // grava _gcl_aw (papel do Conversion Linker)
+    if (window.FIFI_TRACK.ga4Id) gtag('config', window.FIFI_TRACK.ga4Id);
+  </script>
+</head>
+<body>
+  <a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+  <header class="topo">
+    <div class="env topo__linha">
+      <a href="#inicio" aria-label="FIFI Limpeza, início">
+        <img class="topo__logo" src="img/logo-fifi.webp" alt="FIFI" width="280" height="138" fetchpriority="high">
+      </a>
+      <a class="btn btn--lima zap-link" data-zap="topo"
+         href="https://api.whatsapp.com/send/?phone=554733502545&text=Ol%C3%A1%2C%20quero%20saber%20mais%20informa%C3%A7%C3%B5es"
+         target="_blank" rel="noopener">Saiba mais</a>
+    </div>
+  </header>
+
+  <main id="conteudo">
+
+    <!-- ═══════════ HERO ═══════════ -->
+    <section class="hero" id="inicio">
+      <!-- A imagem é o LCP: eager, sem lazy, com preload no <head>.
+           O vídeo é enfeite e só entra depois que a página está de pé
+           (ver script.js). Na página original esse mesmo vídeo tinha
+           92 MB em HEVC — formato que boa parte dos Chrome no Windows e
+           no Android nem decodifica, então o usuário pagava o download
+           e via um quadro preto. Aqui ele é H.264 de 2,5 MB. -->
+      <img class="hero__fundo" src="img/hero-fundo.webp" alt=""
+           width="1500" height="1000" fetchpriority="high" decoding="async">
+      <video class="hero__video" muted loop playsinline preload="none"
+             aria-hidden="true" tabindex="-1" data-src="video/hero.mp4"></video>
+
+      <div class="env hero__conteudo">
+        <h1>Chega de produtos que não resolvem</h1>
+        <h2>Chegou a linha FIFI para empresas que querem limpeza de verdade</h2>
+        <p class="hero__sub">Seu problema não é só produto. Nem só equipe.</p>
+
+        <div class="hero__acoes">
+          <a class="btn btn--vazado zap-link" data-zap="equipe-propria"
+             href="https://wa.me/554733502545?text=Ol%C3%A1%2C%20Tenho%20equipe%20pr%C3%B3pria%20e%20preciso%20s%C3%B3%20dos%20produtos%20certos"
+             target="_blank" rel="noopener">
+            Tenho equipe própria e preciso só dos produtos certos
+            <span class="seta" aria-hidden="true">→</span>
+          </a>
+          <a class="btn btn--lima zap-link" data-zap="quero-implantar"
+             href="https://wa.me/554733502545?text=Ol%C3%A1%2C%20Quero%20ajuda%20para%20implantar%20novos%20produtos%2C%20obter%20treinamento%20e%20suporte%20t%C3%A9cnico"
+             target="_blank" rel="noopener">
+            Quero ajuda para implantar novos produtos com treinamento e suporte técnico
+            <span class="seta" aria-hidden="true">→</span>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ PRODUTOS ═══════════ -->
+    <section class="secao produtos" aria-labelledby="t-produtos">
+      <div class="env">
+        <div class="produtos__topo revela">
+          <h2 class="titulo" id="t-produtos">Confira nossos <span>produtos para:</span></h2>
+          <a class="btn btn--verde zap-link" data-zap="produtos"
+             href="https://wa.me/554733502545?text=Ol%C3%A1%2C%20vim%20pela%20campanha%20do%20corporativo"
+             target="_blank" rel="noopener">Saiba mais</a>
+        </div>
+
+        <div class="cards revela">
+          <!-- Dois destes cinco cards não têm vídeo na página original: o
+               botão de play existe e não abre nada. Aqui eles ficam como
+               card estático, sem o play, até a FIFI mandar os arquivos. -->
+          <div class="card">
+            <img class="card__img" src="img/poster-pisos.webp" alt="Limpeza profunda de pisos" width="480" height="853" loading="lazy" decoding="async">
+            <h3 class="card__titulo">Limpeza profunda de pisos sensíveis e brutos</h3>
+          </div>
+
+          <button class="card card--tem-video" type="button" data-video="video/pet.mp4" data-titulo="Linha Corporativa Pet">
+            <img class="card__img" src="img/poster-pet.webp" alt="Linha Corporativa Pet" width="480" height="853" loading="lazy" decoding="async">
+            <span class="card__play" aria-hidden="true">
+              <svg width="18" height="20" viewBox="0 0 18 20" fill="#fff"><path d="M17 8.27a2 2 0 0 1 0 3.46L3 19.79a2 2 0 0 1-3-1.73V1.94A2 2 0 0 1 3 .21l14 8.06Z"/></svg>
+            </span>
+            <h3 class="card__titulo">Linha Corporativa Pet</h3>
+          </button>
+
+          <button class="card card--tem-video" type="button" data-video="video/cozinhas.mp4" data-titulo="Lavação de cozinhas, coifas e fogões">
+            <img class="card__img" src="img/poster-cozinhas.webp" alt="Lavação de cozinhas, coifas e fogões" width="480" height="853" loading="lazy" decoding="async">
+            <span class="card__play" aria-hidden="true">
+              <svg width="18" height="20" viewBox="0 0 18 20" fill="#fff"><path d="M17 8.27a2 2 0 0 1 0 3.46L3 19.79a2 2 0 0 1-3-1.73V1.94A2 2 0 0 1 3 .21l14 8.06Z"/></svg>
+            </span>
+            <h3 class="card__titulo">Lavação de cozinhas, coifas e fogões</h3>
+          </button>
+
+          <button class="card card--tem-video" type="button" data-video="video/vidros.mp4" data-titulo="Manutenção de vidros, mesas e espelhos">
+            <img class="card__img" src="img/poster-vidros.webp" alt="Manutenção de vidros, mesas e espelhos" width="480" height="853" loading="lazy" decoding="async">
+            <span class="card__play" aria-hidden="true">
+              <svg width="18" height="20" viewBox="0 0 18 20" fill="#fff"><path d="M17 8.27a2 2 0 0 1 0 3.46L3 19.79a2 2 0 0 1-3-1.73V1.94A2 2 0 0 1 3 .21l14 8.06Z"/></svg>
+            </span>
+            <h3 class="card__titulo">Manutenção de vidros, mesas e espelhos</h3>
+          </button>
+
+          <div class="card">
+            <img class="card__img" src="img/poster-sustentaveis.webp" alt="Produtos sustentáveis e de alta diluição" width="1200" height="675" loading="lazy" decoding="async">
+            <h3 class="card__titulo">Produtos sustentáveis e de alta diluição</h3>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ VANTAGENS ═══════════ -->
+    <section class="secao vantagens" aria-labelledby="t-vantagens">
+      <div class="env">
+        <h2 class="titulo" id="t-vantagens"><span>Vantagens</span> da FIFI para empresas</h2>
+        <div class="vantagens__grade revela">
+          <img class="vantagens__foto" src="img/vantagens.webp" alt="Profissional de limpeza com balde e produtos FIFI" width="1440" height="960" loading="lazy" decoding="async">
+          <div class="vantagens__card">
+            <div class="vantagem">
+              <svg class="marca" width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true"><path d="M2 9.5 9.5 17 24 2.5" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <h4>Rendimento Comprovado:</h4>
+              <p>Alta diluição, eficiência na limpeza e redução de até 90% no consumo de água</p>
+            </div>
+            <div class="vantagem">
+              <svg class="marca" width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true"><path d="M2 9.5 9.5 17 24 2.5" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <h4>+200 Empresas Atendidas pela Fifi:</h4>
+              <p>Confiança de empresas que já escolheram a Fifi como sua parceira.</p>
+            </div>
+            <div class="vantagem">
+              <svg class="marca" width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true"><path d="M2 9.5 9.5 17 24 2.5" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <h4>Sustentável e 100% Biodegradável:</h4>
+              <p>Produtos ecológicos e seguros para o meio ambiente, não são prejudiciais para a vegetação</p>
+            </div>
+            <div class="vantagem">
+              <svg class="marca" width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true"><path d="M2 9.5 9.5 17 24 2.5" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <h4>Segurança para Sua Equipe</h4>
+              <p>Soluções seguras e eficazes que garantem a saúde dos colaboradores e ambiente de trabalho</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ CLIENTES ═══════════ -->
+    <section class="secao clientes" aria-labelledby="t-clientes">
+      <div class="env">
+        <h2 class="titulo" id="t-clientes"><span>Clientes</span> Atendidos</h2>
+        <ul class="logos revela">
+        <li><img src="img/clientes/ailos.webp" alt="Ailos" width="320" height="115" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/koch.webp" alt="Koch" width="240" height="86" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/stop-shop.webp" alt="Stop Shop" width="111" height="111" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/kimak.webp" alt="Kimak" width="288" height="151" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/manatex.webp" alt="Manatex" width="182" height="70" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/fip.webp" alt="FIP" width="189" height="167" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/bc-malhas.webp" alt="BC Malhas" width="171" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/brusinox.webp" alt="Brusinox" width="296" height="113" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/giassi.webp" alt="Giassi" width="320" height="77" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/giracor.webp" alt="Giracor" width="179" height="114" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/profor.webp" alt="Profor" width="320" height="92" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/embreex.webp" alt="Embreex" width="245" height="87" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/dmarco.webp" alt="D'Marco" width="185" height="94" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/comper.webp" alt="Comper" width="320" height="108" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/cooper.webp" alt="Cooper" width="200" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/fort.webp" alt="Fort Atacadista" width="252" height="85" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/unifebe.webp" alt="Unifebe" width="258" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/all-shopping.webp" alt="All Shopping" width="244" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/skymsen.webp" alt="Skymsen" width="320" height="143" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/zen.webp" alt="Zen" width="200" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/hoffmann.webp" alt="Hoffmann" width="220" height="102" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/bruscon.webp" alt="Bruscon" width="320" height="188" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/amor-saude.webp" alt="Amor Saúde" width="320" height="91" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/florisa.webp" alt="Florisa" width="320" height="84" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/viacredi.webp" alt="Viacredi" width="320" height="85" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/rvb.webp" alt="RVB" width="194" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/sicredi.webp" alt="Sicredi" width="320" height="75" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/fg.webp" alt="FG Empreendimentos" width="300" height="169" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/unimed.webp" alt="Unimed" width="320" height="114" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/havan.webp" alt="Havan" width="320" height="183" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/zm.webp" alt="ZM" width="200" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="img/clientes/embraed.webp" alt="Embraed" width="320" height="91" loading="lazy" decoding="async"></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════ DEPOIMENTOS ═══════════ -->
+    <section class="secao depoimentos" aria-labelledby="t-depo">
+      <div class="env">
+        <h2 class="titulo titulo--claro" id="t-depo"><span>Depoimento</span> dos Clientes</h2>
+        <div class="depo-grade revela">
+          <figure class="depo">
+            <span class="depo__aspas" aria-hidden="true">&ldquo;</span>
+            <blockquote>Optamos pela Fifi após realizar uma pesquisa sobre alternativas mais sustentáveis e eficazes para nossa empresa. O que mais me impressionou foi a qualidade e o desempenho dos produtos, especialmente em um ambiente corporativo onde a limpeza é essencial.</blockquote>
+            <figcaption><b>José</b><span>Coordenador de Compras</span></figcaption>
+          </figure>
+          <figure class="depo">
+            <span class="depo__aspas" aria-hidden="true">&ldquo;</span>
+            <blockquote>Desde que começamos a usar os produtos da Fifi em nossa empresa, a diferença é visível! A limpeza é mais eficaz e rápida, e o melhor de tudo é que conseguimos garantir um ambiente mais seguro e saudável para nossa equipe.</blockquote>
+            <figcaption><b>Ana</b><span>Responsável pelo Setor de Compras</span></figcaption>
+          </figure>
+          <figure class="depo">
+            <span class="depo__aspas" aria-hidden="true">&ldquo;</span>
+            <blockquote>Desde a implementação dos produtos Fifi em nossa empresa, notamos uma melhoria significativa na qualidade do ambiente de trabalho, o que refletiu diretamente na redução de riscos associados a processos trabalhistas. A escolha pela Fifi, com sua linha de produtos orgânicos e biodegradáveis, garantiu não apenas uma limpeza eficiente, mas também proporcionou um ambiente mais seguro e saudável para os nossos colaboradores.</blockquote>
+            <figcaption><b>Renata</b><span>Coordenadora de Compras Corporativas</span></figcaption>
+          </figure>
+          <figure class="depo">
+            <span class="depo__aspas" aria-hidden="true">&ldquo;</span>
+            <blockquote>Os produtos são eficazes, fáceis de usar e garantem uma limpeza profunda sem a necessidade de produtos químicos agressivos. A Fifi nos ajudou a reduzir a quantidade de manutenção necessária nos espaços e equipamentos.</blockquote>
+            <figcaption><b>João</b><span>Setor de Manutenção</span></figcaption>
+          </figure>
+          <figure class="depo">
+            <span class="depo__aspas" aria-hidden="true">&ldquo;</span>
+            <blockquote>A vantagem de utilizar produtos sustentáveis e biodegradáveis também alinha-se perfeitamente aos nossos valores de responsabilidade ambiental. Recomendamos fortemente!</blockquote>
+            <figcaption><b>Cássia</b><span>Setor de Engenharia</span></figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ QUEM SOMOS ═══════════ -->
+    <section class="secao quem" aria-labelledby="t-quem">
+      <div class="env quem__grade revela">
+        <div>
+          <h2 class="titulo" id="t-quem"><span>FIFI</span> Limpeza</h2>
+          <p>A Fifi Limpeza nasceu para revolucionar a higiene corporativa. Entendemos que um ambiente limpo não deve comprometer a saúde de colaboradores, clientes e do planeta. Por isso, desenvolvemos soluções de alto desempenho, econômicas e sustentáveis, garantindo resultados impecáveis sem agredir as superfícies ou o meio ambiente.</p>
+        </div>
+        <img class="quem__mascote" src="img/mascote.webp" alt="Equipe de mascotes da FIFI Limpeza" width="768" height="1152" loading="lazy" decoding="async">
+      </div>
+    </section>
+
+    <!-- ═══════════ FECHAMENTO + FORMULÁRIO ═══════════ -->
+    <section class="secao fechamento" id="proposta" aria-labelledby="t-fechamento">
+      <div class="env">
+        <h2 class="titulo titulo--claro" id="t-fechamento">Peça sua <span>proposta personalizada</span></h2>
+
+        <div class="fechamento__grade">
+          <div class="fechamento__lado">
+            <p>Preencha os dados e a equipe comercial retorna com uma proposta para a realidade da sua operação: volume, áreas atendidas e o que você já usa hoje.</p>
+
+            <div class="fechamento__ou">
+              <a class="btn btn--lima zap-link" data-zap="fechamento"
+                 href="https://api.whatsapp.com/send/?phone=554733502545&text=Ol%C3%A1%2C%20quero%20saber%20mais%20informa%C3%A7%C3%B5es"
+                 target="_blank" rel="noopener">
+                Entrar em Contato
+                <span class="seta" aria-hidden="true">→</span>
+              </a>
+              <div class="fechamento__contato">
+                <a href="tel:+554733502545">(47) 3350-2545</a>
+                <a href="mailto:fifiprofissional@fifilimpeza.com">fifiprofissional@fifilimpeza.com</a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Este formulário não existe na página original, que só manda
+               para o WhatsApp. Sem ele o /v2 não teria como gravar lead na
+               mesma planilha do `/` e o teste A/B não fecharia no mesmo
+               denominador (CPL por lead com CNPJ). Os campos são idênticos
+               aos da LP `/` de propósito: dado comparável. -->
+          <form class="form" id="lead-form" novalidate>
+            <h3>Receba sua proposta</h3>
+            <div class="campo">
+              <label for="name">Seu nome</label>
+              <input id="name" name="name" type="text" autocomplete="name" required>
+            </div>
+            <div class="form__dupla">
+              <div class="campo">
+                <label for="email">E-mail</label>
+                <input id="email" name="email" type="email" autocomplete="email" required placeholder="nome@empresa.com.br">
+              </div>
+              <div class="campo">
+                <label for="phone">WhatsApp</label>
+                <input id="phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel" required placeholder="(00) 00000-0000">
+              </div>
+            </div>
+            <div class="form__dupla">
+              <div class="campo">
+                <label for="company">Empresa</label>
+                <input id="company" name="company" type="text" autocomplete="organization" required>
+              </div>
+              <div class="campo">
+                <label for="cnpj">CNPJ</label>
+                <input id="cnpj" name="cnpj" type="text" inputmode="numeric" required placeholder="00.000.000/0000-00">
+              </div>
+            </div>
+            <div class="form__dupla">
+              <div class="campo">
+                <label for="sector">Segmento</label>
+                <select id="sector" name="sector" required>
+                  <option value="">Selecione</option>
+                  <option>Supermercado / varejo</option>
+                  <option>Indústria</option>
+                  <option>Saúde</option>
+                  <option>Facilities / condomínio</option>
+                  <option>Outro</option>
+                </select>
+              </div>
+              <div class="campo">
+                <label for="spend">Gasto mensal com produtos</label>
+                <select id="spend" name="spend" required>
+                  <option value="">Selecione uma faixa</option>
+                  <option>R$ 3.000 a R$ 8.000</option>
+                  <option>R$ 8.000 a R$ 15.000</option>
+                  <option>R$ 15.000 a R$ 30.000</option>
+                  <option>Acima de R$ 30.000</option>
+                </select>
+              </div>
+            </div>
+            <button class="btn btn--verde" type="submit">Quero minha proposta</button>
+            <p class="form__aviso" role="status" aria-live="polite"></p>
+            <p class="form__legal">Ao enviar você autoriza o contato da equipe comercial da FIFI.</p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="rodape">
+    <div class="env">
+      <div class="rodape__linha">
+        <img class="rodape__logo" src="img/logo-fifi.webp" alt="FIFI Limpeza" width="280" height="138" loading="lazy">
+        <div class="rodape__social">
+          <a href="https://www.instagram.com/fifilimpeza/" target="_blank" rel="noopener" aria-label="Instagram da FIFI Limpeza">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true">
+              <rect x="2" y="2" width="20" height="20" rx="5.5"/><circle cx="12" cy="12" r="4.2"/><circle cx="17.8" cy="6.2" r="1.2" fill="#fff" stroke="none"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+      <p class="rodape__fim">Copyright FIFI Limpeza, 2025. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+
+  <a class="zap zap-link" data-zap="flutuante"
+     href="https://api.whatsapp.com/send/?phone=554733502545&text=Ol%C3%A1%2C%20quero%20saber%20mais%20informa%C3%A7%C3%B5es"
+     target="_blank" rel="noopener" aria-label="Falar no WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff" aria-hidden="true">
+      <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm5.8 14.16c-.24.68-1.42 1.3-1.95 1.35-.5.05-.98.24-3.3-.69-2.78-1.1-4.55-3.94-4.69-4.12-.14-.19-1.12-1.49-1.12-2.85 0-1.35.71-2.02.96-2.29.25-.28.55-.35.73-.35h.53c.17 0 .4-.06.63.48.24.58.8 2 .87 2.14.07.14.12.31.02.5-.1.19-.14.31-.28.48-.14.17-.3.37-.42.5-.14.14-.29.29-.12.57.16.28.73 1.2 1.56 1.95 1.08.96 1.98 1.26 2.26 1.4.28.14.45.12.61-.07.17-.19.71-.83.9-1.11.19-.28.37-.24.63-.14.25.09 1.6.76 1.88.9.28.14.46.21.53.33.07.11.07.65-.17 1.33Z"/>
+    </svg>
+  </a>
+
+  <dialog class="visor" id="visor">
+    <button class="visor__fechar" type="button" aria-label="Fechar vídeo">&times;</button>
+    <video controls playsinline preload="none"></video>
+  </dialog>
+
+  <script src="script.js?v=1" defer></script>
+</body>
+</html>
