@@ -45,11 +45,13 @@
         Verde escuro dá 6,75:1 sem mudar o desenho.                     */
   --sobre-lima:  #0B3F1F;
   /* 2. Lima como cor de TEXTO em seção clara (os títulos de dois tons).
-        #BCCC00 sobre branco também dá 1,78:1 — o mínimo para texto
-        grande é 3:1. #8A9600 dá 3,26:1 e continua lendo como a lima da
-        marca. Sobre os verdes escuros o lima puro vai de 3,98:1 a
-        10:1, então lá ele fica como está.                              */
-  --lima-texto:  #8A9600;
+        #BCCC00 sobre branco dá 1,78:1 — o mínimo para texto grande é 3:1.
+        O valor tem de passar nos DOIS fundos claros da página, e o
+        azul-gelo é o mais exigente dos dois: #8A9600 dava 3,26:1 no
+        branco mas só 2,97:1 no #F0F5FB. #849000 fecha 3,52 e 3,21.
+        Sobre os verdes escuros o lima puro vai de 3,98:1 a 10:1, então
+        lá ele fica como está.                                          */
+  --lima-texto:  #849000;
 
   --raio:      18px;
   --raio-g:    28px;
