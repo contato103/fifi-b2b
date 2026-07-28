@@ -179,40 +179,72 @@ Events Manager → Testar eventos.
 - Os dois são gravados **no load**, não no submit. Quem entra por `?gclid=`, sai
   para o WhatsApp e volta pela URL limpa continua com o click ID.
 
-### ⛔ Clique de WhatsApp NÃO dispara conversão do Google
-Regra dura, e foi bug real corrigido em 28/07. A ação `K-x6CPngztQcEKK577Q-` é
-**compartilhada** com a `/`, que só a dispara para lead qualificado (CNPJ conferido
-na Receita ou Typebot completo). Contar clique de link ali infla a contagem,
-envenena o Smart Bidding da conta inteira e faria o `/v2` "ganhar" o A/B por
-contar coisa mais barata.
+### Rotas de lead — iguais às da `/` desde 28/07
+O WhatsApp saiu do `/v2` (5 links + botão flutuante) e entrou o **mesmo Typebot**
+da `/`. As duas páginas passam a ter as mesmas rotas, então o A/B compara design
+e copy, não canal.
 
-O clique dispara só `Contact` no Meta — evento distinto de `Lead`, não entra na
-otimização de quem compra Lead.
-
-**Se um dia quiser medir clique de WhatsApp no Google:** criar ação própria em
-Metas → Conversões, tipo manual/gtag, e marcá-la como **Secundária** ("Não
-otimizar"). Aí sim passar o label novo num campo separado do `FIFI_TRACK` —
-nunca reusar `convLabel`.
-
-### ⚠️ As duas páginas não têm as mesmas rotas de lead
 | | `/` | `/v2` |
 |---|---|---|
 | Formulário → planilha | ✅ `Origem: Formulário` | ✅ `Origem: Formulário v2` |
-| Typebot → planilha | ✅ `Origem: Typebot` | ❌ não tem |
-| WhatsApp direto | ❌ não tem | ✅ 5 links + botão flutuante |
+| Typebot → planilha | ✅ `Origem: Typebot` | ✅ `Origem: Typebot` + `Pagina` = `/v2/` |
+| WhatsApp direto | ❌ | ❌ |
 
-Isso é **da natureza do teste** — a página da FIFI é WhatsApp-first e a nossa é
-formulário+bot. Mas muda como ler o resultado:
+**Como separar o lead de bot das duas LPs:** pela coluna **`Pagina`**, não pela
+`Origem`. O corpo do webhook do bot tem `"origem": "Typebot"` **literal**, não
+variável — prefill não muda isso. Trocar por `{{origem}}` exigiria mexer no grafo
+compartilhado **e** passar prefill nas DUAS LPs; mexer só no bot faria o lead da
+`/` cair como "Formulário", que é o fallback da edge quando `origem` vem vazio.
 
-- **Métrica primária: lead de formulário.** É a única que as duas gravam na mesma
-  planilha, com CNPJ conferido, e dá para comparar CPL no mesmo denominador.
-- **Clique de WhatsApp é métrica secundária**, só visível no Meta pelo `Contact`.
-  Não entra na conta de CPL, porque não vira linha na planilha e não passa por
-  qualificação nenhuma.
-- Se quiser as duas páginas com rotas idênticas, aí é embutir o Typebot no `/v2`.
-  Dois problemas: o balão do bot ocupa o mesmo canto do botão flutuante de
-  WhatsApp, e o bot é **um só** para as duas LPs — para separar na planilha seria
-  preciso prefill de variável e mexer no grafo compartilhado, o que afeta a `/`.
+Os dois botões do hero (a única segmentação da página original) viram
+`EscolheuCaminho` no Meta — `trackCustom`, não `Lead`: é intenção, não conversão.
+Não viraram campo do formulário de propósito, senão os dois forms deixariam de
+ser comparáveis.
+
+**Se um dia quiser medir clique de WhatsApp no Google:** criar ação própria em
+Metas → Conversões, tipo manual/gtag, e marcá-la como **Secundária** ("Não
+otimizar"). Nunca reusar `convLabel` — ela é compartilhada com a `/` e só conta
+lead qualificado.
+
+---
+
+## 🔴 O CAPI nunca funcionou (descoberto em 28/07)
+
+`GET /api/leads?health=1` agora devolve um campo `capi` com o diagnóstico.
+
+**Diagnóstico do token em produção:** `SYSTEM_USER`, válido, nunca expira, mas o
+**escopo único é `read_ads_dataset_quality`**. Isso lê qualidade de dataset;
+**não envia evento**. Confirmado mandando evento com `test_event_code` (não entra
+em produção) para os dois pixels da conta — recusado nos dois.
+
+**Por que ninguém viu:** `sendLeadCAPI` devolvia `{status: res.status}` sem checar
+`res.ok`. Como não lançava, o `try/catch` de quem chama nunca rodava e um 400 do
+Meta passava sem **uma linha de log**. O lead salvava, o pixel do navegador
+disparava, e o lado server-side simplesmente não existia. Corrigido: agora lança
+com status, pixel e corpo do erro (continua **não** bloqueando o lead).
+
+**O que se perdeu desde 22/07:** nenhum evento server-side, nenhum dedup, lead de
+quem usa bloqueador ou iOS com prevenção de rastreamento perdido inteiro, e todo o
+Advanced Matching que a edge monta (em, ph, fn, ln, ct, st, zp, external_id) nunca
+saiu.
+
+**Conserto (só o Igor tem acesso):**
+1. Events Manager → pixel `3538639579767084` → Configurações → API de Conversões →
+   **Gerar token de acesso**.
+2. `vercel env rm META_ACCESS_TOKEN production` e `vercel env add` com o novo.
+3. Redeploy.
+4. Conferir: `GET /api/leads?health=1` tem de voltar `capi.ok: true`.
+5. Atualizar `~/.secrets/meta-fifi.json`.
+
+### Pixel — qual é, e por que
+`3538639579767084` "New E-commerce Fifi", business `Fiel Limpeza`, conta
+`CA - Fifi Limpeza`. **É da FIFI**, não há pixel de outro cliente envolvido.
+
+A conta tem um segundo pixel, `1184111166897233` "Pixel LP - Fifi Empresarial",
+que é o que a `empresas.fifilimpeza.com` dispara. **Decisão do Igor em 28/07:
+manter o do e-commerce nas duas LPs**, só fazer funcionar. Se um dia migrar, tem
+de ser nas duas ao mesmo tempo, senão a comparação dentro do Meta se perde — e o
+token novo tem de ser gerado a partir do pixel escolhido.
 
 ## ⚠️ Armadilhas já cobertas neste código
 
