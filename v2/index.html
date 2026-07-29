@@ -18,7 +18,7 @@
        e sem o atributo o preload não casa e o arquivo baixa duas vezes. -->
   <link rel="preload" href="/v2/fonts/plus-jakarta-sans-v12-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/v2/img/hero-fundo.webp" as="image" fetchpriority="high">
-  <link rel="stylesheet" href="/v2/styles.css?v=3">
+  <link rel="stylesheet" href="/v2/styles.css?v=4">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="FIFI Limpeza — Produtos de limpeza corporativa">
@@ -325,8 +325,14 @@
                 Entrar em Contato
                 <span class="seta" aria-hidden="true">→</span>
               </button>
+              <!-- O telefone (47) 3350-2545 saiu daqui de propósito. Era o
+                   MESMO número do WhatsApp da FIFI (`wa.me/554733502545`),
+                   então mantê-lo como `tel:` deixava aberta exatamente a
+                   rota que o formulário existe para fechar: contato sem
+                   CNPJ, sem qualificação e sem linha na planilha. Não faz
+                   sentido conferir CNPJ na Receita e deixar o número na
+                   tela do lado. Decisão do Igor em 29/07. -->
               <div class="fechamento__contato">
-                <a href="tel:+554733502545">(47) 3350-2545</a>
                 <a href="mailto:fifiprofissional@fifilimpeza.com">fifiprofissional@fifilimpeza.com</a>
               </div>
             </div>
@@ -424,7 +430,7 @@
     <video controls playsinline preload="none"></video>
   </dialog>
 
-  <script src="/v2/script.js?v=3" defer></script>
+  <script src="/v2/script.js?v=4" defer></script>
 
   <!-- ══ TYPEBOT ═════════════════════════════════════════════════════
        Mesmo bot da LP `/` (`fifi-profissional`) — um só grafo para as duas
@@ -480,12 +486,19 @@
         },
         theme: {
           button: {
-            backgroundColor: '#25D366',
+            // Lima da marca, NAO o verde #25D366 do WhatsApp. Junto com o
+            // icone abaixo, isso e o que impede o balao de ser lido como
+            // "fale no WhatsApp" — promessa que a pagina nao cumpre mais e
+            // que reabriria a rota sem CNPJ que o formulario existe para
+            // fechar. Ver o comentario do telefone removido no fechamento.
+            backgroundColor: '#BCCC00',
             // data URI, nao caminho relativo: o bundle valida com
             // `src.startsWith('http') || src.startsWith('data:image/svg+xml')`.
             // Caminho relativo reprova e ele renderiza a string como TEXTO no
             // botao, sem erro e sem request.
-            customIconSrc: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48cGF0aCBmaWxsPSIjZmZmIiBkPSJNMTcuNDcyIDE0LjM4MmMtLjI5Ny0uMTQ5LTEuNzU4LS44NjctMi4wMy0uOTY3LS4yNzMtLjA5OS0uNDcxLS4xNDgtLjY3LjE1LS4xOTcuMjk3LS43NjcuOTY2LS45NCAxLjE2NC0uMTczLjE5OS0uMzQ3LjIyMy0uNjQ0LjA3NS0uMjk3LS4xNS0xLjI1NS0uNDYzLTIuMzktMS40NzUtLjg4My0uNzg4LTEuNDgtMS43NjEtMS42NTMtMi4wNTktLjE3My0uMjk3LS4wMTgtLjQ1OC4xMy0uNjA2LjEzNC0uMTMzLjI5OC0uMzQ3LjQ0Ni0uNTIuMTQ5LS4xNzQuMTk4LS4yOTguMjk4LS40OTcuMDk5LS4xOTguMDUtLjM3MS0uMDI1LS41Mi0uMDc1LS4xNDktLjY2OS0xLjYxMi0uOTE2LTIuMjA3LS4yNDItLjU3OS0uNDg3LS41LS42NjktLjUxLS4xNzMtLjAwOC0uMzcxLS4wMS0uNTctLjAxLS4xOTggMC0uNTIuMDc0LS43OTIuMzcyLS4yNzIuMjk3LTEuMDQgMS4wMTYtMS4wNCAyLjQ3OSAwIDEuNDYyIDEuMDY1IDIuODc1IDEuMjEzIDMuMDc0LjE0OS4xOTggMi4wOTYgMy4yIDUuMDc3IDQuNDg3LjcxLjMwNiAxLjI2My40ODkgMS42OTQuNjI1LjcxMi4yMjcgMS4zNi4xOTUgMS44NzEuMTE4LjU3MS0uMDg1IDEuNzU4LS43MTkgMi4wMDYtMS40MTMuMjQ4LS42OTQuMjQ4LTEuMjg5LjE3My0xLjQxMy0uMDc0LS4xMjQtLjI3Mi0uMTk4LS41Ny0uMzQ3bS01LjQyMSA3LjQwM2gtLjAwNGE5Ljg3IDkuODcgMCAwMS01LjAzMS0xLjM3OGwtLjM2MS0uMjE0LTMuNzQxLjk4Mi45OTgtMy42NDgtLjIzNS0uMzc0YTkuODYgOS44NiAwIDAxLTEuNTEtNS4yNmMuMDAxLTUuNDUgNC40MzYtOS44ODQgOS44ODgtOS44ODQgMi42NCAwIDUuMTIyIDEuMDMgNi45ODggMi44OThhOS44MjUgOS44MjUgMCAwMTIuODkzIDYuOTk0Yy0uMDAzIDUuNDUtNC40MzcgOS44ODUtOS44ODUgOS44ODVNMjAuNTIgMy40NDlDMTguMjQgMS4yNDUgMTUuMjQgMCAxMi4wNDUgMCA1LjQ2MyAwIC4xMDQgNS4zMzQuMTAxIDExLjg5MmMwIDIuMDk2LjU0OSA0LjE0IDEuNTk1IDUuOTQ1TDAgMjRsNi4zMzUtMS42NTJhMTIuMDYyIDEyLjA2MiAwIDAwNS43MSAxLjQ0N2guMDA2YzYuNTg1IDAgMTEuOTQ2LTUuMzM1IDExLjk0OS0xMS44OTNhMTEuODIxIDExLjgyMSAwIDAwLTMuNDgtOC40MTN6Ii8+PC9zdmc+Cg==',
+            // Balao de conversa neutro: verde escuro sobre o lima da o mesmo
+            // 6,75:1 do --sobre-lima.
+            customIconSrc: 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgd2lkdGg9IjI0IiBoZWlnaHQ9IjI0Ij48cGF0aCBmaWxsPSIjMEIzRjFGIiBkPSJNMTIgMi40Yy01LjEzIDAtOS4zIDMuNS05LjMgNy44MiAwIDIuNDYgMS4zNSA0LjY2IDMuNDYgNi4xLS4xNSAxLjMyLS43IDIuNS0xLjU1IDMuNDItLjI0LjI2LS4wNy42OC4yOS42NiAxLjk4LS4xIDMuNzUtLjggNS4xMy0xLjkuNjMuMTIgMS4yOS4xOCAxLjk3LjE4NS4xMyAwIDkuMy0zLjUgOS4zLTcuODJTMTcuMTMgMi40IDEyIDIuNFoiLz48Y2lyY2xlIGN4PSI4LjEiIGN5PSIxMC4yIiByPSIxLjE1IiBmaWxsPSIjQkNDQzAwIi8+PGNpcmNsZSBjeD0iMTIiIGN5PSIxMC4yIiByPSIxLjE1IiBmaWxsPSIjQkNDQzAwIi8+PGNpcmNsZSBjeD0iMTUuOSIgY3k9IjEwLjIiIHI9IjEuMTUiIGZpbGw9IiNCQ0NDMDAiLz48L3N2Zz4=',
           },
         },
         onEnd: () => window.fifiTrackBotLead && window.fifiTrackBotLead(),

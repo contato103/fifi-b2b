@@ -383,7 +383,9 @@ formulario?.addEventListener("submit", async (e) => {
     aviso.textContent = "Recebemos seus dados. Um consultor FIFI entra em contato em até 1 dia útil.";
   } catch (err) {
     aviso.dataset.estado = "erro";
-    aviso.textContent = "Não conseguimos enviar agora. Tente de novo ou chame no WhatsApp pelo botão verde.";
+    // Não mandar para WhatsApp aqui: a página não tem mais essa rota, e
+    // oferecê-la no erro reabriria justamente o contato sem CNPJ.
+    aviso.textContent = "Não conseguimos enviar agora. Tente de novo ou fale com a gente pelo chat no canto da tela.";
     console.error("[lead]", err);
   } finally {
     enviando = false;
