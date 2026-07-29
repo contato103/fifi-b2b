@@ -7,23 +7,23 @@
   <meta name="theme-color" content="#086632">
   <title>FIFI Limpeza | Chega de produtos que não resolvem</title>
 
-  <link rel="icon" href="../img/favicon.ico" sizes="32x32">
-  <link rel="icon" href="../img/favicon.png" type="image/png" sizes="256x256">
-  <link rel="apple-touch-icon" href="../img/favicon.png">
+  <link rel="icon" href="/img/favicon.ico" sizes="32x32">
+  <link rel="icon" href="/img/favicon.png" type="image/png" sizes="256x256">
+  <link rel="apple-touch-icon" href="/img/favicon.png">
 
   <!-- A fonte vem daqui, não do Google. O <link> remoto custava três
        viagens antes do primeiro texto (DNS+TLS em fonts.googleapis.com,
        o CSS, e só então o woff2 num SEGUNDO domínio). `crossorigin` é
        obrigatório mesmo em mesma origem: fonte busca sempre em modo CORS
        e sem o atributo o preload não casa e o arquivo baixa duas vezes. -->
-  <link rel="preload" href="fonts/plus-jakarta-sans-v12-latin.woff2" as="font" type="font/woff2" crossorigin>
-  <link rel="preload" href="img/hero-fundo.webp" as="image" fetchpriority="high">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="preload" href="/v2/fonts/plus-jakarta-sans-v12-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/v2/img/hero-fundo.webp" as="image" fetchpriority="high">
+  <link rel="stylesheet" href="/v2/styles.css?v=3">
 
   <meta property="og:type" content="website">
   <meta property="og:title" content="FIFI Limpeza — Produtos de limpeza corporativa">
   <meta property="og:description" content="Chegou a linha FIFI para empresas que querem limpeza de verdade.">
-  <meta property="og:image" content="img/hero-fundo.webp">
+  <meta property="og:image" content="https://fifi-lp.vercel.app/v2/img/hero-fundo.webp">
   <meta property="og:locale" content="pt_BR">
   <meta name="twitter:card" content="summary_large_image">
 
@@ -79,7 +79,7 @@
   <header class="topo">
     <div class="env topo__linha">
       <a href="#inicio" aria-label="FIFI Limpeza, início">
-        <img class="topo__logo" src="img/logo-fifi.webp" alt="FIFI" width="280" height="138" fetchpriority="high">
+        <img class="topo__logo" src="/v2/img/logo-fifi.webp" alt="FIFI" width="280" height="138" fetchpriority="high">
       </a>
       <a class="btn btn--lima" href="#proposta">Saiba mais</a>
     </div>
@@ -95,10 +95,10 @@
            92 MB em HEVC — formato que boa parte dos Chrome no Windows e
            no Android nem decodifica, então o usuário pagava o download
            e via um quadro preto. Aqui ele é H.264 de 2,5 MB. -->
-      <img class="hero__fundo" src="img/hero-fundo.webp" alt=""
+      <img class="hero__fundo" src="/v2/img/hero-fundo.webp" alt=""
            width="1500" height="1000" fetchpriority="high" decoding="async">
       <video class="hero__video" muted loop playsinline preload="none"
-             aria-hidden="true" tabindex="-1" data-src="video/hero.mp4"></video>
+             aria-hidden="true" tabindex="-1" data-src="/v2/video/hero.mp4"></video>
 
       <div class="env hero__conteudo">
         <h1>Chega de produtos que não resolvem</h1>
@@ -137,28 +137,28 @@
                botão de play existe e não abre nada. Aqui eles ficam como
                card estático, sem o play, até a FIFI mandar os arquivos. -->
           <div class="card">
-            <img class="card__img" src="img/poster-pisos.webp" alt="Limpeza profunda de pisos" width="480" height="853" loading="lazy" decoding="async">
+            <img class="card__img" src="/v2/img/poster-pisos.webp" alt="Limpeza profunda de pisos" width="480" height="853" loading="lazy" decoding="async">
             <h3 class="card__titulo">Limpeza profunda de pisos sensíveis e brutos</h3>
           </div>
 
-          <button class="card card--tem-video" type="button" data-video="video/pet.mp4" data-titulo="Linha Corporativa Pet">
-            <img class="card__img" src="img/poster-pet.webp" alt="Linha Corporativa Pet" width="480" height="853" loading="lazy" decoding="async">
+          <button class="card card--tem-video" type="button" data-video="/v2/video/pet.mp4" data-titulo="Linha Corporativa Pet">
+            <img class="card__img" src="/v2/img/poster-pet.webp" alt="Linha Corporativa Pet" width="480" height="853" loading="lazy" decoding="async">
             <span class="card__play" aria-hidden="true">
               <svg width="18" height="20" viewBox="0 0 18 20" fill="#fff"><path d="M17 8.27a2 2 0 0 1 0 3.46L3 19.79a2 2 0 0 1-3-1.73V1.94A2 2 0 0 1 3 .21l14 8.06Z"/></svg>
             </span>
             <h3 class="card__titulo">Linha Corporativa Pet</h3>
           </button>
 
-          <button class="card card--tem-video" type="button" data-video="video/cozinhas.mp4" data-titulo="Lavação de cozinhas, coifas e fogões">
-            <img class="card__img" src="img/poster-cozinhas.webp" alt="Lavação de cozinhas, coifas e fogões" width="480" height="853" loading="lazy" decoding="async">
+          <button class="card card--tem-video" type="button" data-video="/v2/video/cozinhas.mp4" data-titulo="Lavação de cozinhas, coifas e fogões">
+            <img class="card__img" src="/v2/img/poster-cozinhas.webp" alt="Lavação de cozinhas, coifas e fogões" width="480" height="853" loading="lazy" decoding="async">
             <span class="card__play" aria-hidden="true">
               <svg width="18" height="20" viewBox="0 0 18 20" fill="#fff"><path d="M17 8.27a2 2 0 0 1 0 3.46L3 19.79a2 2 0 0 1-3-1.73V1.94A2 2 0 0 1 3 .21l14 8.06Z"/></svg>
             </span>
             <h3 class="card__titulo">Lavação de cozinhas, coifas e fogões</h3>
           </button>
 
-          <button class="card card--tem-video" type="button" data-video="video/vidros.mp4" data-titulo="Manutenção de vidros, mesas e espelhos">
-            <img class="card__img" src="img/poster-vidros.webp" alt="Manutenção de vidros, mesas e espelhos" width="480" height="853" loading="lazy" decoding="async">
+          <button class="card card--tem-video" type="button" data-video="/v2/video/vidros.mp4" data-titulo="Manutenção de vidros, mesas e espelhos">
+            <img class="card__img" src="/v2/img/poster-vidros.webp" alt="Manutenção de vidros, mesas e espelhos" width="480" height="853" loading="lazy" decoding="async">
             <span class="card__play" aria-hidden="true">
               <svg width="18" height="20" viewBox="0 0 18 20" fill="#fff"><path d="M17 8.27a2 2 0 0 1 0 3.46L3 19.79a2 2 0 0 1-3-1.73V1.94A2 2 0 0 1 3 .21l14 8.06Z"/></svg>
             </span>
@@ -166,7 +166,7 @@
           </button>
 
           <div class="card">
-            <img class="card__img" src="img/poster-sustentaveis.webp" alt="Produtos sustentáveis e de alta diluição" width="1200" height="675" loading="lazy" decoding="async">
+            <img class="card__img" src="/v2/img/poster-sustentaveis.webp" alt="Produtos sustentáveis e de alta diluição" width="1200" height="675" loading="lazy" decoding="async">
             <h3 class="card__titulo">Produtos sustentáveis e de alta diluição</h3>
           </div>
         </div>
@@ -178,7 +178,7 @@
       <div class="env">
         <h2 class="titulo" id="t-vantagens"><span>Vantagens</span> da FIFI para empresas</h2>
         <div class="vantagens__grade revela">
-          <img class="vantagens__foto" src="img/vantagens.webp" alt="Profissional de limpeza com balde e produtos FIFI" width="1440" height="960" loading="lazy" decoding="async">
+          <img class="vantagens__foto" src="/v2/img/vantagens.webp" alt="Profissional de limpeza com balde e produtos FIFI" width="1440" height="960" loading="lazy" decoding="async">
           <div class="vantagens__card">
             <div class="vantagem">
               <svg class="marca" width="26" height="20" viewBox="0 0 26 20" fill="none" aria-hidden="true"><path d="M2 9.5 9.5 17 24 2.5" stroke="currentColor" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -210,38 +210,38 @@
       <div class="env">
         <h2 class="titulo" id="t-clientes"><span>Clientes</span> Atendidos</h2>
         <ul class="logos revela">
-        <li><img src="img/clientes/ailos.webp" alt="Ailos" width="320" height="115" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/koch.webp" alt="Koch" width="240" height="86" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/stop-shop.webp" alt="Stop Shop" width="111" height="111" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/kimak.webp" alt="Kimak" width="288" height="151" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/manatex.webp" alt="Manatex" width="182" height="70" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/fip.webp" alt="FIP" width="189" height="167" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/bc-malhas.webp" alt="BC Malhas" width="171" height="200" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/brusinox.webp" alt="Brusinox" width="296" height="113" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/giassi.webp" alt="Giassi" width="320" height="77" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/giracor.webp" alt="Giracor" width="179" height="114" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/profor.webp" alt="Profor" width="320" height="92" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/embreex.webp" alt="Embreex" width="245" height="87" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/dmarco.webp" alt="D'Marco" width="185" height="94" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/comper.webp" alt="Comper" width="320" height="108" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/cooper.webp" alt="Cooper" width="200" height="200" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/fort.webp" alt="Fort Atacadista" width="252" height="85" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/unifebe.webp" alt="Unifebe" width="258" height="200" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/all-shopping.webp" alt="All Shopping" width="244" height="200" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/skymsen.webp" alt="Skymsen" width="320" height="143" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/zen.webp" alt="Zen" width="200" height="200" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/hoffmann.webp" alt="Hoffmann" width="220" height="102" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/bruscon.webp" alt="Bruscon" width="320" height="188" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/amor-saude.webp" alt="Amor Saúde" width="320" height="91" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/florisa.webp" alt="Florisa" width="320" height="84" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/viacredi.webp" alt="Viacredi" width="320" height="85" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/rvb.webp" alt="RVB" width="194" height="200" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/sicredi.webp" alt="Sicredi" width="320" height="75" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/fg.webp" alt="FG Empreendimentos" width="300" height="169" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/unimed.webp" alt="Unimed" width="320" height="114" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/havan.webp" alt="Havan" width="320" height="183" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/zm.webp" alt="ZM" width="200" height="200" loading="lazy" decoding="async"></li>
-        <li><img src="img/clientes/embraed.webp" alt="Embraed" width="320" height="91" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/ailos.webp" alt="Ailos" width="320" height="115" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/koch.webp" alt="Koch" width="240" height="86" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/stop-shop.webp" alt="Stop Shop" width="111" height="111" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/kimak.webp" alt="Kimak" width="288" height="151" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/manatex.webp" alt="Manatex" width="182" height="70" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/fip.webp" alt="FIP" width="189" height="167" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/bc-malhas.webp" alt="BC Malhas" width="171" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/brusinox.webp" alt="Brusinox" width="296" height="113" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/giassi.webp" alt="Giassi" width="320" height="77" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/giracor.webp" alt="Giracor" width="179" height="114" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/profor.webp" alt="Profor" width="320" height="92" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/embreex.webp" alt="Embreex" width="245" height="87" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/dmarco.webp" alt="D'Marco" width="185" height="94" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/comper.webp" alt="Comper" width="320" height="108" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/cooper.webp" alt="Cooper" width="200" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/fort.webp" alt="Fort Atacadista" width="252" height="85" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/unifebe.webp" alt="Unifebe" width="258" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/all-shopping.webp" alt="All Shopping" width="244" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/skymsen.webp" alt="Skymsen" width="320" height="143" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/zen.webp" alt="Zen" width="200" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/hoffmann.webp" alt="Hoffmann" width="220" height="102" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/bruscon.webp" alt="Bruscon" width="320" height="188" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/amor-saude.webp" alt="Amor Saúde" width="320" height="91" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/florisa.webp" alt="Florisa" width="320" height="84" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/viacredi.webp" alt="Viacredi" width="320" height="85" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/rvb.webp" alt="RVB" width="194" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/sicredi.webp" alt="Sicredi" width="320" height="75" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/fg.webp" alt="FG Empreendimentos" width="300" height="169" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/unimed.webp" alt="Unimed" width="320" height="114" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/havan.webp" alt="Havan" width="320" height="183" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/zm.webp" alt="ZM" width="200" height="200" loading="lazy" decoding="async"></li>
+        <li><img src="/v2/img/clientes/embraed.webp" alt="Embraed" width="320" height="91" loading="lazy" decoding="async"></li>
         </ul>
       </div>
     </section>
@@ -287,7 +287,7 @@
           <h2 class="titulo" id="t-quem"><span>FIFI</span> Limpeza</h2>
           <p>A Fifi Limpeza nasceu para revolucionar a higiene corporativa. Entendemos que um ambiente limpo não deve comprometer a saúde de colaboradores, clientes e do planeta. Por isso, desenvolvemos soluções de alto desempenho, econômicas e sustentáveis, garantindo resultados impecáveis sem agredir as superfícies ou o meio ambiente.</p>
         </div>
-        <img class="quem__mascote" src="img/mascote.webp" alt="Equipe de mascotes da FIFI Limpeza" width="768" height="1152" loading="lazy" decoding="async">
+        <img class="quem__mascote" src="/v2/img/mascote.webp" alt="Equipe de mascotes da FIFI Limpeza" width="768" height="1152" loading="lazy" decoding="async">
       </div>
     </section>
 
@@ -388,7 +388,7 @@
   <footer class="rodape">
     <div class="env">
       <div class="rodape__linha">
-        <img class="rodape__logo" src="img/logo-fifi.webp" alt="FIFI Limpeza" width="280" height="138" loading="lazy">
+        <img class="rodape__logo" src="/v2/img/logo-fifi.webp" alt="FIFI Limpeza" width="280" height="138" loading="lazy">
         <div class="rodape__social">
           <a href="https://www.instagram.com/fifilimpeza/" target="_blank" rel="noopener" aria-label="Instagram da FIFI Limpeza">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true">
@@ -406,7 +406,7 @@
     <video controls playsinline preload="none"></video>
   </dialog>
 
-  <script src="script.js?v=3" defer></script>
+  <script src="/v2/script.js?v=3" defer></script>
 
   <!-- ══ TYPEBOT ═════════════════════════════════════════════════════
        Mesmo bot da LP `/` (`fifi-profissional`) — um só grafo para as duas
