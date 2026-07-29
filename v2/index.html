@@ -133,13 +133,20 @@
         </div>
 
         <div class="cards revela">
-          <!-- Dois destes cinco cards não têm vídeo na página original: o
-               botão de play existe e não abre nada. Aqui eles ficam como
-               card estático, sem o play, até a FIFI mandar os arquivos. -->
-          <div class="card">
+          <!-- Na página original, dois destes cinco cards têm botão de play
+               que não abre nada. O de pisos era só link faltando: o
+               `Limpeza-para-pisos-sensiveis-e-brutos.mp4` está na biblioteca
+               de mídia deles, só não foi ligado ao card. Achado pela API do
+               WordPress (/wp-json/wp/v2/media?media_type=video) e ligado aqui.
+               O de "Produtos sustentáveis" continua sem vídeo porque não
+               existe nenhum na biblioteca — esse tem de ser gravado. -->
+          <button class="card card--tem-video" type="button" data-video="/v2/video/pisos.mp4" data-titulo="Limpeza profunda de pisos sensíveis e brutos">
             <img class="card__img" src="/v2/img/poster-pisos.webp" alt="Limpeza profunda de pisos" width="480" height="853" loading="lazy" decoding="async">
+            <span class="card__play" aria-hidden="true">
+              <svg width="18" height="20" viewBox="0 0 18 20" fill="#fff"><path d="M17 8.27a2 2 0 0 1 0 3.46L3 19.79a2 2 0 0 1-3-1.73V1.94A2 2 0 0 1 3 .21l14 8.06Z"/></svg>
+            </span>
             <h3 class="card__titulo">Limpeza profunda de pisos sensíveis e brutos</h3>
-          </div>
+          </button>
 
           <button class="card card--tem-video" type="button" data-video="/v2/video/pet.mp4" data-titulo="Linha Corporativa Pet">
             <img class="card__img" src="/v2/img/poster-pet.webp" alt="Linha Corporativa Pet" width="480" height="853" loading="lazy" decoding="async">
