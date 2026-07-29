@@ -172,10 +172,21 @@
             <h3 class="card__titulo">Manutenção de vidros, mesas e espelhos</h3>
           </button>
 
-          <div class="card">
+          <!-- Este card não tem vídeo próprio: o de "produtos sustentáveis"
+               nunca foi produzido (biblioteca inteira da FIFI = 6 vídeos, e
+               nenhum é desse tema; nada no Wayback nem em URL direta). O que
+               está aqui é o `Higienizacao-de-banheiros-1.mp4`, que estava
+               sobrando na biblioteca deles e — apesar do nome — mostra o
+               concentrado sendo diluído no borrifador e aplicado. Ou seja, é
+               a promessa do card em uso. Decisão do Igor em 29/07: usar este
+               e manter o título. -->
+          <button class="card card--tem-video" type="button" data-video="/v2/video/sustentaveis.mp4" data-titulo="Produtos sustentáveis e de alta diluição">
             <img class="card__img" src="/v2/img/poster-sustentaveis.webp" alt="Produtos sustentáveis e de alta diluição" width="1200" height="675" loading="lazy" decoding="async">
+            <span class="card__play" aria-hidden="true">
+              <svg width="18" height="20" viewBox="0 0 18 20" fill="#fff"><path d="M17 8.27a2 2 0 0 1 0 3.46L3 19.79a2 2 0 0 1-3-1.73V1.94A2 2 0 0 1 3 .21l14 8.06Z"/></svg>
+            </span>
             <h3 class="card__titulo">Produtos sustentáveis e de alta diluição</h3>
-          </div>
+          </button>
         </div>
       </div>
     </section>
