@@ -208,33 +208,50 @@ lead qualificado.
 
 ---
 
-## 🔴 O CAPI nunca funcionou (descoberto em 28/07)
+## ✅ CAPI — consertado em 30/07 (ficou fora do ar de 22/07 a 30/07)
 
-`GET /api/leads?health=1` agora devolve um campo `capi` com o diagnóstico.
+`GET /api/leads?health=1` devolve um campo `capi` com o diagnóstico.
 
-**Diagnóstico do token em produção:** `SYSTEM_USER`, válido, nunca expira, mas o
-**escopo único é `read_ads_dataset_quality`**. Isso lê qualidade de dataset;
-**não envia evento**. Confirmado mandando evento com `test_event_code` (não entra
-em produção) para os dois pixels da conta — recusado nos dois.
+### ⚠️ Escopo de token NÃO diz se o CAPI funciona
+Erro meu no diagnóstico de 28/07: culpei a falta de `ads_management`. Está
+**errado**. O token que funciona e o que não funcionava têm **exatamente o mesmo
+escopo** (`read_ads_dataset_quality`). O que decide é o **pixel estar atribuído
+ao system user** no Business Manager — e isso não aparece em `debug_token`.
 
-**Por que ninguém viu:** `sendLeadCAPI` devolvia `{status: res.status}` sem checar
-`res.ok`. Como não lançava, o `try/catch` de quem chama nunca rodava e um 400 do
-Meta passava sem **uma linha de log**. O lead salvava, o pixel do navegador
-disparava, e o lado server-side simplesmente não existia. Corrigido: agora lança
-com status, pixel e corpo do erro (continua **não** bloqueando o lead).
+Consequência prática: **o health-check antigo dava falso negativo em token bom.**
+Corrigido — agora ele **tenta enviar** (`POST /{pixel}/events` com
+`test_event_code: HEALTHCHECK`) e só diz ok se `events_received > 0`. Evento com
+`test_event_code` cai apenas em Events Manager → Testar eventos: não entra no
+dado de produção, não conta conversão, não afeta otimização.
 
-**O que se perdeu desde 22/07:** nenhum evento server-side, nenhum dedup, lead de
-quem usa bloqueador ou iOS com prevenção de rastreamento perdido inteiro, e todo o
-Advanced Matching que a edge monta (em, ph, fn, ln, ct, st, zp, external_id) nunca
-saiu.
+**Regra:** para saber se um token de CAPI presta, mande um evento com
+`test_event_code`. Não olhe escopo.
 
-**Conserto (só o Igor tem acesso):**
-1. Events Manager → pixel `3538639579767084` → Configurações → API de Conversões →
-   **Gerar token de acesso**.
-2. `vercel env rm META_ACCESS_TOKEN production` e `vercel env add` com o novo.
-3. Redeploy.
-4. Conferir: `GET /api/leads?health=1` tem de voltar `capi.ok: true`.
-5. Atualizar `~/.secrets/meta-fifi.json`.
+### O que estava certo no diagnóstico
+- O CAPI **estava** fora e falhando **calado**, de 22/07 a 30/07.
+- A causa do silêncio: `sendLeadCAPI` devolvia `{status: res.status}` sem checar
+  `res.ok`. Como não lançava, o `try/catch` de quem chama nunca rodava e um 400
+  da Meta passava sem **uma linha de log**. Corrigido: agora lança com status,
+  pixel e corpo (segue **não** bloqueando o lead).
+- Perdido no período: nenhum evento server-side, nenhum dedup, lead de quem usa
+  bloqueador ou iOS com prevenção de rastreamento perdido inteiro, e todo o
+  Advanced Matching que a edge monta (em, ph, fn, ln, ct, st, zp, external_id).
+
+### Como foi verificado o conserto (30/07)
+Três evidências independentes:
+1. `POST /{pixel}/events` direto com o token → `events_received: 1` nos **dois**
+   pixels da conta.
+2. `?health=1` rodando **dentro da edge**, com a env var de produção →
+   `capi.ok: true, eventosAceitos: 1`.
+3. Lead real pela edge com o log em stream → **nenhuma** linha `[leads] capi:`,
+   que é o que o fix emitiria se a Meta recusasse.
+
+`server_last_fired_time` do dataset **não serve** de prova enquanto
+`META_TEST_CODE` estiver setado: evento de teste não atualiza esse campo.
+
+Token novo em `~/.secrets/meta-fifi.json` e na Vercel (Production +
+Development). **Preview ficou sem** — exige flag de branch e não serve tráfego
+real; se algum dia precisar de CAPI em deploy de preview, adicionar lá.
 
 ### Pixel — qual é, e por que
 `3538639579767084` "New E-commerce Fifi", business `Fiel Limpeza`, conta
