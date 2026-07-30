@@ -197,31 +197,52 @@ async function sendLeadCAPI(d, ip, geo) {
   return { status: res.status };
 }
 
-// Confere se o token do CAPI consegue MESMO enviar evento, sem enviar nenhum.
-// `debug_token` é read-only. Um token gerado em Events Manager → API de
-// Conversões vem com `ads_management`; sem esse escopo o POST /events é
-// recusado, que é exatamente o que estava acontecendo.
+// Confere se o token do CAPI consegue MESMO enviar evento.
+//
+// ⚠️ NÃO julgar por escopo. A versão anterior desta função olhava
+// `debug_token` e exigia `ads_management` — e estava errada: o token que
+// FUNCIONA e o que NÃO funcionava têm exatamente o mesmo escopo
+// (`read_ads_dataset_quality`). O que muda é o pixel estar atribuído ao
+// system user no Business Manager, e isso não aparece em `debug_token`.
+// Julgar por escopo dava falso negativo em token bom.
+//
+// O único teste confiável é tentar enviar. `test_event_code` faz o evento
+// cair só em Events Manager → Testar eventos: não entra no dado de
+// produção, não conta conversão e não afeta otimização.
 async function checarCredenciaisMeta() {
   const PIXEL = process.env.META_PIXEL_ID;
   const TOKEN = process.env.META_ACCESS_TOKEN;
   if (!PIXEL || !TOKEN) return { ok: false, motivo: 'META_PIXEL_ID ou META_ACCESS_TOKEN ausente' };
 
   try {
-    const r = await fetch(`https://graph.facebook.com/v19.0/debug_token?input_token=${TOKEN}&access_token=${TOKEN}`);
-    const d = (await r.json()).data || {};
-    if (!d.is_valid) return { ok: false, pixel: PIXEL, motivo: 'token inválido ou expirado' };
-
-    const escopos = d.scopes || [];
-    const podeEnviar = escopos.includes('ads_management');
-    return {
-      ok: podeEnviar,
-      pixel: PIXEL,
-      tipo: d.type,
-      escopos,
-      motivo: podeEnviar ? undefined
-        : 'token válido mas sem `ads_management` — não consegue POST /events. '
-        + 'Gerar em Events Manager → o pixel → Configurações → API de Conversões → Gerar token de acesso.',
-    };
+    const res = await fetch(`https://graph.facebook.com/v19.0/${PIXEL}/events`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        data: [{
+          event_name:   'Lead',
+          event_time:   Math.floor(Date.now() / 1000),
+          action_source: 'website',
+          user_data: {
+            // sha256 de "healthcheck@fifi.local" — constante, não é pessoa real
+            em: ['3d3f1f4a6a0e0f1b2c9f7a5e8d4c6b3a1f0e9d8c7b6a5f4e3d2c1b0a9f8e7d6c'],
+          },
+        }],
+        test_event_code: 'HEALTHCHECK',
+        access_token: TOKEN,
+      }),
+    });
+    const d = await res.json();
+    if (!res.ok || !(d.events_received > 0)) {
+      return {
+        ok: false, pixel: PIXEL,
+        motivo: 'o token não consegue enviar evento para este pixel',
+        respostaMeta: (d && d.error && d.error.message) || JSON.stringify(d).slice(0, 200),
+        conserto: 'Events Manager → o pixel → Configurações → API de Conversões → Gerar token de acesso. '
+                + 'Se o token for de system user, conferir também se o PIXEL está atribuído a ele no Business Manager.',
+      };
+    }
+    return { ok: true, pixel: PIXEL, eventosAceitos: d.events_received, nota: 'evento de teste, não entra em produção' };
   } catch (e) {
     return { ok: false, pixel: PIXEL, motivo: String(e && e.message || e) };
   }
