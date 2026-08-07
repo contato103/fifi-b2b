@@ -254,14 +254,41 @@ Development). **Preview ficou sem** — exige flag de branch e não serve tráfe
 real; se algum dia precisar de CAPI em deploy de preview, adicionar lá.
 
 ### Pixel — qual é, e por que
-`3538639579767084` "New E-commerce Fifi", business `Fiel Limpeza`, conta
+**`1184111166897233` "Pixel LP - Fifi Empresarial"** — dataset do B2B, o mesmo
+que a `empresas.fifilimpeza.com` dispara. Business `Fiel Limpeza`, conta
 `CA - Fifi Limpeza`. **É da FIFI**, não há pixel de outro cliente envolvido.
 
-A conta tem um segundo pixel, `1184111166897233` "Pixel LP - Fifi Empresarial",
-que é o que a `empresas.fifilimpeza.com` dispara. **Decisão do Igor em 28/07:
-manter o do e-commerce nas duas LPs**, só fazer funcionar. Se um dia migrar, tem
-de ser nas duas ao mesmo tempo, senão a comparação dentro do Meta se perde — e o
-token novo tem de ser gerado a partir do pixel escolhido.
+**Trocado em 07/08/2026 a pedido do Igor**, revertendo a decisão de 28/07 que
+mantinha o pixel do e-commerce (`3538639579767084` "New E-commerce Fifi"). A
+migração foi feita **nas duas LPs ao mesmo tempo** — separar `/` de `/v2` em
+datasets diferentes destruiria a comparação do teste A/B dentro do Meta.
+
+Trocado nos **quatro** lugares que citam o pixel, senão o sinal parte no meio:
+
+| Onde | O quê |
+|---|---|
+| `index.html` | `FIFI_TRACK.metaPixelId` + `id=` do `<noscript>` |
+| `v2/index.html` | idem |
+| Vercel `META_PIXEL_ID` | Production + Development (é o pixel do CAPI da edge) |
+| `sheets-setup-fifi.gs` | `META_PIXEL_ID` do topo — eventos de funil por Status |
+
+⚠️ **Pixel e CAPI têm de apontar para o mesmo dataset.** Se o `fbq` for para um e
+a edge para outro, o `event_id` compartilhado não deduplica nada (dedup só existe
+dentro de um dataset) e o server-side some do relatório da LP.
+
+`Preview` na Vercel ficou sem `META_PIXEL_ID` — igual ao `META_ACCESS_TOKEN`, que
+também não está lá. Sem os dois a edge devolve `skipped: no_creds`, que é o
+comportamento desejado num deploy que não serve tráfego real.
+
+O token de CAPI continua o mesmo: foi testado com `POST /{pixel}/events` +
+`test_event_code` contra o dataset novo → `events_received: 1`. Um token de
+system user envia para os dois datasets da conta.
+
+**Histórico do dataset antigo não migra.** Público personalizado, evento de
+otimização e janela de aprendizado que existiam no `3538639579767084` não valem
+para o novo. Hoje isso não custa nada porque quem manda tráfego para a LP é o
+Google Ads; **antes de subir campanha Meta para estas LPs, conferir qual pixel a
+campanha está usando.**
 
 ## ⚠️ Armadilhas já cobertas neste código
 
