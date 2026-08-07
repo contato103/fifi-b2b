@@ -4,3 +4,8 @@ index-v1.html
 .impeccable.md
 *.gs
 CHECKLIST-TRACKING.md
+
+# originais de video antes do transcode (407 MB). O deploy por git nunca os ve
+# (estao no .gitignore), mas `vercel deploy` pela CLI ve, e estoura o limite
+# de 100 MB por arquivo.
+_raw-v2/
