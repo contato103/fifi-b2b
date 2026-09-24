@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Recebemos! | FIFI Revenda</title>
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#0b3a2c">
+  <link rel="icon" href="img/favicon.png">
+  <link rel="stylesheet" href="styles.css?v=4">
+  <style>
+    .thanks {
+      min-height: calc(100svh - var(--header-h));
+      padding: clamp(48px, 8vw, 120px) var(--pad-x);
+      display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr); gap: clamp(32px, 6vw, 96px); align-items: center;
+      background: radial-gradient(90% 70% at 85% 45%, color-mix(in oklch, var(--green-700) 38%, transparent), transparent 70%), var(--green-900);
+      color: var(--on-dark);
+    }
+    .check {
+      width: 72px; height: 72px; border-radius: 50%; display: grid; place-items: center;
+      background: var(--lime); margin-bottom: var(--space-2xl);
+    }
+    .check svg { width: 34px; height: 34px; fill: none; stroke: var(--green-950); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .thanks h1 { color: var(--white); font-size: clamp(2.4rem, 1.4rem + 4vw, 5rem); }
+    .thanks p { margin-top: var(--space-xl); font-size: clamp(1.05rem, 1rem + .4vw, 1.3rem); max-width: 44ch; }
+    .thanks .button { margin-top: var(--space-2xl); }
+    .thanks .shelf-unit { margin-inline: auto; }
+    @media (max-width: 900px) { .thanks { grid-template-columns: 1fr; } .thanks .hero-visual { display: none; } }
+  </style>
+</head>
+<body>
+<header class="site-header">
+  <a class="brand" href="./" aria-label="FIFI, voltar para a página de revenda">
+    <img class="brand-mark" src="img/logo-fifi-branco.webp" alt="FIFI" width="92" height="30">
+    <span class="brand-sub">Revenda</span>
+  </a>
+</header>
+<main class="thanks">
+  <div>
+    <div class="check" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg></div>
+    <h1>Recebemos! Sua tabela está a caminho.</h1>
+    <p>Um consultor comercial da FIFI vai chamar você no WhatsApp.</p>
+    <a class="button button-lime" href="https://www.fifilimpeza.com" target="_blank" rel="noopener">Enquanto isso, conheça a linha completa</a>
+  </div>
+  <div class="hero-visual" aria-hidden="true">
+    <div class="shelf-unit">
+      <div class="shelf shelf-top">
+        <div class="shelf-items">
+          <img src="img/500ml-citrus-5d.webp" alt="" width="180" height="420">
+          <img src="img/500ml-vidro-vip.webp" alt="" width="180" height="420">
+          <img src="img/pet-textil-500ml.webp" alt="" width="180" height="420">
+          <img src="img/500ml-limpa-rejunte.webp" alt="" width="180" height="420">
+        </div>
+        <div class="plank"></div>
+      </div>
+    </div>
+  </div>
+</main>
+</body>
+</html>
