@@ -1,15 +1,16 @@
 export const config = { runtime: 'edge' };
+import { gravarLead, diagnosticar } from './_abas-mensais.js';
+
+const COLUNAS_ESPERADAS = ['data', 'mês', 'nome', 'telefone', 'loja', 'cnpj', 'cidade/uf', 'tipo de loja', 'já vende limpeza',
+  'status', 'origem', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'event id', 'data iso'];
 
 // ── FIFI Revenda (/distribuidor) — captura de leads de lojistas ──────
 // Grava na planilha "LP FIFI Revenda · Leads" com a MESMA service account
 // da LP B2B (env GOOGLE_CREDENTIALS; a planilha foi compartilhada com
 // fifi-b2b@sheets-services-accounts como editora).
 //
-// Diferença proposital para o api/leads.js: a aba NÃO é procurada pelo
-// nome. Lá o nome 'Leads' é fixo e, quando a aba foi renomeada para
-// "SETEMBRO" (21/09/2026), o endpoint passou a responder 400 em toda
-// gravação. Aqui vale a PRIMEIRA aba da planilha, qualquer que seja o nome;
-// as colunas continuam mapeadas pelo nome do cabeçalho (linha 1).
+// Grava na ABA DO MÊS, criada sozinha na virada (regra geral da agência,
+// ver _abas-mensais.js). As colunas são mapeadas pelo nome do cabeçalho.
 
 const SPREADSHEET_ID = process.env.REVENDA_SPREADSHEET_ID || '1-fiw_IbFHJAm1n-CRhA-TL5wENaGNfsJ7kWU1KYB8Dc';
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
@@ -43,28 +44,6 @@ async function getAccessToken(serviceAccountKey) {
   const data = await res.json();
   if (!res.ok) throw new Error(`TOKEN_FAIL: ${data.error_description || res.status}`);
   return data.access_token;
-}
-
-// Nome atual da primeira aba (a que o comercial vê ao abrir a planilha).
-async function primeiraAba(token) {
-  const res = await fetch(
-    `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}?fields=sheets.properties(title,index)`,
-    { headers: { Authorization: `Bearer ${token}` } }
-  );
-  if (!res.ok) throw new Error(`META_FAIL(${res.status})`);
-  const d = await res.json();
-  const aba = (d.sheets || []).map(s => s.properties).sort((a, b) => a.index - b.index)[0];
-  if (!aba) throw new Error('SEM_ABA');
-  return aba.title;
-}
-const range = (aba, a1) => encodeURIComponent(`'${aba.replace(/'/g, "''")}'!${a1}`);
-
-async function lerCabecalho(token, aba) {
-  const res = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range(aba, '1:1')}`,
-    { headers: { Authorization: `Bearer ${token}` } });
-  if (!res.ok) throw new Error(`HEADERS_FAIL(${res.status})`);
-  const d = await res.json();
-  return (d.values?.[0] || []).map(h => h.toLowerCase().trim());
 }
 
 function agoraBR() {
@@ -101,9 +80,8 @@ export default async function handler(req) {
   if (req.method === 'GET' && url.searchParams.get('health') === '1') {
     try {
       const token = await getAccessToken(process.env.GOOGLE_CREDENTIALS);
-      const aba = await primeiraAba(token);
-      const cols = await lerCabecalho(token, aba);
-      return json({ ok: true, aba, colunas: cols.length });
+      const planilha = await diagnosticar({ planilhaId: SPREADSHEET_ID, token, esperadas: COLUNAS_ESPERADAS });
+      return json(planilha, planilha.ok ? 200 : 500);
     } catch (e) {
       return json({ ok: false, erro: String(e && e.message || e) }, 500);
     }
@@ -145,16 +123,8 @@ export default async function handler(req) {
     };
 
     const token = await getAccessToken(process.env.GOOGLE_CREDENTIALS);
-    const aba = await primeiraAba(token);
-    const cabecalho = await lerCabecalho(token, aba);
-    // RAW: o Sheets grava o texto como veio, sem interpretar fórmula ("=IMPORTXML(...)" fica texto).
-    const linha = cabecalho.map(h => campos[h] ?? '');
-
-    const res = await fetch(
-      `https://sheets.googleapis.com/v4/spreadsheets/${SPREADSHEET_ID}/values/${range(aba, 'A:A')}:append?valueInputOption=RAW&insertDataOption=INSERT_ROWS`,
-      { method: 'POST', headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' }, body: JSON.stringify({ values: [linha] }) }
-    );
-    if (!res.ok) throw new Error(`SHEETS_FAIL(${res.status}): ${(await res.text()).slice(0, 300)}`);
+    // Aba do mês; se falhar, aba "LEADS CONTINGÊNCIA". Só lança se as duas falharem.
+    await gravarLead({ planilhaId: SPREADSHEET_ID, token, campos });
 
     return json({ success: true });
   } catch (err) {
