@@ -11,7 +11,8 @@ Form OU Typebot  → POST /api/leads (EDGE)
       ├── grava no Sheets (mapeado por NOME de coluna, RAW)
       └── manda o CAPI Lead server-side (em, ph, fn, ln, ct, st, zp,
           external_id, fbc, fbp, ip, ua) → dedup com o pixel por event_id
-Apps Script onChange → sobe o lead pro topo + formata (+ RD, se ligar)
+Apps Script onChange → (desde 24/09/2026 não age: procura a aba 'Leads', que não existe mais;
+                       a edge já grava o lead na linha 2 da aba do mês)
 Apps Script onEdit   → Status muda → evento Meta de funil + remonta a aba
                        "Google Ads Offline" (upload por GCLID)
 ```
@@ -28,6 +29,7 @@ Para o Google, o Typebot dispara `gtag` pelo callback `onEnd` do `initBubble`
 | Arquivo | O que é |
 |---|---|
 | `api/leads.js` | Edge function: Sheets + Meta CAPI + geo por IP. Health-check em `GET /api/leads?health=1` |
+| `api/_abas-mensais.js` | Grava na **aba do mês** (linha 2), cria a do mês seguinte na virada, contingência `LEADS CONTINGÊNCIA`. Usado por `leads.js` e `revenda.js` |
 | `index.html` | Bloco `window.FIFI_TRACK` (todos os IDs num lugar só) + pixel Meta + gtag + embed do Typebot |
 | `script.js` | Captura de browser/UTM/click IDs, máscaras de telefone e CNPJ, submit real, disparo Meta + Google, rota Typebot |
 | `sheets-setup-fifi.gs` | Setup da planilha (38 colunas), funil por Status, aba de upload do Google Ads. **Gitignored — tem token** |
@@ -122,7 +124,7 @@ Sem página publicada, o consentimento não se sustenta.
 
 ## 🧪 Teste E2E (nesta ordem)
 
-1. `GET https://fifi-lp.vercel.app/api/leads?health=1` → `{"ok":true,"columns":38}`
+1. `GET https://fifi-lp.vercel.app/api/leads?health=1` → `{"ok":true,"aba_do_mes":"SETEMBRO","colunas":39,"problemas":[],"avisos":[]...}` (formato desde 24/09/2026)
 2. Abrir a LP e conferir no console: `document.cookie.match(/_fbp=/)` **não pode ser null**
    (se for, o pixel não disparou nenhum `track` e o Advanced Matching degrada em silêncio).
 3. Submeter o form → linha na planilha com os 38 campos preenchidos + Events Manager
@@ -151,7 +153,7 @@ a planilha, o pixel e a ação de conversão com a `/`.
 
 | Checagem | Resultado |
 |---|---|
-| `GET /api/leads?health=1` | `{"ok":true,"sheet":"Leads","columns":38}` |
+| `GET /api/leads?health=1` | `{"ok":true,"aba_do_mes":"<mês>","sera_criada":false,"colunas":39,"leads_em_contingencia":0,"problemas":[],"avisos":[],"abas":[...],"capi":{...}}` |
 | `GET /api/cnpj?n=<real>` | `{"ok":"sim"}` · sequência repetida → `{"ok":"nao","reason":"digito"}` |
 | CORS `OPTIONS /api/leads` com `Origin: fifi-lp.vercel.app` | liberado |
 | Cookie `_fbp` | criado (o `track PageView` roda) |
@@ -302,3 +304,22 @@ campanha está usando.**
 - `outgoingEdgeId` no **último** bloco de cada grupo.
 - `googleTagManagerId` ausente das settings do Typebot — senão ele reinjeta GTM na LP.
 - `Conversion Time` do upload offline = data **fixa** do lead, nunca `now()`.
+
+---
+
+## Planilha com uma aba por mês (24/09/2026)
+
+Em 21/09/2026 a aba fixa `Leads` foi renomeada para `AGOSTO` na separação por mês e a LP ficou
+3 dias sem gravar lead. Desde o commit `251b6c3` a edge grava na **aba do mês** (reconhecida
+pelo nome: `SETEMBRO`, `OUTUBRO 2026`, `SET/2026`...), sempre na **linha 2**, e cria a aba do
+mês seguinte sozinha na virada (duplicando a anterior, sem os leads). Falha → aba
+`LEADS CONTINGÊNCIA` + health vermelho. Regra geral: padrões técnicos da agência §4.1 (vault).
+
+**Não pode:** mudar o texto da linha 1 (as colunas são achadas pelo nome do cabeçalho; em 21/09
+alguém pôs `=COUNTA(A7:A100005)` no lugar de `utm_term` e a coluna chegou vazia até 24/09).
+
+**Apps Script (`Script Fifi`, gatilhos onChange + onEdit instalados):** os dois procuram a aba
+`Leads`. O `onChange` virou inofensivo (a edge já faz o "sobe pro topo"). O **`onEdit` também
+não age desde 21/09**: mudança de Status nas abas mensais não manda o evento de funil para o
+Meta. Correção pendente: aceitar qualquer aba de mês no lugar de `getName() !== 'Leads'`.
+
