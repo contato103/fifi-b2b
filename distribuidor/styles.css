@@ -168,7 +168,6 @@ h1 em, h2 em { color: var(--lime); font-style: italic; padding-right: .08em; }
 .hero h1 .h1-main { display: block; margin-top: var(--space-xl); }
 .hero-lead { margin-top: var(--space-xl); max-width: 54ch; font-size: clamp(1rem, .9rem + .4vw, 1.2rem); line-height: 1.65; }
 .hero-actions { margin-top: var(--space-2xl); display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }
-.micro { font-size: .86rem; color: var(--on-dark-soft); }
 
 /* A gôndola. Fundo de painel perfurado, duas prateleiras, selos como etiqueta de preço. */
 .hero-visual { position: relative; display: grid; place-items: center; }
@@ -319,13 +318,6 @@ h1 em, h2 em { color: var(--lime); font-style: italic; padding-right: .08em; }
   max-width: 12ch;
 }
 .p-size { font-weight: 500; color: var(--muted); display: block; }
-
-.accessories { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--space-lg); }
-.accessories li {
-  display: grid; justify-items: center; gap: var(--space-md); padding: var(--space-2xl) var(--space-lg);
-  background: var(--white); border-radius: var(--radius-md); font-weight: 650; text-align: center;
-}
-.accessories svg { width: 64px; height: 64px; fill: none; stroke: var(--green-800); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 
 .line > .button { margin-top: var(--space-3xl); }
 
@@ -483,7 +475,7 @@ h1 em, h2 em { color: var(--lime); font-style: italic; padding-right: .08em; }
 .seals-lead { margin-top: var(--space-lg); max-width: 40ch; font-size: clamp(1.05rem, 1rem + .3vw, 1.25rem); color: var(--muted); }
 .seal-badges { display: flex; gap: clamp(12px, 2vw, 28px); }
 .seal-badges li { display: grid; justify-items: center; gap: var(--space-sm); font-size: .8rem; font-weight: 650; color: var(--green-800); text-align: center; }
-.seal-badges img { width: clamp(84px, 8vw, 116px); height: auto; filter: drop-shadow(0 10px 14px oklch(20% 0.05 166 / .18)); }
+.seal-badges img { width: clamp(100px, 10vw, 148px); height: auto; filter: drop-shadow(0 10px 14px oklch(20% 0.05 166 / .18)); }
 .seal-grid { margin-top: var(--space-3xl); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); }
 .seal-grid li { padding: var(--space-2xl) var(--space-xl); background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-md); }
 .seal-grid h3 { display: flex; align-items: center; gap: 10px; color: var(--green-900); }
@@ -589,9 +581,6 @@ h1 em, h2 em { color: var(--lime); font-style: italic; padding-right: .08em; }
   .step-list li { grid-template-columns: 56px 1fr; column-gap: var(--space-lg); row-gap: 4px; }
   .step-num { grid-row: span 2; margin: 0; }
   .field-row { grid-template-columns: 1fr; }
-  .accessories { grid-template-columns: 1fr; }
-  .accessories li { grid-template-columns: 48px 1fr; justify-items: start; align-items: center; text-align: left; padding: var(--space-lg); }
-  .accessories svg { width: 44px; height: 44px; }
   /* Mobile: rolagem lateral de produtos, a tábua acompanha. */
   .products { --img-h: 160px; justify-content: flex-start; overflow-x: auto; scroll-snap-type: x mandatory;
     margin-inline: -20px; padding: 16px 20px 16px; scrollbar-width: none; }

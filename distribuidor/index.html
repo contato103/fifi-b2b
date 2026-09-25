@@ -28,7 +28,7 @@
   </script>
   <!-- Liga as animações só se o movimento estiver liberado. Roda antes da pintura: sem piscar. -->
   <script>if(matchMedia("(prefers-reduced-motion: no-preference)").matches&&"IntersectionObserver"in window)document.documentElement.classList.add("js-motion")</script>
-  <link rel="stylesheet" href="styles.css?v=5">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body class="revisao">
 <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
@@ -60,7 +60,6 @@
     </p>
     <div class="hero-actions">
       <a class="button button-lime" href="#formulario">Quero revender FIFI</a>
-      <p class="micro">Leva 1 minuto.</p>
     </div>
   </div>
 
@@ -159,7 +158,6 @@
     <button role="tab" id="tab-dia" aria-controls="painel-dia" aria-selected="true">Limpeza do dia a dia</button>
     <button role="tab" id="tab-pesada" aria-controls="painel-pesada" aria-selected="false" tabindex="-1">Limpeza pesada</button>
     <button role="tab" id="tab-pet" aria-controls="painel-pet" aria-selected="false" tabindex="-1">Linha Pet</button>
-    <button role="tab" id="tab-acessorios" aria-controls="painel-acessorios" aria-selected="false" tabindex="-1">Acessórios</button>
   </div>
 
   <div class="panel" role="tabpanel" id="painel-dia" aria-labelledby="tab-dia">
@@ -206,27 +204,6 @@
       <li class="is-500ml"><span class="p-img"><img data-src="img/pet-textil-500ml.webp" alt="FIFI Pet Têxtil 500ml" width="208" height="480" decoding="async"></span><span class="p-name">Pet Têxtil<span class="p-size">500ml</span></span></li>
     </ul>
   </div>
-  <div class="panel" role="tabpanel" id="painel-acessorios" aria-labelledby="tab-acessorios" hidden>
-    <div class="panel-text">
-      <h3>Acessórios</h3>
-      <p>Mops, escovas e panos de microfibra para vender junto e aumentar o valor de cada compra.</p>
-    </div>
-    <ul class="accessories">
-      <li>
-        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M32 4v34"/><path d="M18 44c0-4 6-6 14-6s14 2 14 6v4H18z"/><path d="M20 48l-3 12M26 48l-1 12M32 48v12M38 48l1 12M44 48l3 12"/></svg>
-        <span>Mops</span>
-      </li>
-      <li>
-        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M8 30h48v10H8z"/><path d="M12 40v14M18 40v14M24 40v14M30 40v14M36 40v14M42 40v14M48 40v14M54 40v14"/><path d="M28 30V12a4 4 0 0 1 8 0v18"/></svg>
-        <span>Escovas</span>
-      </li>
-      <li>
-        <svg viewBox="0 0 64 64" aria-hidden="true"><path d="M10 14h36l8 8v28H18l-8-8z"/><path d="M10 14v28M46 14v8h8"/><path d="M20 26h24M20 34h24M20 42h16"/></svg>
-        <span>Panos de microfibra</span>
-      </li>
-    </ul>
-  </div>
-
   <a class="button button-dark" href="#formulario">Peça o catálogo e as condições</a>
 </section>
 
@@ -239,9 +216,9 @@
       <p class="seals-lead">É uma escolha sobre o tipo de produto que o seu cliente coloca dentro de casa.</p>
     </div>
     <ul class="seal-badges">
-      <li><img src="img/selo-nanotecnologia.webp" alt="Selo Nanotecnologia, a evolução da limpeza" width="226" height="226" loading="lazy" decoding="async"><span>Nanotecnologia</span></li>
-      <li><img src="img/selo-fifi-eco-life.webp" alt="Selo FIFI Eco Life" width="226" height="226" loading="lazy" decoding="async"><span>FIFI Eco Life</span></li>
-      <li><img src="img/selo-ecolife.webp" alt="Selo Ecolife, produtos ecológicos" width="232" height="232" loading="lazy" decoding="async"><span>Ecolife</span></li>
+      <li><img src="img/selo-nanotecnologia.webp?v=2" alt="Selo Nanotecnologia, a evolução da limpeza" width="360" height="360" loading="lazy" decoding="async"><span>Nanotecnologia</span></li>
+      <li><img src="img/selo-fifi-eco-life.webp?v=2" alt="Selo FIFI Eco Life" width="360" height="360" loading="lazy" decoding="async"><span>FIFI Eco Life</span></li>
+      <li><img src="img/selo-ecolife.webp?v=2" alt="Selo Ecolife, produtos ecológicos 100% biodegradáveis" width="360" height="360" loading="lazy" decoding="async"><span>Ecolife</span></li>
     </ul>
   </div>
   <ul class="seal-grid">
@@ -284,14 +261,14 @@
       <p>Linha pesada e pós-obra, com compra planejada.</p>
     </li>
     <li class="store reveal">
-      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 42V20"/><path d="M24 26c-8 0-12-5-12-12 8 0 12 5 12 12Z"/><path d="M24 22c0-7 4-12 12-12 0 7-4 12-12 12Z"/><path d="M10 42h28"/></svg>
-      <h3>Agropecuárias</h3>
-      <p>Limpeza pesada e linha pet no mesmo pedido.</p>
+      <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="13" cy="19" r="4"/><circle cx="24" cy="13" r="4"/><circle cx="35" cy="19" r="4"/><path d="M24 25c-6 0-11 6-11 10.5 0 3.2 2.8 4.5 5.6 3.7L24 38l5.4 1.2c2.8.8 5.6-.5 5.6-3.7C35 31 30 25 24 25Z"/></svg>
+      <h3>Pet shops e agropecuárias</h3>
+      <p>Linha pet e limpeza pesada no mesmo pedido, com argumento técnico que o cliente entende na hora.</p>
     </li>
     <li class="store reveal">
-      <svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="13" cy="19" r="4"/><circle cx="24" cy="13" r="4"/><circle cx="35" cy="19" r="4"/><path d="M24 25c-6 0-11 6-11 10.5 0 3.2 2.8 4.5 5.6 3.7L24 38l5.4 1.2c2.8.8 5.6-.5 5.6-3.7C35 31 30 25 24 25Z"/></svg>
-      <h3>Pet shops</h3>
-      <p>Linha pet com argumento técnico que o cliente entende na hora.</p>
+      <svg viewBox="0 0 48 48" aria-hidden="true"><path d="M4 8h6l5 22h22l4-15H11.6"/><circle cx="18" cy="38" r="3"/><circle cx="34" cy="38" r="3"/></svg>
+      <h3>Mercados</h3>
+      <p>Do mercado de bairro à grande franquia, com a linha do dia a dia para a gôndola de limpeza.</p>
     </li>
   </ul>
   <a class="button button-lime stores-cta" href="#formulario">Peça o catálogo e as condições</a>
@@ -315,7 +292,7 @@
     <img class="about-logo" src="img/logo-fifi.webp" alt="FIFI" width="280" height="92" loading="lazy">
     <div>
       <h2>Uma marca de limpeza de Brusque/SC, feita para quem cobra resultado.</h2>
-      <p>A FIFI Limpeza <span class="pend" data-nota="A FIFI fabrica? Se sim, trocar por &quot;fabrica&quot;">desenvolve</span> produtos para uso doméstico, profissional e institucional, com fórmulas de alta performance, foco em rendimento e ingredientes de origem vegetal em boa parte da linha.</p>
+      <p>A FIFI Limpeza <span class="pend" data-nota="A FIFI fabrica? Se sim, trocar por &quot;fabrica&quot;">desenvolve</span> produtos para uso doméstico e profissional, com fórmulas de alta performance, foco em rendimento e ingredientes de origem vegetal em boa parte da linha.</p>
       <p>Nasceu atendendo empresas que precisam de limpeza impecável todos os dias e agora leva a mesma linha para a prateleira de lojas parceiras.</p>
     </div>
   </div>
@@ -328,7 +305,7 @@
     <h2>Do catálogo à prateleira em 3 passos.</h2>
   </div>
   <ol class="step-list">
-    <li class="reveal"><span class="step-num">1</span><h3>Peça o catálogo</h3><p>Preencha o formulário em 1 minuto.</p></li>
+    <li class="reveal"><span class="step-num">1</span><h3>Peça o catálogo</h3><p>Preencha o formulário com os dados da sua loja.</p></li>
     <li class="reveal"><span class="step-num">2</span><h3>Monte seu mix com um consultor</h3><p>Ele ajuda a escolher as linhas certas para o seu tipo de loja.</p></li>
     <li class="reveal"><span class="step-num">3</span><h3>Receba e comece a vender</h3><p>Com apoio para explicar o produto para seu cliente.</p></li>
   </ol>
