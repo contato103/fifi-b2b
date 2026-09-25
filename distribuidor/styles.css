@@ -327,7 +327,7 @@ h1 em, h2 em { color: var(--lime); font-style: italic; padding-right: .08em; }
 }
 .accessories svg { width: 64px; height: 64px; fill: none; stroke: var(--green-800); stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 
-.line .button-outline { margin-top: var(--space-3xl); }
+.line > .button { margin-top: var(--space-3xl); }
 
 /* ---------------- S4 · lojas ---------------- */
 .stores { background: var(--green-900); color: var(--on-dark); }
@@ -475,6 +475,32 @@ h1 em, h2 em { color: var(--lime); font-style: italic; padding-right: .08em; }
   transform: translateY(140%); transition: transform .45s var(--ease);
 }
 .sticky-cta.show { transform: none; }
+
+/* ---------------- selos (ajuste da Ivonete, 24/09/2026) ---------------- */
+.seals { background: var(--cream); }
+.seals-head { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: clamp(24px, 4vw, 64px); align-items: end; }
+.seals h2 { margin-top: var(--space-lg); }
+.seals-lead { margin-top: var(--space-lg); max-width: 40ch; font-size: clamp(1.05rem, 1rem + .3vw, 1.25rem); color: var(--muted); }
+.seal-badges { display: flex; gap: clamp(12px, 2vw, 28px); }
+.seal-badges li { display: grid; justify-items: center; gap: var(--space-sm); font-size: .8rem; font-weight: 650; color: var(--green-800); text-align: center; }
+.seal-badges img { width: clamp(84px, 8vw, 116px); height: auto; filter: drop-shadow(0 10px 14px oklch(20% 0.05 166 / .18)); }
+.seal-grid { margin-top: var(--space-3xl); display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: var(--space-lg); }
+.seal-grid li { padding: var(--space-2xl) var(--space-xl); background: var(--white); border: 1px solid var(--line); border-radius: var(--radius-md); }
+.seal-grid h3 { display: flex; align-items: center; gap: 10px; color: var(--green-900); }
+.seal-grid h3::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: var(--lime-deep); flex: 0 0 auto; }
+.seal-grid p { margin-top: var(--space-md); color: var(--muted); font-size: .96rem; }
+.seals-note { margin-top: var(--space-2xl); font-weight: 650; color: var(--green-800); }
+.stores-cta { margin-top: var(--space-3xl); }
+.hero-lead strong { color: var(--white); font-weight: 650; }
+@media (max-width: 1100px) {
+  .seals-head { grid-template-columns: 1fr; align-items: start; }
+  .seal-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 760px) {
+  .seal-grid { grid-template-columns: 1fr; }
+  .seal-grid li { padding: var(--space-xl); }
+  .seal-badges { justify-content: space-between; width: 100%; }
+}
 
 /* ---------------- modo revisão ---------------- */
 /* Tudo que está [CONFIRMAR] na copy fica marcado. Passar o mouse mostra o que falta confirmar.
