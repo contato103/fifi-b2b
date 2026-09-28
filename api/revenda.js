@@ -2,7 +2,7 @@ export const config = { runtime: 'edge' };
 import { gravarLead, diagnosticar } from './_abas-mensais.js';
 
 const COLUNAS_ESPERADAS = ['data', 'mês', 'nome', 'telefone', 'loja', 'cnpj', 'cidade/uf', 'tipo de loja', 'já vende limpeza',
-  'status', 'origem', 'interesse', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'event id', 'data iso'];
+  'status', 'origem', 'interesse', 'dúvida', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'event id', 'data iso'];
 
 // ── FIFI Revenda (/distribuidor) — captura de leads de lojistas ──────
 // Grava na planilha "LP FIFI Revenda · Leads" com a MESMA service account
@@ -16,7 +16,8 @@ const SPREADSHEET_ID = process.env.REVENDA_SPREADSHEET_ID || '1-fiw_IbFHJAm1n-CR
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const TIPOS = ['Utilidades', 'Home center / Material de construção', 'Agropecuária', 'Pet shop', 'Mercado', 'Outro'];
 // Resposta do "O que você precisa?" do Typebot (typebot/fifi-revenda.json). O formulário não manda.
-const INTERESSES = ['Quero revender FIFI', 'Ver o catálogo e as condições', 'Tirar uma dúvida'];
+// ("Ver o catálogo e as condições" saiu do bot em 28/09; fica aceito para conversa que já estava aberta.)
+const INTERESSES = ['Quero revender FIFI', 'Tirar uma dúvida', 'Ver o catálogo e as condições'];
 
 // O Typebot roda o webhook NO NAVEGADOR: embutido na página é mesma origem, mas no
 // teste do editor (app.typebot.com) e no link público (typebot.co) é outra origem.
@@ -124,6 +125,8 @@ export default async function handler(req) {
       'tipo de loja': tipo, 'já vende limpeza': jaVende,
       'status': 'Novo', 'origem': d.origem === 'Typebot' ? 'Typebot' : 'Formulário',
       'interesse': INTERESSES.includes(d.interesse) ? d.interesse : '',
+      // Texto livre do "Tirar uma dúvida" do bot, para o vendedor ler na planilha.
+      'dúvida': /^(null|undefined)$/i.test(String(d.duvida || '').trim()) ? '' : limpa(d.duvida, 1000),
       'utm_source': limpa(u.utm_source), 'utm_medium': limpa(u.utm_medium), 'utm_campaign': limpa(u.utm_campaign),
       'utm_term': limpa(u.utm_term), 'utm_content': limpa(u.utm_content),
       'gclid': limpa(ck.gclid), 'gbraid': limpa(ck.gbraid), 'wbraid': limpa(ck.wbraid), 'fbclid': limpa(ck.fbclid, 500),

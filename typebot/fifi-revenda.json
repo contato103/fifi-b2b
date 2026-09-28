@@ -141,21 +141,57 @@
           "type": "choice input",
           "items": [
             {
-              "id": "b-precisa-in-i0",
+              "id": "b-precisa-in-rev",
               "content": "Quero revender FIFI"
             },
             {
-              "id": "b-precisa-in-i1",
-              "content": "Ver o catálogo e as condições"
-            },
-            {
-              "id": "b-precisa-in-i2",
-              "content": "Tirar uma dúvida"
+              "id": "b-precisa-in-duv",
+              "content": "Tirar uma dúvida",
+              "outgoingEdgeId": "e-precisa-duvida"
             }
           ],
           "options": {
             "variableId": "v_interesse",
             "isMultipleChoice": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-duvida",
+      "title": "Dúvida",
+      "graphCoordinates": {
+        "x": 680,
+        "y": 360
+      },
+      "blocks": [
+        {
+          "id": "b-duvida-q",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Pode escrever a sua dúvida. Um consultor comercial da FIFI vai responder."
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-duvida-in",
+          "outgoingEdgeId": "e-duvida",
+          "type": "text input",
+          "options": {
+            "labels": {
+              "placeholder": "Escreva a sua dúvida",
+              "button": "Enviar"
+            },
+            "variableId": "v_duvida",
+            "isLong": true
           }
         }
       ]
@@ -620,7 +656,7 @@
               "headers": [],
               "method": "POST",
               "url": "https://mkt.fifilimpeza.com/api/revenda",
-              "body": "{\n  \"nome\": \"{{nome}}\",\n  \"whatsapp\": \"{{whatsapp}}\",\n  \"loja\": \"{{loja}}\",\n  \"cnpj\": \"{{cnpj}}\",\n  \"cidade\": \"{{cidade}}\",\n  \"tipo\": \"{{tipo}}\",\n  \"ja_vende\": \"{{ja_vende}}\",\n  \"origem\": \"Typebot\",\n  \"interesse\": \"{{interesse}}\",\n  \"utms\": {\n    \"utm_source\": \"{{utm_source}}\",\n    \"utm_medium\": \"{{utm_medium}}\",\n    \"utm_campaign\": \"{{utm_campaign}}\",\n    \"utm_term\": \"{{utm_term}}\",\n    \"utm_content\": \"{{utm_content}}\"\n  },\n  \"clicks\": {\n    \"gclid\": \"{{gclid}}\",\n    \"gbraid\": \"{{gbraid}}\",\n    \"wbraid\": \"{{wbraid}}\",\n    \"fbclid\": \"{{fbclid}}\"\n  },\n  \"referencia\": \"{{referencia}}\",\n  \"pagina\": \"{{pagina}}\",\n  \"fbp\": \"{{fbp}}\",\n  \"fbc\": \"{{fbc}}\",\n  \"event_id\": \"{{event_id}}\"\n}"
+              "body": "{\n  \"nome\": \"{{nome}}\",\n  \"whatsapp\": \"{{whatsapp}}\",\n  \"loja\": \"{{loja}}\",\n  \"cnpj\": \"{{cnpj}}\",\n  \"cidade\": \"{{cidade}}\",\n  \"tipo\": \"{{tipo}}\",\n  \"ja_vende\": \"{{ja_vende}}\",\n  \"origem\": \"Typebot\",\n  \"interesse\": \"{{interesse}}\",\n  \"duvida\": \"{{duvida}}\",\n  \"utms\": {\n    \"utm_source\": \"{{utm_source}}\",\n    \"utm_medium\": \"{{utm_medium}}\",\n    \"utm_campaign\": \"{{utm_campaign}}\",\n    \"utm_term\": \"{{utm_term}}\",\n    \"utm_content\": \"{{utm_content}}\"\n  },\n  \"clicks\": {\n    \"gclid\": \"{{gclid}}\",\n    \"gbraid\": \"{{gbraid}}\",\n    \"wbraid\": \"{{wbraid}}\",\n    \"fbclid\": \"{{fbclid}}\"\n  },\n  \"referencia\": \"{{referencia}}\",\n  \"pagina\": \"{{pagina}}\",\n  \"fbp\": \"{{fbp}}\",\n  \"fbc\": \"{{fbc}}\",\n  \"event_id\": \"{{event_id}}\"\n}"
             }
           }
         },
@@ -684,7 +720,39 @@
           }
         },
         {
-          "id": "b-ok2",
+          "id": "b-ok-cond",
+          "outgoingEdgeId": "e-ok-revenda",
+          "type": "Condition",
+          "items": [
+            {
+              "id": "ok-duvida",
+              "outgoingEdgeId": "e-ok-duvida",
+              "content": {
+                "logicalOperator": "AND",
+                "comparisons": [
+                  {
+                    "id": "ok-duvida-cmp",
+                    "variableId": "v_interesse",
+                    "comparisonOperator": "Equal to",
+                    "value": "Tirar uma dúvida"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g-ok-revenda",
+      "title": "Agradecimento: revenda (libera o WhatsApp)",
+      "graphCoordinates": {
+        "x": 4080,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-okr1",
           "type": "text",
           "content": {
             "richText": [
@@ -692,7 +760,16 @@
                 "type": "p",
                 "children": [
                   {
-                    "text": "Um consultor comercial da FIFI vai chamar você no WhatsApp."
+                    "text": "Agora você já pode falar com a Renata no WhatsApp: "
+                  },
+                  {
+                    "type": "a",
+                    "url": "https://wa.me/5547991994731?text=Ol%C3%A1%2C%20Renata!%20Vim%20pela%20p%C3%A1gina%20de%20revenda%20da%20FIFI%20e%20quero%20saber%20como%20revender%20os%20produtos%20na%20minha%20loja.",
+                    "children": [
+                      {
+                        "text": "Falar com a Renata"
+                      }
+                    ]
                   }
                 ]
               }
@@ -700,7 +777,58 @@
           }
         },
         {
-          "id": "b-ok3",
+          "id": "b-okr2",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Enquanto isso, veja o catálogo completo: "
+                  },
+                  {
+                    "type": "a",
+                    "url": "https://drive.google.com/file/d/1ayT0qVXGJHj7anIxKqzI1nNpeeM00l9P/view?usp=sharing",
+                    "children": [
+                      {
+                        "text": "Ver catálogo"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-ok-duvida",
+      "title": "Agradecimento: dúvida",
+      "graphCoordinates": {
+        "x": 4080,
+        "y": 360
+      },
+      "blocks": [
+        {
+          "id": "b-okd1",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Um consultor comercial da FIFI vai responder a sua dúvida pelo WhatsApp."
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-okd2",
           "type": "text",
           "content": {
             "richText": [
@@ -731,7 +859,7 @@
       "title": "Envio falhou",
       "graphCoordinates": {
         "x": 3740,
-        "y": 360
+        "y": 720
       },
       "blocks": [
         {
@@ -810,6 +938,25 @@
       "id": "e-precisa",
       "from": {
         "blockId": "b-precisa-in"
+      },
+      "to": {
+        "groupId": "g-nome"
+      }
+    },
+    {
+      "id": "e-precisa-duvida",
+      "from": {
+        "blockId": "b-precisa-in",
+        "itemId": "b-precisa-in-duv"
+      },
+      "to": {
+        "groupId": "g-duvida"
+      }
+    },
+    {
+      "id": "e-duvida",
+      "from": {
+        "blockId": "b-duvida-in"
       },
       "to": {
         "groupId": "g-nome"
@@ -934,12 +1081,36 @@
       "to": {
         "groupId": "g-falha"
       }
+    },
+    {
+      "id": "e-ok-duvida",
+      "from": {
+        "blockId": "b-ok-cond",
+        "itemId": "ok-duvida"
+      },
+      "to": {
+        "groupId": "g-ok-duvida"
+      }
+    },
+    {
+      "id": "e-ok-revenda",
+      "from": {
+        "blockId": "b-ok-cond"
+      },
+      "to": {
+        "groupId": "g-ok-revenda"
+      }
     }
   ],
   "variables": [
     {
       "id": "v_interesse",
       "name": "interesse",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_duvida",
+      "name": "duvida",
       "isSessionVariable": false
     },
     {

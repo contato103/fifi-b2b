@@ -1,7 +1,10 @@
 """Gera typebot/fifi-revenda.json: o bot da LP de revenda (/distribuidor).
 
-Fluxo: Saudação -> O que você precisa? -> coleta (nome, WhatsApp, loja, CNPJ,
-cidade/UF, tipo de loja, já vende) -> envio para /api/revenda -> agradecimento.
+Fluxo: Saudação -> O que você precisa? (Quero revender FIFI | Tirar uma dúvida;
+a dúvida pede a mensagem) -> coleta (nome, WhatsApp, loja, CNPJ, cidade/UF, tipo de
+loja, já vende) -> envio para /api/revenda -> agradecimento. O WhatsApp da Renata só
+aparece DEPOIS dos dados, no agradecimento de quem quer revender (pedido do Adail,
+28/09: ninguém vai para o WhatsApp sem deixar os dados).
 Os campos e os valores das escolhas são os MESMOS do formulário da página: a
 API valida os dois caminhos com as mesmas regras e grava na mesma planilha.
 
@@ -15,9 +18,10 @@ API = "https://mkt.fifilimpeza.com/api/revenda"
 CATALOGO = "https://drive.google.com/file/d/1ayT0qVXGJHj7anIxKqzI1nNpeeM00l9P/view?usp=sharing"
 WHATS_RENATA = ("https://wa.me/5547991994731?text=Ol%C3%A1%2C%20Renata!%20Vim%20pela%20p%C3%A1gina%20de%20"
                 "revenda%20da%20FIFI%20e%20quero%20saber%20como%20revender%20os%20produtos%20na%20minha%20loja.")
+REVENDER, DUVIDA = "Quero revender FIFI", "Tirar uma dúvida"
 TIPOS = ["Utilidades", "Home center / Material de construção", "Agropecuária", "Pet shop", "Mercado", "Outro"]
 
-variaveis = ["interesse", "nome", "whatsapp", "loja", "cnpj", "cidade", "tipo", "ja_vende",
+variaveis = ["interesse", "duvida", "nome", "whatsapp", "loja", "cnpj", "cidade", "tipo", "ja_vende",
              "tel_valido", "cnpj_valido", "envio", "lead_ok",
              # vêm da página (prefilledVariables) ou de Set variable no navegador
              "utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content",
@@ -89,7 +93,7 @@ JS_LEAD = ('try{sessionStorage.setItem("fifi_revenda_enviado","1")}catch(e){}'
 corpo = {
     "nome": "{{nome}}", "whatsapp": "{{whatsapp}}", "loja": "{{loja}}", "cnpj": "{{cnpj}}",
     "cidade": "{{cidade}}", "tipo": "{{tipo}}", "ja_vende": "{{ja_vende}}",
-    "origem": "Typebot", "interesse": "{{interesse}}",
+    "origem": "Typebot", "interesse": "{{interesse}}", "duvida": "{{duvida}}",
     "utms": {k: "{{%s}}" % k for k in ["utm_source", "utm_medium", "utm_campaign", "utm_term", "utm_content"]},
     "clicks": {k: "{{%s}}" % k for k in ["gclid", "gbraid", "wbraid", "fbclid"]},
     "referencia": "{{referencia}}", "pagina": "{{pagina}}",
@@ -115,8 +119,16 @@ grupos = [
     ]),
     ("g-precisa", "O que você precisa?", [
         texto("b-precisa-q", "O que você precisa?"),
-        escolha("b-precisa-in", "interesse",
-                ["Quero revender FIFI", "Ver o catálogo e as condições", "Tirar uma dúvida"], "e-precisa"),
+        {"id": "b-precisa-in", "outgoingEdgeId": "e-precisa", "type": "choice input",
+         "items": [{"id": "b-precisa-in-rev", "content": REVENDER},
+                   {"id": "b-precisa-in-duv", "content": DUVIDA, "outgoingEdgeId": "e-precisa-duvida"}],
+         "options": {"variableId": "v_interesse", "isMultipleChoice": False}},
+    ]),
+    ("g-duvida", "Dúvida", [
+        texto("b-duvida-q", "Pode escrever a sua dúvida. Um consultor comercial da FIFI vai responder."),
+        {"id": "b-duvida-in", "outgoingEdgeId": "e-duvida", "type": "text input",
+         "options": {"labels": {"placeholder": "Escreva a sua dúvida", "button": "Enviar"},
+                     "variableId": "v_duvida", "isLong": True}},
     ]),
     ("g-nome", "Nome", [
         texto("b-nome-intro", "Combinado. Vou anotar alguns dados para um consultor comercial da FIFI falar com você."),
@@ -169,8 +181,15 @@ grupos = [
     ("g-obrigado", "Agradecimento", [
         codigo("b-lead", "lead_ok", JS_LEAD),
         texto("b-ok1", "Recebemos seu contato, {{nome}}!"),
-        texto("b-ok2", "Um consultor comercial da FIFI vai chamar você no WhatsApp."),
-        texto("b-ok3", "Enquanto isso, veja o catálogo completo: ", ("Ver catálogo", CATALOGO)),
+        condicao("b-ok-cond", "ok-duvida", "interesse", DUVIDA, "e-ok-duvida", "e-ok-revenda"),
+    ]),
+    ("g-ok-revenda", "Agradecimento: revenda (libera o WhatsApp)", [
+        texto("b-okr1", "Agora você já pode falar com a Renata no WhatsApp: ", ("Falar com a Renata", WHATS_RENATA)),
+        texto("b-okr2", "Enquanto isso, veja o catálogo completo: ", ("Ver catálogo", CATALOGO)),
+    ]),
+    ("g-ok-duvida", "Agradecimento: dúvida", [
+        texto("b-okd1", "Um consultor comercial da FIFI vai responder a sua dúvida pelo WhatsApp."),
+        texto("b-okd2", "Enquanto isso, veja o catálogo completo: ", ("Ver catálogo", CATALOGO)),
     ]),
     ("g-falha", "Envio falhou", [
         texto("b-falha1", "Não consegui registrar seus dados agora."),
@@ -182,6 +201,8 @@ ligacoes = [  # (id, bloco de origem, item, grupo de destino)
     ("e-init", "b-pagina", None, "g-oi"),
     ("e-oi", "b-oi2", None, "g-precisa"),
     ("e-precisa", "b-precisa-in", None, "g-nome"),
+    ("e-precisa-duvida", "b-precisa-in", "b-precisa-in-duv", "g-duvida"),
+    ("e-duvida", "b-duvida-in", None, "g-nome"),
     ("e-nome", "b-nome-in", None, "g-tel"),
     ("e-tel", "b-tel-cond", "tel-sim", "g-loja"),
     ("e-tel-erro", "b-tel-cond", None, "g-tel-erro"),
@@ -195,13 +216,16 @@ ligacoes = [  # (id, bloco de origem, item, grupo de destino)
     ("e-vende", "b-vende-in", None, "g-envio"),
     ("e-envio-ok", "b-envio-cond", "envio-ok", "g-obrigado"),
     ("e-envio-falha", "b-envio-cond", None, "g-falha"),
+    ("e-ok-duvida", "b-ok-cond", "ok-duvida", "g-ok-duvida"),
+    ("e-ok-revenda", "b-ok-cond", None, "g-ok-revenda"),
 ]
 
 # Posições no editor: linha principal em cima e, embaixo, os desvios de erro.
-posicao = {"g-init": (0, 0), "g-oi": (340, 0), "g-precisa": (680, 0), "g-nome": (1020, 0), "g-tel": (1360, 0),
+posicao = {"g-init": (0, 0), "g-oi": (340, 0), "g-precisa": (680, 0), "g-duvida": (680, 360), "g-nome": (1020, 0), "g-tel": (1360, 0),
            "g-tel-erro": (1360, 360), "g-loja": (1700, 0), "g-cnpj": (2040, 0), "g-cnpj-erro": (2040, 360),
            "g-cidade": (2380, 0), "g-tipo": (2720, 0), "g-vende": (3060, 0), "g-envio": (3400, 0),
-           "g-obrigado": (3740, 0), "g-falha": (3740, 360)}
+           "g-obrigado": (3740, 0), "g-falha": (3740, 720),
+           "g-ok-revenda": (4080, 0), "g-ok-duvida": (4080, 360)}
 
 bot = {
     "version": "6.1",
