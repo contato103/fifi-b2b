@@ -163,8 +163,11 @@ form.addEventListener("submit", async e => {
     // Libera o botão "Ver catálogo" do obrigado.html só para quem enviou o formulário.
     try { sessionStorage.setItem("fifi_revenda_enviado", "1"); } catch {}
     window.location.href = "obrigado.html";
-  } catch {
-    erro.textContent = "Não conseguimos enviar agora. Confira sua conexão e tente de novo.";
+  } catch (falha) {
+    // 400 = a API recusou os dados (validação do servidor); o resto é rede ou servidor fora.
+    erro.textContent = falha && falha.message === "400"
+      ? "Confira os dados informados e tente de novo."
+      : "Não conseguimos enviar agora. Confira sua conexão e tente de novo.";
     erro.hidden = false;
     enviando = false; botao.disabled = false; botao.textContent = rotulo;
   }
