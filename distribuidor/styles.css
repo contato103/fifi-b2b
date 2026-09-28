@@ -169,18 +169,18 @@ h1 em, h2 em { color: var(--lime); font-style: italic; padding-right: .08em; }
 .hero-lead { margin-top: var(--space-xl); max-width: 54ch; font-size: clamp(1rem, .9rem + .4vw, 1.2rem); line-height: 1.65; }
 .hero-actions { margin-top: var(--space-2xl); display: flex; flex-direction: column; align-items: flex-start; gap: var(--space-md); }
 
-/* A gôndola. Fundo de painel perfurado, duas prateleiras, selos como etiqueta de preço. */
+/* A gôndola. Fundo de painel perfurado, três prateleiras (500ml, 1L e 5L na base), selos como etiqueta de preço. */
 .hero-visual { position: relative; display: grid; place-items: center; }
 .shelf-unit {
   container-type: inline-size;
-  width: min(100%, 600px);
+  width: min(100%, 540px);
   padding: 6cqw 5cqw 5cqw;
   border-radius: 22px 22px 8px 8px;
   background:
     radial-gradient(circle, oklch(100% 0 0 / .07) 1.2px, transparent 1.6px) 0 0 / 22px 22px,
     linear-gradient(180deg, var(--green-850), color-mix(in oklch, var(--green-850) 70%, var(--green-950)));
   box-shadow: inset 0 0 0 1px var(--hairline), 0 40px 80px -30px oklch(10% 0.04 166 / .7);
-  display: grid; gap: 6cqw;
+  display: grid; gap: 5cqw;
 }
 .shelf { position: relative; }
 .shelf-items {
@@ -188,8 +188,10 @@ h1 em, h2 em { color: var(--lime); font-style: italic; padding-right: .08em; }
   padding-inline: 2cqw; position: relative; z-index: 1;
 }
 .shelf-items img { width: auto; filter: drop-shadow(0 10px 8px oklch(10% 0.04 166 / .45)); }
-.shelf-top .shelf-items img { height: 40cqw; }
-.shelf-bottom .shelf-items img { height: 34cqw; }
+.shelf-top .shelf-items img { height: 34cqw; }
+.shelf-bottom .shelf-items img { height: 29cqw; }
+/* Galão de 5L: o mais alto e o mais largo, fica na base como na gôndola de verdade. Cabem 3. */
+.shelf-base .shelf-items img { height: 36cqw; }
 .plank {
   position: relative; height: 4.2cqw; margin-inline: -2cqw;
   background: linear-gradient(180deg, var(--white), var(--wood));
@@ -541,6 +543,7 @@ h1 em, h2 em { color: var(--lime); font-style: italic; padding-right: .08em; }
 .js-motion .shelf-unit { animation: rise .9s var(--ease) both; }
 .js-motion .shelf-items img { animation: drop .8s var(--ease) both; animation-delay: calc(350ms + var(--i, 0) * 70ms); }
 .js-motion .shelf-bottom .shelf-items img { animation-delay: calc(600ms + var(--i, 0) * 70ms); }
+.js-motion .shelf-base .shelf-items img { animation-delay: calc(850ms + var(--i, 0) * 70ms); }
 .shelf-items img:nth-child(2) { --i: 1; } .shelf-items img:nth-child(3) { --i: 2; }
 .shelf-items img:nth-child(4) { --i: 3; } .shelf-items img:nth-child(5) { --i: 4; }
 .js-motion .plank .tag { animation: swing 1s var(--ease) 1s both; }
@@ -608,5 +611,5 @@ h1 em, h2 em { color: var(--lime); font-style: italic; padding-right: .08em; }
 }
 @media (max-height: 800px) and (min-width: 1101px) {
   .hero h1 { font-size: clamp(2.2rem, 7.4cqw, 4.8rem); }
-  .shelf-unit { width: min(100%, 500px); }
+  .shelf-unit { width: min(100%, 440px); }
 }

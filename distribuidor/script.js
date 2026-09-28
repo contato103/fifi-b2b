@@ -160,6 +160,8 @@ form.addEventListener("submit", async e => {
       body: JSON.stringify(payload), keepalive: true
     });
     if (!r.ok) throw new Error(r.status);
+    // Libera o botão "Ver catálogo" do obrigado.html só para quem enviou o formulário.
+    try { sessionStorage.setItem("fifi_revenda_enviado", "1"); } catch {}
     window.location.href = "obrigado.html";
   } catch {
     erro.textContent = "Não conseguimos enviar agora. Confira sua conexão e tente de novo.";
