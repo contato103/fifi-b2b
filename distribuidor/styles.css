@@ -621,25 +621,24 @@ h1 em, h2 em { color: var(--lime); font-style: italic; padding-right: .08em; }
 }
 
 /* ---------------- balões fixos: Typebot + WhatsApp da Renata ----------------
-   Desktop: bot no canto inferior direito, WhatsApp (pílula com texto) logo acima.
+   Desktop: bot no canto inferior direito, WhatsApp (só o ícone) logo acima.
    Celular: os dois sobem acima do CTA fixo; com o chat aberto, o bot desce e o
    resto sai da frente (classe .bot-aberto, ligada pelo script.js). */
 typebot-bubble { position: fixed; right: 20px; bottom: 20px; z-index: 60; }
 .whats-fab {
   position: fixed; right: 20px; bottom: 80px; z-index: 50;
-  display: inline-flex; align-items: center; gap: 10px;
-  min-height: 48px; padding: 0 18px 0 14px; border-radius: 999px;
-  background: #25D366; color: #fff; font-weight: 700; font-size: .92rem;
+  display: grid; place-items: center;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: #25D366; color: #fff;
   box-shadow: 0 14px 30px -12px oklch(10% 0.04 166 / .55);
   transition: transform .25s var(--ease), background .25s var(--ease);
 }
 .whats-fab:hover { transform: translateY(-2px); background: #1fbd5a; }
 .whats-fab:focus-visible { outline: 3px solid var(--lime-deep); outline-offset: 3px; }
-.whats-fab svg { width: 24px; height: 24px; fill: currentColor; flex: 0 0 auto; }
+.whats-fab svg { width: 26px; height: 26px; fill: currentColor; }
 @media (max-width: 760px) {
   typebot-bubble { bottom: 80px; }
-  .whats-fab { bottom: 140px; width: 48px; padding: 0; justify-content: center; }
-  .whats-fab span { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .whats-fab { bottom: 140px; }
   .bot-aberto typebot-bubble { bottom: 20px; }
   .bot-aberto .whats-fab, .bot-aberto .sticky-cta { visibility: hidden; }
 }

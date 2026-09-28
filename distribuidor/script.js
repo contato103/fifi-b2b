@@ -207,7 +207,7 @@ if (document.documentElement.classList.contains("js-motion")) {
    posiciona é o nosso CSS: no celular ele sobe acima do botão fixo. */
 const TYPEBOT = { id: "fifi-revenda", host: "https://typebot.co", lib: "https://cdn.jsdelivr.net/npm/@typebot.io/js@0.10.11/dist/web.js" };
 const ICONE_CHAT = "data:image/svg+xml," + encodeURIComponent(
-  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#C4F04A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#0B3A2C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
   '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg>');
 let botCarregado = false;
 async function carregarBot() {
@@ -221,7 +221,8 @@ async function carregarBot() {
       prefilledVariables: { ...origem.utms, ...origem.clicks, referencia: origem.referencia },
       theme: {
         position: "static",
-        button: { backgroundColor: "#0B3A2C", customIconSrc: ICONE_CHAT, size: "medium" },
+        // Lima com ícone escuro: o verde-escuro sumia no hero e nas seções escuras.
+        button: { backgroundColor: "#C4F04A", customIconSrc: ICONE_CHAT, size: "medium" },
         chatWindow: { backgroundColor: "#F4F7F2" }
       },
       // Chat aberto no celular: o balão desce e o CTA fixo e o WhatsApp saem da frente.
