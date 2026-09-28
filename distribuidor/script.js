@@ -207,8 +207,11 @@ if (document.documentElement.classList.contains("js-motion")) {
    posiciona é o nosso CSS: no celular ele sobe acima do botão fixo. */
 const TYPEBOT = { id: "fifi-revenda", host: "https://typebot.co", lib: "https://cdn.jsdelivr.net/npm/@typebot.io/js@0.10.11/dist/web.js" };
 const ICONE_CHAT = "data:image/svg+xml," + encodeURIComponent(
+  // Balão centrado em (12,12) e os 3 pontos como círculos nesse mesmo centro
+  // (antes o balão era centrado em x=13 e os pontos em x=12: ficavam tortos).
   '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#0B3A2C" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">' +
-  '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg>');
+  '<path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><g fill="#0B3A2C" stroke="none"><circle cx="8" cy="12" r="1.25"/>' +
+  '<circle cx="12" cy="12" r="1.25"/><circle cx="16" cy="12" r="1.25"/></g></svg>');
 let botCarregado = false;
 async function carregarBot() {
   if (botCarregado) return;
