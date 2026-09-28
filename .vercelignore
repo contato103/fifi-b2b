@@ -10,3 +10,6 @@ CHECKLIST-TRACKING.md
 # de 100 MB por arquivo.
 _raw-v2/
 _teste_local/
+
+# bot do Typebot (fonte e gerador): vai para o Typebot, não para o site
+typebot/

@@ -2,7 +2,7 @@ export const config = { runtime: 'edge' };
 import { gravarLead, diagnosticar } from './_abas-mensais.js';
 
 const COLUNAS_ESPERADAS = ['data', 'mês', 'nome', 'telefone', 'loja', 'cnpj', 'cidade/uf', 'tipo de loja', 'já vende limpeza',
-  'status', 'origem', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'event id', 'data iso'];
+  'status', 'origem', 'interesse', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'event id', 'data iso'];
 
 // ── FIFI Revenda (/distribuidor) — captura de leads de lojistas ──────
 // Grava na planilha "LP FIFI Revenda · Leads" com a MESMA service account
@@ -15,9 +15,20 @@ const COLUNAS_ESPERADAS = ['data', 'mês', 'nome', 'telefone', 'loja', 'cnpj', '
 const SPREADSHEET_ID = process.env.REVENDA_SPREADSHEET_ID || '1-fiw_IbFHJAm1n-CRhA-TL5wENaGNfsJ7kWU1KYB8Dc';
 const MESES = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 const TIPOS = ['Utilidades', 'Home center / Material de construção', 'Agropecuária', 'Pet shop', 'Mercado', 'Outro'];
+// Resposta do "O que você precisa?" do Typebot (typebot/fifi-revenda.json). O formulário não manda.
+const INTERESSES = ['Quero revender FIFI', 'Ver o catálogo e as condições', 'Tirar uma dúvida'];
 
-const json = (body, status = 200) =>
-  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json' } });
+// O Typebot roda o webhook NO NAVEGADOR: embutido na página é mesma origem, mas no
+// teste do editor (app.typebot.com) e no link público (typebot.co) é outra origem.
+const ORIGENS = ['https://mkt.fifilimpeza.com', 'https://app.typebot.com', 'https://app.typebot.io', 'https://typebot.co', 'https://typebot.com'];
+const cors = req => {
+  const o = req.headers.get('origin') || '';
+  return ORIGENS.includes(o) ? { 'Access-Control-Allow-Origin': o, 'Access-Control-Allow-Headers': 'content-type',
+    'Access-Control-Allow-Methods': 'POST, OPTIONS', 'Vary': 'Origin' } : { 'Vary': 'Origin' };
+};
+
+const json = (body, status = 200, extra = {}) =>
+  new Response(JSON.stringify(body), { status, headers: { 'Content-Type': 'application/json', ...extra } });
 
 async function getAccessToken(serviceAccountKey) {
   const key = JSON.parse(serviceAccountKey);
@@ -86,20 +97,22 @@ export default async function handler(req) {
       return json({ ok: false, erro: String(e && e.message || e) }, 500);
     }
   }
+  if (req.method === 'OPTIONS') return new Response(null, { status: 204, headers: cors(req) });
   if (req.method !== 'POST') return new Response('Method Not Allowed', { status: 405 });
+  const h = cors(req);
 
   try {
     const d = await req.json();
 
     // Honeypot: campo invisível que só robô preenche. Responde sucesso e não grava.
-    if (d.site) return json({ success: true });
+    if (d.site) return json({ success: true, resultado: 'ok' }, 200, h);
 
     const nome = limpa(d.nome, 120), loja = limpa(d.loja, 160), cidade = limpa(d.cidade, 120);
     const fone = telefone(d.whatsapp), cnpj = digitos(d.cnpj);
     const tipo = TIPOS.includes(d.tipo) ? d.tipo : '';
     const jaVende = d.ja_vende === 'Sim' || d.ja_vende === 'Não' ? d.ja_vende : '';
     if (nome.length < 2 || loja.length < 2 || cidade.length < 2 || !fone || !cnpjValido(cnpj) || !tipo || !jaVende) {
-      return json({ success: false, error: 'invalid' }, 400);
+      return json({ success: false, error: 'invalid' }, 400, h);
     }
 
     const u = d.utms || {}, ck = d.clicks || {};
@@ -109,7 +122,8 @@ export default async function handler(req) {
       'data': t.br, 'mês': t.mes,
       'nome': nome, 'telefone': fone, 'loja': loja, 'cnpj': cnpjFmt(cnpj), 'cidade/uf': cidade,
       'tipo de loja': tipo, 'já vende limpeza': jaVende,
-      'status': 'Novo', 'origem': 'Formulário',
+      'status': 'Novo', 'origem': d.origem === 'Typebot' ? 'Typebot' : 'Formulário',
+      'interesse': INTERESSES.includes(d.interesse) ? d.interesse : '',
       'utm_source': limpa(u.utm_source), 'utm_medium': limpa(u.utm_medium), 'utm_campaign': limpa(u.utm_campaign),
       'utm_term': limpa(u.utm_term), 'utm_content': limpa(u.utm_content),
       'gclid': limpa(ck.gclid), 'gbraid': limpa(ck.gbraid), 'wbraid': limpa(ck.wbraid), 'fbclid': limpa(ck.fbclid, 500),
@@ -126,9 +140,9 @@ export default async function handler(req) {
     // Aba do mês; se falhar, aba "LEADS CONTINGÊNCIA". Só lança se as duas falharem.
     await gravarLead({ planilhaId: SPREADSHEET_ID, token, campos });
 
-    return json({ success: true });
+    return json({ success: true, resultado: 'ok' }, 200, h);
   } catch (err) {
     console.error('[revenda]', err && err.message || err);
-    return json({ success: false, error: 'internal' }, 500);
+    return json({ success: false, error: 'internal' }, 500, h);
   }
 }

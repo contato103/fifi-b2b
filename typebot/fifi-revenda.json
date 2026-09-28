@@ -1,0 +1,1113 @@
+{
+  "version": "6.1",
+  "name": "FIFI Revenda · LP Distribuidor",
+  "events": [
+    {
+      "id": "ev-start",
+      "outgoingEdgeId": "e-start",
+      "graphCoordinates": {
+        "x": -300,
+        "y": 0
+      },
+      "type": "start"
+    }
+  ],
+  "groups": [
+    {
+      "id": "g-init",
+      "title": "Dados do navegador",
+      "graphCoordinates": {
+        "x": 0,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-fbp",
+          "type": "Set variable",
+          "options": {
+            "variableId": "v_fbp",
+            "isExecutedOnClient": true,
+            "expressionToEvaluate": "function gc(n){var m=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)'));return m?decodeURIComponent(m[2]):''} return gc('_fbp')",
+            "isCode": true,
+            "type": "Custom"
+          }
+        },
+        {
+          "id": "b-fbc",
+          "type": "Set variable",
+          "options": {
+            "variableId": "v_fbc",
+            "isExecutedOnClient": true,
+            "expressionToEvaluate": "function gc(n){var m=document.cookie.match(new RegExp('(^| )'+n+'=([^;]+)'));return m?decodeURIComponent(m[2]):''} var c=gc('_fbc');if(!c){var f={{fbclid}}||new URLSearchParams(location.search).get('fbclid');if(f)c='fb.1.'+Date.now()+'.'+f}return c",
+            "isCode": true,
+            "type": "Custom"
+          }
+        },
+        {
+          "id": "b-event",
+          "type": "Set variable",
+          "options": {
+            "variableId": "v_event_id",
+            "isExecutedOnClient": true,
+            "expressionToEvaluate": "return (window.crypto&&crypto.randomUUID)?crypto.randomUUID():'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,function(c){var r=Math.random()*16|0;return (c==='x'?r:(r&0x3|0x8)).toString(16)})",
+            "isCode": true,
+            "type": "Custom"
+          }
+        },
+        {
+          "id": "b-pagina",
+          "type": "Set variable",
+          "options": {
+            "variableId": "v_pagina",
+            "isExecutedOnClient": true,
+            "expressionToEvaluate": "return window.location.href",
+            "isCode": true,
+            "type": "Custom"
+          },
+          "outgoingEdgeId": "e-init"
+        }
+      ]
+    },
+    {
+      "id": "g-oi",
+      "title": "Saudação",
+      "graphCoordinates": {
+        "x": 340,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-oi1",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Olá! Aqui é a FIFI."
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-oi2",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Vou te ajudar a levar a linha de limpeza FIFI para a sua loja."
+                  }
+                ]
+              }
+            ]
+          },
+          "outgoingEdgeId": "e-oi"
+        }
+      ]
+    },
+    {
+      "id": "g-precisa",
+      "title": "O que você precisa?",
+      "graphCoordinates": {
+        "x": 680,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-precisa-q",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "O que você precisa?"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-precisa-in",
+          "outgoingEdgeId": "e-precisa",
+          "type": "choice input",
+          "items": [
+            {
+              "id": "b-precisa-in-i0",
+              "content": "Quero revender FIFI"
+            },
+            {
+              "id": "b-precisa-in-i1",
+              "content": "Ver o catálogo e as condições"
+            },
+            {
+              "id": "b-precisa-in-i2",
+              "content": "Tirar uma dúvida"
+            }
+          ],
+          "options": {
+            "variableId": "v_interesse",
+            "isMultipleChoice": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-nome",
+      "title": "Nome",
+      "graphCoordinates": {
+        "x": 1020,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-nome-intro",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Combinado. Vou anotar alguns dados para um consultor comercial da FIFI falar com você."
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-nome-q",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Qual o seu nome?"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-nome-in",
+          "type": "text input",
+          "options": {
+            "labels": {
+              "placeholder": "Seu nome",
+              "button": "Enviar"
+            },
+            "variableId": "v_nome",
+            "isLong": false
+          },
+          "outgoingEdgeId": "e-nome"
+        }
+      ]
+    },
+    {
+      "id": "g-tel",
+      "title": "WhatsApp",
+      "graphCoordinates": {
+        "x": 1360,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-tel-q",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Qual o seu WhatsApp com DDD?"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-tel-in",
+          "type": "text input",
+          "options": {
+            "labels": {
+              "placeholder": "(47) 99999-9999",
+              "button": "Enviar"
+            },
+            "variableId": "v_whatsapp",
+            "isLong": false
+          }
+        },
+        {
+          "id": "b-tel-check",
+          "type": "Set variable",
+          "options": {
+            "variableId": "v_tel_valido",
+            "isExecutedOnClient": true,
+            "expressionToEvaluate": "var d=(\"\"+({{whatsapp}}||\"\")).replace(/\\D/g,\"\");if(d.length>=12&&d.indexOf(\"55\")===0)d=d.slice(2);return (d.length===10||d.length===11)?\"sim\":\"nao\";",
+            "isCode": true,
+            "type": "Custom"
+          }
+        },
+        {
+          "id": "b-tel-cond",
+          "outgoingEdgeId": "e-tel-erro",
+          "type": "Condition",
+          "items": [
+            {
+              "id": "tel-sim",
+              "outgoingEdgeId": "e-tel",
+              "content": {
+                "logicalOperator": "AND",
+                "comparisons": [
+                  {
+                    "id": "tel-sim-cmp",
+                    "variableId": "v_tel_valido",
+                    "comparisonOperator": "Equal to",
+                    "value": "sim"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g-tel-erro",
+      "title": "WhatsApp inválido",
+      "graphCoordinates": {
+        "x": 1360,
+        "y": 360
+      },
+      "blocks": [
+        {
+          "id": "b-tel-err",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Esse número não parece completo. Envie com DDD, por exemplo (47) 99999-9999."
+                  }
+                ]
+              }
+            ]
+          },
+          "outgoingEdgeId": "e-tel-volta"
+        }
+      ]
+    },
+    {
+      "id": "g-loja",
+      "title": "Loja",
+      "graphCoordinates": {
+        "x": 1700,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-loja-q",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Qual o nome da sua loja?"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-loja-in",
+          "type": "text input",
+          "options": {
+            "labels": {
+              "placeholder": "Nome da loja",
+              "button": "Enviar"
+            },
+            "variableId": "v_loja",
+            "isLong": false
+          },
+          "outgoingEdgeId": "e-loja"
+        }
+      ]
+    },
+    {
+      "id": "g-cnpj",
+      "title": "CNPJ",
+      "graphCoordinates": {
+        "x": 2040,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-cnpj-q",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "E o CNPJ da loja? As condições de revenda são para lojas com CNPJ ativo."
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-cnpj-in",
+          "type": "text input",
+          "options": {
+            "labels": {
+              "placeholder": "00.000.000/0000-00",
+              "button": "Enviar"
+            },
+            "variableId": "v_cnpj",
+            "isLong": false
+          }
+        },
+        {
+          "id": "b-cnpj-check",
+          "type": "Set variable",
+          "options": {
+            "variableId": "v_cnpj_valido",
+            "isExecutedOnClient": true,
+            "expressionToEvaluate": "var d=(\"\"+({{cnpj}}||\"\")).replace(/\\D/g,\"\").slice(0,14);if(d.length!==14||/^(\\d)\\1{13}$/.test(d))return\"nao\";function dv(b){var p=b.length-7,s=0;for(var i=0;i<b.length;i++){s+=(+b[i])*p;p=p===2?9:p-1}var r=s%11;return r<2?0:11-r}return (dv(d.slice(0,12))===+d[12]&&dv(d.slice(0,13))===+d[13])?\"sim\":\"nao\";",
+            "isCode": true,
+            "type": "Custom"
+          }
+        },
+        {
+          "id": "b-cnpj-cond",
+          "outgoingEdgeId": "e-cnpj-erro",
+          "type": "Condition",
+          "items": [
+            {
+              "id": "cnpj-sim",
+              "outgoingEdgeId": "e-cnpj",
+              "content": {
+                "logicalOperator": "AND",
+                "comparisons": [
+                  {
+                    "id": "cnpj-sim-cmp",
+                    "variableId": "v_cnpj_valido",
+                    "comparisonOperator": "Equal to",
+                    "value": "sim"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g-cnpj-erro",
+      "title": "CNPJ inválido",
+      "graphCoordinates": {
+        "x": 2040,
+        "y": 360
+      },
+      "blocks": [
+        {
+          "id": "b-cnpj-err",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Esse CNPJ não confere. Confira os 14 números e envie de novo."
+                  }
+                ]
+              }
+            ]
+          },
+          "outgoingEdgeId": "e-cnpj-volta"
+        }
+      ]
+    },
+    {
+      "id": "g-cidade",
+      "title": "Cidade",
+      "graphCoordinates": {
+        "x": 2380,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-cidade-q",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Em qual cidade e estado fica a loja?"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-cidade-in",
+          "type": "text input",
+          "options": {
+            "labels": {
+              "placeholder": "Brusque / SC",
+              "button": "Enviar"
+            },
+            "variableId": "v_cidade",
+            "isLong": false
+          },
+          "outgoingEdgeId": "e-cidade"
+        }
+      ]
+    },
+    {
+      "id": "g-tipo",
+      "title": "Tipo de loja",
+      "graphCoordinates": {
+        "x": 2720,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-tipo-q",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Qual o tipo da sua loja?"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-tipo-in",
+          "outgoingEdgeId": "e-tipo",
+          "type": "choice input",
+          "items": [
+            {
+              "id": "b-tipo-in-i0",
+              "content": "Utilidades"
+            },
+            {
+              "id": "b-tipo-in-i1",
+              "content": "Home center / Material de construção"
+            },
+            {
+              "id": "b-tipo-in-i2",
+              "content": "Agropecuária"
+            },
+            {
+              "id": "b-tipo-in-i3",
+              "content": "Pet shop"
+            },
+            {
+              "id": "b-tipo-in-i4",
+              "content": "Mercado"
+            },
+            {
+              "id": "b-tipo-in-i5",
+              "content": "Outro"
+            }
+          ],
+          "options": {
+            "variableId": "v_tipo",
+            "isMultipleChoice": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-vende",
+      "title": "Já vende?",
+      "graphCoordinates": {
+        "x": 3060,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-vende-q",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Você já vende produtos de limpeza hoje?"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-vende-in",
+          "outgoingEdgeId": "e-vende",
+          "type": "choice input",
+          "items": [
+            {
+              "id": "b-vende-in-i0",
+              "content": "Sim"
+            },
+            {
+              "id": "b-vende-in-i1",
+              "content": "Não"
+            }
+          ],
+          "options": {
+            "variableId": "v_ja_vende",
+            "isMultipleChoice": false
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-envio",
+      "title": "Enviar para a planilha",
+      "graphCoordinates": {
+        "x": 3400,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-webhook",
+          "type": "Webhook",
+          "options": {
+            "isCustomBody": true,
+            "isExecutedOnClient": true,
+            "responseVariableMapping": [
+              {
+                "id": "map-envio",
+                "variableId": "v_envio",
+                "bodyPath": "data.resultado"
+              }
+            ],
+            "webhook": {
+              "headers": [],
+              "method": "POST",
+              "url": "https://mkt.fifilimpeza.com/api/revenda",
+              "body": "{\n  \"nome\": \"{{nome}}\",\n  \"whatsapp\": \"{{whatsapp}}\",\n  \"loja\": \"{{loja}}\",\n  \"cnpj\": \"{{cnpj}}\",\n  \"cidade\": \"{{cidade}}\",\n  \"tipo\": \"{{tipo}}\",\n  \"ja_vende\": \"{{ja_vende}}\",\n  \"origem\": \"Typebot\",\n  \"interesse\": \"{{interesse}}\",\n  \"utms\": {\n    \"utm_source\": \"{{utm_source}}\",\n    \"utm_medium\": \"{{utm_medium}}\",\n    \"utm_campaign\": \"{{utm_campaign}}\",\n    \"utm_term\": \"{{utm_term}}\",\n    \"utm_content\": \"{{utm_content}}\"\n  },\n  \"clicks\": {\n    \"gclid\": \"{{gclid}}\",\n    \"gbraid\": \"{{gbraid}}\",\n    \"wbraid\": \"{{wbraid}}\",\n    \"fbclid\": \"{{fbclid}}\"\n  },\n  \"referencia\": \"{{referencia}}\",\n  \"pagina\": \"{{pagina}}\",\n  \"fbp\": \"{{fbp}}\",\n  \"fbc\": \"{{fbc}}\",\n  \"event_id\": \"{{event_id}}\"\n}"
+            }
+          }
+        },
+        {
+          "id": "b-envio-cond",
+          "outgoingEdgeId": "e-envio-falha",
+          "type": "Condition",
+          "items": [
+            {
+              "id": "envio-ok",
+              "outgoingEdgeId": "e-envio-ok",
+              "content": {
+                "logicalOperator": "AND",
+                "comparisons": [
+                  {
+                    "id": "envio-ok-cmp",
+                    "variableId": "v_envio",
+                    "comparisonOperator": "Equal to",
+                    "value": "ok"
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "g-obrigado",
+      "title": "Agradecimento",
+      "graphCoordinates": {
+        "x": 3740,
+        "y": 0
+      },
+      "blocks": [
+        {
+          "id": "b-lead",
+          "type": "Set variable",
+          "options": {
+            "variableId": "v_lead_ok",
+            "isExecutedOnClient": true,
+            "expressionToEvaluate": "try{sessionStorage.setItem(\"fifi_revenda_enviado\",\"1\")}catch(e){}try{window.dispatchEvent(new CustomEvent(\"fifi:lead\",{detail:{origem:\"Typebot\",event_id:{{event_id}}}}))}catch(e){}return \"sim\";",
+            "isCode": true,
+            "type": "Custom"
+          }
+        },
+        {
+          "id": "b-ok1",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Recebemos seu contato, {{nome}}!"
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-ok2",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Um consultor comercial da FIFI vai chamar você no WhatsApp."
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-ok3",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Enquanto isso, veja o catálogo completo: "
+                  },
+                  {
+                    "type": "a",
+                    "url": "https://drive.google.com/file/d/1ayT0qVXGJHj7anIxKqzI1nNpeeM00l9P/view?usp=sharing",
+                    "children": [
+                      {
+                        "text": "Ver catálogo"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "g-falha",
+      "title": "Envio falhou",
+      "graphCoordinates": {
+        "x": 3740,
+        "y": 360
+      },
+      "blocks": [
+        {
+          "id": "b-falha1",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Não consegui registrar seus dados agora."
+                  }
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "id": "b-falha2",
+          "type": "text",
+          "content": {
+            "richText": [
+              {
+                "type": "p",
+                "children": [
+                  {
+                    "text": "Fale direto com a Renata no WhatsApp: "
+                  },
+                  {
+                    "type": "a",
+                    "url": "https://wa.me/5547991994731?text=Ol%C3%A1%2C%20Renata!%20Vim%20pela%20p%C3%A1gina%20de%20revenda%20da%20FIFI%20e%20quero%20saber%20como%20revender%20os%20produtos%20na%20minha%20loja.",
+                    "children": [
+                      {
+                        "text": "Falar com a Renata"
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "e-start",
+      "from": {
+        "eventId": "ev-start"
+      },
+      "to": {
+        "groupId": "g-init"
+      }
+    },
+    {
+      "id": "e-init",
+      "from": {
+        "blockId": "b-pagina"
+      },
+      "to": {
+        "groupId": "g-oi"
+      }
+    },
+    {
+      "id": "e-oi",
+      "from": {
+        "blockId": "b-oi2"
+      },
+      "to": {
+        "groupId": "g-precisa"
+      }
+    },
+    {
+      "id": "e-precisa",
+      "from": {
+        "blockId": "b-precisa-in"
+      },
+      "to": {
+        "groupId": "g-nome"
+      }
+    },
+    {
+      "id": "e-nome",
+      "from": {
+        "blockId": "b-nome-in"
+      },
+      "to": {
+        "groupId": "g-tel"
+      }
+    },
+    {
+      "id": "e-tel",
+      "from": {
+        "blockId": "b-tel-cond",
+        "itemId": "tel-sim"
+      },
+      "to": {
+        "groupId": "g-loja"
+      }
+    },
+    {
+      "id": "e-tel-erro",
+      "from": {
+        "blockId": "b-tel-cond"
+      },
+      "to": {
+        "groupId": "g-tel-erro"
+      }
+    },
+    {
+      "id": "e-tel-volta",
+      "from": {
+        "blockId": "b-tel-err"
+      },
+      "to": {
+        "groupId": "g-tel"
+      }
+    },
+    {
+      "id": "e-loja",
+      "from": {
+        "blockId": "b-loja-in"
+      },
+      "to": {
+        "groupId": "g-cnpj"
+      }
+    },
+    {
+      "id": "e-cnpj",
+      "from": {
+        "blockId": "b-cnpj-cond",
+        "itemId": "cnpj-sim"
+      },
+      "to": {
+        "groupId": "g-cidade"
+      }
+    },
+    {
+      "id": "e-cnpj-erro",
+      "from": {
+        "blockId": "b-cnpj-cond"
+      },
+      "to": {
+        "groupId": "g-cnpj-erro"
+      }
+    },
+    {
+      "id": "e-cnpj-volta",
+      "from": {
+        "blockId": "b-cnpj-err"
+      },
+      "to": {
+        "groupId": "g-cnpj"
+      }
+    },
+    {
+      "id": "e-cidade",
+      "from": {
+        "blockId": "b-cidade-in"
+      },
+      "to": {
+        "groupId": "g-tipo"
+      }
+    },
+    {
+      "id": "e-tipo",
+      "from": {
+        "blockId": "b-tipo-in"
+      },
+      "to": {
+        "groupId": "g-vende"
+      }
+    },
+    {
+      "id": "e-vende",
+      "from": {
+        "blockId": "b-vende-in"
+      },
+      "to": {
+        "groupId": "g-envio"
+      }
+    },
+    {
+      "id": "e-envio-ok",
+      "from": {
+        "blockId": "b-envio-cond",
+        "itemId": "envio-ok"
+      },
+      "to": {
+        "groupId": "g-obrigado"
+      }
+    },
+    {
+      "id": "e-envio-falha",
+      "from": {
+        "blockId": "b-envio-cond"
+      },
+      "to": {
+        "groupId": "g-falha"
+      }
+    }
+  ],
+  "variables": [
+    {
+      "id": "v_interesse",
+      "name": "interesse",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_nome",
+      "name": "nome",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_whatsapp",
+      "name": "whatsapp",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_loja",
+      "name": "loja",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_cnpj",
+      "name": "cnpj",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_cidade",
+      "name": "cidade",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_tipo",
+      "name": "tipo",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_ja_vende",
+      "name": "ja_vende",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_tel_valido",
+      "name": "tel_valido",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_cnpj_valido",
+      "name": "cnpj_valido",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_envio",
+      "name": "envio",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_lead_ok",
+      "name": "lead_ok",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_utm_source",
+      "name": "utm_source",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_utm_medium",
+      "name": "utm_medium",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_utm_campaign",
+      "name": "utm_campaign",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_utm_term",
+      "name": "utm_term",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_utm_content",
+      "name": "utm_content",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_gclid",
+      "name": "gclid",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_gbraid",
+      "name": "gbraid",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_wbraid",
+      "name": "wbraid",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_fbclid",
+      "name": "fbclid",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_referencia",
+      "name": "referencia",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_pagina",
+      "name": "pagina",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_fbp",
+      "name": "fbp",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_fbc",
+      "name": "fbc",
+      "isSessionVariable": false
+    },
+    {
+      "id": "v_event_id",
+      "name": "event_id",
+      "isSessionVariable": false
+    }
+  ],
+  "theme": {
+    "general": {
+      "font": "Outfit",
+      "background": {
+        "type": "Color",
+        "content": "#F4F7F2"
+      }
+    },
+    "chat": {
+      "hostAvatar": {
+        "isEnabled": false
+      },
+      "hostBubbles": {
+        "backgroundColor": "#0B3A2C",
+        "color": "#FFFFFF"
+      },
+      "guestBubbles": {
+        "backgroundColor": "#FFFFFF",
+        "color": "#10231B"
+      },
+      "buttons": {
+        "backgroundColor": "#C4F04A",
+        "color": "#0B3A2C"
+      },
+      "inputs": {
+        "backgroundColor": "#FFFFFF",
+        "color": "#10231B",
+        "placeholderColor": "#8A948E"
+      }
+    }
+  },
+  "settings": {
+    "general": {
+      "isBrandingEnabled": true,
+      "isInputPrefillEnabled": true,
+      "isHideQueryParamsEnabled": false,
+      "isNewResultOnRefreshEnabled": false
+    },
+    "metadata": {
+      "title": "FIFI Revenda"
+    }
+  }
+}

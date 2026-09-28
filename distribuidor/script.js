@@ -162,6 +162,8 @@ form.addEventListener("submit", async e => {
     if (!r.ok) throw new Error(r.status);
     // Libera o botão "Ver catálogo" do obrigado.html só para quem enviou o formulário.
     try { sessionStorage.setItem("fifi_revenda_enviado", "1"); } catch {}
+    // Mesmo aviso que o Typebot dá quando grava um lead: um ponto só para ligar Pixel/Google Ads.
+    dispatchEvent(new CustomEvent("fifi:lead", { detail: { origem: "Formulário", event_id: payload.event_id } }));
     window.location.href = "obrigado.html";
   } catch (falha) {
     // 400 = a API recusou os dados (validação do servidor); o resto é rede ou servidor fora.
@@ -195,3 +197,41 @@ if (document.documentElement.classList.contains("js-motion")) {
     io.observe(el);
   });
 }
+
+/* ---------- 6. Typebot (typebot/fifi-revenda.json) -------------------------
+   Saudação > O que você precisa? > dados > agradecimento. O bot grava pela
+   mesma /api/revenda do formulário (origem "Typebot") e, quando grava, avisa
+   a página com o evento "fifi:lead", igual ao formulário.
+   O bundle tem ~190 KB: só baixa na primeira interação, no ocioso ou em 4 s.
+   position "static" deixa o <typebot-bubble> no fluxo da página e quem
+   posiciona é o nosso CSS: no celular ele sobe acima do botão fixo. */
+const TYPEBOT = { id: "fifi-revenda", host: "https://typebot.co", lib: "https://cdn.jsdelivr.net/npm/@typebot.io/js@0.10.11/dist/web.js" };
+const ICONE_CHAT = "data:image/svg+xml," + encodeURIComponent(
+  '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="#C4F04A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+  '<path d="M21 12a8 8 0 0 1-11.6 7.1L4 20.5l1.4-4.9A8 8 0 1 1 21 12Z"/><path d="M8.5 12h.01M12 12h.01M15.5 12h.01"/></svg>');
+let botCarregado = false;
+async function carregarBot() {
+  if (botCarregado) return;
+  botCarregado = true;
+  try {
+    const Typebot = (await import(TYPEBOT.lib)).default;
+    Typebot.initBubble({
+      typebot: TYPEBOT.id,
+      apiHost: TYPEBOT.host,
+      prefilledVariables: { ...origem.utms, ...origem.clicks, referencia: origem.referencia },
+      theme: {
+        position: "static",
+        button: { backgroundColor: "#0B3A2C", customIconSrc: ICONE_CHAT, size: "medium" },
+        chatWindow: { backgroundColor: "#F4F7F2" }
+      },
+      // Chat aberto no celular: o balão desce e o CTA fixo e o WhatsApp saem da frente.
+      onOpen: () => document.documentElement.classList.add("bot-aberto"),
+      onClose: () => document.documentElement.classList.remove("bot-aberto")
+    });
+  } catch (e) {
+    botCarregado = false; // CDN fora: tenta de novo na próxima interação
+  }
+}
+["pointerdown", "keydown", "scroll", "touchstart"].forEach(ev => addEventListener(ev, carregarBot, { passive: true, once: true }));
+(window.requestIdleCallback || (cb => setTimeout(cb, 2000)))(carregarBot, { timeout: 4000 });
+setTimeout(carregarBot, 4000);
