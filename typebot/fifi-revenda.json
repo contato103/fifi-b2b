@@ -712,7 +712,7 @@
                 "type": "p",
                 "children": [
                   {
-                    "text": "Recebemos seu contato, {{nome}}!"
+                    "text": "Obrigado pelas informações, {{nome}}!"
                   }
                 ]
               }
@@ -760,14 +760,14 @@
                 "type": "p",
                 "children": [
                   {
-                    "text": "Agora você já pode falar com a Renata no WhatsApp: "
+                    "text": "Para continuar a conversa, fale com a gente no WhatsApp: "
                   },
                   {
                     "type": "a",
-                    "url": "https://wa.me/5547991994731?text=Ol%C3%A1%2C%20Renata!%20Vim%20pela%20p%C3%A1gina%20de%20revenda%20da%20FIFI%20e%20quero%20saber%20como%20revender%20os%20produtos%20na%20minha%20loja.",
+                    "url": "https://wa.me/5547991994731?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20de%20revenda%20da%20FIFI%20e%20quero%20saber%20como%20revender%20os%20produtos%20na%20minha%20loja.",
                     "children": [
                       {
-                        "text": "Falar com a Renata"
+                        "text": "Chamar no WhatsApp"
                       }
                     ]
                   }
@@ -785,7 +785,7 @@
                 "type": "p",
                 "children": [
                   {
-                    "text": "Enquanto isso, veja o catálogo completo: "
+                    "text": "Ou, se preferir, veja o nosso catálogo completo: "
                   },
                   {
                     "type": "a",
@@ -836,7 +836,7 @@
                 "type": "p",
                 "children": [
                   {
-                    "text": "Enquanto isso, veja o catálogo completo: "
+                    "text": "Enquanto isso, veja o nosso catálogo completo: "
                   },
                   {
                     "type": "a",
@@ -887,14 +887,14 @@
                 "type": "p",
                 "children": [
                   {
-                    "text": "Fale direto com a Renata no WhatsApp: "
+                    "text": "Fale com a gente direto no WhatsApp: "
                   },
                   {
                     "type": "a",
-                    "url": "https://wa.me/5547991994731?text=Ol%C3%A1%2C%20Renata!%20Vim%20pela%20p%C3%A1gina%20de%20revenda%20da%20FIFI%20e%20quero%20saber%20como%20revender%20os%20produtos%20na%20minha%20loja.",
+                    "url": "https://wa.me/5547991994731?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20de%20revenda%20da%20FIFI%20e%20quero%20saber%20como%20revender%20os%20produtos%20na%20minha%20loja.",
                     "children": [
                       {
-                        "text": "Falar com a Renata"
+                        "text": "Chamar no WhatsApp"
                       }
                     ]
                   }

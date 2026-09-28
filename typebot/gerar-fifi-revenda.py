@@ -16,8 +16,9 @@ import pathlib
 
 API = "https://mkt.fifilimpeza.com/api/revenda"
 CATALOGO = "https://drive.google.com/file/d/1ayT0qVXGJHj7anIxKqzI1nNpeeM00l9P/view?usp=sharing"
-WHATS_RENATA = ("https://wa.me/5547991994731?text=Ol%C3%A1%2C%20Renata!%20Vim%20pela%20p%C3%A1gina%20de%20"
-                "revenda%20da%20FIFI%20e%20quero%20saber%20como%20revender%20os%20produtos%20na%20minha%20loja.")
+# WhatsApp do comercial (quem responde é a Renata, mas o nome dela não aparece para o cliente).
+WHATS = ("https://wa.me/5547991994731?text=Ol%C3%A1!%20Vim%20pela%20p%C3%A1gina%20de%20"
+         "revenda%20da%20FIFI%20e%20quero%20saber%20como%20revender%20os%20produtos%20na%20minha%20loja.")
 REVENDER, DUVIDA = "Quero revender FIFI", "Tirar uma dúvida"
 TIPOS = ["Utilidades", "Home center / Material de construção", "Agropecuária", "Pet shop", "Mercado", "Outro"]
 
@@ -180,20 +181,20 @@ grupos = [
     ]),
     ("g-obrigado", "Agradecimento", [
         codigo("b-lead", "lead_ok", JS_LEAD),
-        texto("b-ok1", "Recebemos seu contato, {{nome}}!"),
+        texto("b-ok1", "Obrigado pelas informações, {{nome}}!"),
         condicao("b-ok-cond", "ok-duvida", "interesse", DUVIDA, "e-ok-duvida", "e-ok-revenda"),
     ]),
     ("g-ok-revenda", "Agradecimento: revenda (libera o WhatsApp)", [
-        texto("b-okr1", "Agora você já pode falar com a Renata no WhatsApp: ", ("Falar com a Renata", WHATS_RENATA)),
-        texto("b-okr2", "Enquanto isso, veja o catálogo completo: ", ("Ver catálogo", CATALOGO)),
+        texto("b-okr1", "Para continuar a conversa, fale com a gente no WhatsApp: ", ("Chamar no WhatsApp", WHATS)),
+        texto("b-okr2", "Ou, se preferir, veja o nosso catálogo completo: ", ("Ver catálogo", CATALOGO)),
     ]),
     ("g-ok-duvida", "Agradecimento: dúvida", [
         texto("b-okd1", "Um consultor comercial da FIFI vai responder a sua dúvida pelo WhatsApp."),
-        texto("b-okd2", "Enquanto isso, veja o catálogo completo: ", ("Ver catálogo", CATALOGO)),
+        texto("b-okd2", "Enquanto isso, veja o nosso catálogo completo: ", ("Ver catálogo", CATALOGO)),
     ]),
     ("g-falha", "Envio falhou", [
         texto("b-falha1", "Não consegui registrar seus dados agora."),
-        texto("b-falha2", "Fale direto com a Renata no WhatsApp: ", ("Falar com a Renata", WHATS_RENATA)),
+        texto("b-falha2", "Fale com a gente direto no WhatsApp: ", ("Chamar no WhatsApp", WHATS)),
     ]),
 ]
 
