@@ -185,7 +185,8 @@ grupos = [
         condicao("b-ok-cond", "ok-duvida", "interesse", DUVIDA, "e-ok-duvida", "e-ok-revenda"),
     ]),
     ("g-ok-revenda", "Agradecimento: revenda (libera o WhatsApp)", [
-        texto("b-okr1", "Para continuar a conversa, fale com a gente no WhatsApp: ", ("Chamar no WhatsApp", WHATS)),
+        texto("b-okr1", "Em breve nossa equipe entrará em contato. Se deseja contato imediato, fale com a gente no WhatsApp: ",
+              ("Chamar no WhatsApp", WHATS)),
         texto("b-okr2", "Ou, se preferir, veja o nosso catálogo completo: ", ("Ver catálogo", CATALOGO)),
     ]),
     ("g-ok-duvida", "Agradecimento: dúvida", [
