@@ -4,7 +4,7 @@
    true enquanto houver [CONFIRMAR] na copy. Marca cada promessa pendente e
    mostra a contagem. Desligar só quando o cliente confirmar tudo por escrito
    (o que não for confirmado sai da página, não vira texto mais vago).     */
-const REVISAO = true;
+const REVISAO = false; // LP aprovada pelo cliente em 28/09/2026
 
 const pends = document.querySelectorAll(".pend");
 const pill = document.getElementById("review-pill");
