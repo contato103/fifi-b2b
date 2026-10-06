@@ -60,9 +60,9 @@ tabs.forEach((tab, i) => {
 });
 
 /* ---------- 3. Formulário: máscaras, validação e envio ---------------------
-   POST /api/revenda → planilha "LP FIFI Revenda · Leads". Pixel Meta e
-   conversão do Google ainda NÃO estão ligados (decisão pendente: qual pixel
-   e qual ação de conversão, para não misturar com a campanha B2B).        */
+   POST /api/revenda → planilha "LP FIFI Revenda · Leads". Conversão do
+   Google na seção 7. Pixel Meta ainda NÃO está ligado (decisão pendente:
+   qual pixel, para não misturar com o aprendizado da campanha B2B).       */
 
 /* Origem do lead: UTMs e IDs de clique da URL de entrada, guardados na sessão
    para não se perderem se o visitante navegar pelas âncoras antes de enviar. */
@@ -163,7 +163,14 @@ form.addEventListener("submit", async e => {
     // Libera o botão "Ver catálogo" do obrigado.html só para quem enviou o formulário.
     try { sessionStorage.setItem("fifi_revenda_enviado", "1"); } catch {}
     // Mesmo aviso que o Typebot dá quando grava um lead: um ponto só para ligar Pixel/Google Ads.
-    dispatchEvent(new CustomEvent("fifi:lead", { detail: { origem: "Formulário", event_id: payload.event_id } }));
+    // Só troca de página depois que a conversão saiu (seção 7), com teto de 1,5 s.
+    await new Promise(ok => {
+      const teto = setTimeout(ok, 1500);
+      dispatchEvent(new CustomEvent("fifi:lead", { detail: {
+        origem: "Formulário", event_id: payload.event_id, user_data: dadosGoogle(payload),
+        pronto: () => { clearTimeout(teto); ok(); }
+      } }));
+    });
     window.location.href = "obrigado.html";
   } catch (falha) {
     // 400 = a API recusou os dados (validação do servidor); o resto é rede ou servidor fora.
@@ -239,3 +246,23 @@ async function carregarBot() {
 ["pointerdown", "keydown", "scroll", "touchstart"].forEach(ev => addEventListener(ev, carregarBot, { passive: true, once: true }));
 (window.requestIdleCallback || (cb => setTimeout(cb, 2000)))(carregarBot, { timeout: 4000 });
 setTimeout(carregarBot, 4000);
+
+/* ---------- 7. Conversão no Google Ads --------------------------------------
+   Ouve o "fifi:lead" do formulário e do Typebot (só disparam depois que a
+   /api/revenda gravou). transaction_id = event_id: a mesma conversão não conta
+   duas vezes. "pronto" libera o formulário para ir ao obrigado.html. Enquanto
+   o rótulo for o marcador LABEL_REVENDA, não dispara nada.                  */
+function dadosGoogle(p) {
+  const [primeiro, ...resto] = p.nome.trim().split(/\s+/);
+  const u = { phone_number: "+55" + onlyDigits(p.whatsapp) };
+  if (primeiro && resto.length) u.address = { first_name: primeiro, last_name: resto.join(" "), country: "BR" };
+  return u;
+}
+addEventListener("fifi:lead", e => {
+  const d = e.detail || {};
+  const pronto = typeof d.pronto === "function" ? d.pronto : () => {};
+  const sendTo = (window.FIFI_TRACK || {}).sendTo || "";
+  if (typeof gtag !== "function" || !sendTo || sendTo.includes("LABEL_")) return pronto();
+  if (d.user_data) gtag("set", "user_data", d.user_data);
+  gtag("event", "conversion", { send_to: sendTo, transaction_id: d.event_id, event_callback: pronto, event_timeout: 1500 });
+});
