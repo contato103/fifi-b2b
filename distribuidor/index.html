@@ -31,14 +31,26 @@
   <link rel="stylesheet" href="styles.css?v=12">
   <!-- Google Ads: ação própria da revenda ("Lead Revenda FIFI", categoria Pedir cotação), separada do
        "Lead LP FIFI" da B2B para os dois lances não aprenderem um com o outro. Dispara no evento
-       "fifi:lead" (formulário e Typebot), seção 7 do script.js. Sem pixel Meta por enquanto. -->
-  <script>window.FIFI_TRACK = { sendTo: "AW-16753876130/OIEGCPidyZMdEKK577Q-" };</script>
+       "fifi:lead" (formulário e Typebot), seção 7 do script.js. -->
+  <script>window.FIFI_TRACK = { sendTo: "AW-16753876130/OIEGCPidyZMdEKK577Q-", metaPixel: "1392391086313268" };</script>
   <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16753876130"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag("js", new Date());
     gtag("config", "AW-16753876130", { allow_enhanced_conversions: true }); // grava _gcl_aw: a conversão sai atribuída ao clique
+  </script>
+  <!-- Meta Pixel 1392391086313268: o mesmo que a campanha [DIGITHA][FUNDO][LL] otimiza (evento Lead).
+       PageView aqui; Lead no "fifi:lead", seção 8 do script.js, com eventID = event_id da planilha
+       (dedup com a CAPI da /api/revenda). O pixel grava _fbp e, vindo de anúncio, _fbc pelo fbclid. -->
+  <script>
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+    n.push=n;n.loaded=!0;n.version="2.0";n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+    document,"script","https://connect.facebook.net/en_US/fbevents.js");
+    fbq("init", "1392391086313268");
+    fbq("track", "PageView");
   </script>
 </head>
 <body>
@@ -428,6 +440,6 @@
   <button type="button" id="review-toggle">Ocultar</button>
 </div>
 
-<script src="script.js?v=11" defer></script>
+<script src="script.js?v=12" defer></script>
 </body>
 </html>

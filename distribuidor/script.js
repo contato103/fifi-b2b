@@ -61,8 +61,7 @@ tabs.forEach((tab, i) => {
 
 /* ---------- 3. Formulário: máscaras, validação e envio ---------------------
    POST /api/revenda → planilha "LP FIFI Revenda · Leads". Conversão do
-   Google na seção 7. Pixel Meta ainda NÃO está ligado (decisão pendente:
-   qual pixel, para não misturar com o aprendizado da campanha B2B).       */
+   Google na seção 7, Meta na seção 8.
 
 /* Origem do lead: UTMs e IDs de clique da URL de entrada, guardados na sessão
    para não se perderem se o visitante navegar pelas âncoras antes de enviar. */
@@ -265,4 +264,15 @@ addEventListener("fifi:lead", e => {
   if (typeof gtag !== "function" || !sendTo || sendTo.includes("LABEL_")) return pronto();
   if (d.user_data) gtag("set", "user_data", d.user_data);
   gtag("event", "conversion", { send_to: sendTo, transaction_id: d.event_id, event_callback: pronto, event_timeout: 1500 });
+});
+
+/* ---------- 8. Lead no Meta (pixel 1392391086313268) -----------------------
+   Mesmo "fifi:lead" da seção 7. eventID = event_id gravado na planilha e
+   mandado pela CAPI da /api/revenda: a Meta conta uma vez só. Telefone e nome
+   vão pela CAPI (hash no servidor), não por aqui: re-init do pixel é ignorado. */
+addEventListener("fifi:lead", e => {
+  const d = e.detail || {};
+  const pixel = (window.FIFI_TRACK || {}).metaPixel;
+  if (typeof fbq !== "function" || !pixel || !d.event_id) return;
+  fbq("trackSingle", pixel, "Lead", { content_name: "Revenda FIFI", content_category: d.origem || "" }, { eventID: d.event_id });
 });

@@ -85,6 +85,51 @@ function cnpjValido(c) {
 }
 const cnpjFmt = c => `${c.slice(0, 2)}.${c.slice(2, 5)}.${c.slice(5, 8)}/${c.slice(8, 12)}-${c.slice(12)}`;
 
+// ── Meta CAPI (Lead) ─────────────────────────────────────────────────
+// Pixel 1392391086313268: o da campanha [DIGITHA][FUNDO][LL] (evento Lead).
+// Mesmo event_id do fbq do navegador (seção 8 do script.js): a Meta deduplica.
+// Token: META_REVENDA_TOKEN (gerado no Gerenciador de Eventos desse pixel);
+// sem ele tenta o META_ACCESS_TOKEN da LP B2B. Falha não derruba o lead: só loga.
+const META_PIXEL = process.env.META_REVENDA_PIXEL_ID || '1392391086313268';
+const metaToken = () => process.env.META_REVENDA_TOKEN || process.env.META_ACCESS_TOKEN || '';
+async function sha256(v) {
+  const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(v));
+  return [...new Uint8Array(b)].map(x => x.toString(16).padStart(2, '0')).join('');
+}
+const semAcento = v => v.normalize('NFD').toLowerCase().replace(/[^a-z]/g, ''); // NFD separa o acento, o filtro tira
+async function enviarCAPI(ev, teste = false) {
+  const token = metaToken();
+  if (!token) return { ok: false, motivo: 'sem META_REVENDA_TOKEN/META_ACCESS_TOKEN' };
+  const body = { data: [ev] };
+  if (teste) body.test_event_code = 'TEST_HEALTH';
+  else if (process.env.META_TEST_CODE) body.test_event_code = process.env.META_TEST_CODE;
+  const res = await fetch(`https://graph.facebook.com/v19.0/${META_PIXEL}/events?access_token=${encodeURIComponent(token)}`, {
+    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+  });
+  const d = await res.json().catch(() => ({}));
+  if (!res.ok) return { ok: false, pixel: META_PIXEL, motivo: (d.error && d.error.message) || String(res.status) };
+  return { ok: true, pixel: META_PIXEL, eventosAceitos: d.events_received };
+}
+async function leadCAPI({ eventId, fone, nome, cidade, fbp, fbc, ip, ua, pagina }) {
+  const [primeiro, ...resto] = nome.split(/\s+/);
+  const ud = { ph: [await sha256(digitos(fone))], country: [await sha256('br')] };
+  if (primeiro) ud.fn = [await sha256(semAcento(primeiro))];
+  if (resto.length) ud.ln = [await sha256(semAcento(resto[resto.length - 1]))];
+  const ct = semAcento(cidade.split(/[\/,-]/)[0] || '');
+  if (ct) ud.ct = [await sha256(ct)];
+  if (fbp) ud.fbp = fbp;
+  if (fbc) ud.fbc = fbc;
+  if (ip) ud.client_ip_address = ip;
+  if (ua) ud.client_user_agent = ua;
+  const r = await enviarCAPI({
+    event_name: 'Lead', event_time: Math.floor(Date.now() / 1000), event_id: eventId,
+    action_source: 'website', event_source_url: pagina || 'https://mkt.fifilimpeza.com/distribuidor/',
+    user_data: ud, custom_data: { content_name: 'Revenda FIFI' },
+  });
+  if (!r.ok) console.error('[revenda] capi:', r.motivo);
+  return r;
+}
+
 export default async function handler(req) {
   const url = new URL(req.url);
 
@@ -93,7 +138,11 @@ export default async function handler(req) {
     try {
       const token = await getAccessToken(process.env.GOOGLE_CREDENTIALS);
       const planilha = await diagnosticar({ planilhaId: SPREADSHEET_ID, token, esperadas: COLUNAS_ESPERADAS });
-      return json(planilha, planilha.ok ? 200 : 500);
+      // CAPI em campo próprio: falha calada (o lead grava e ninguém vê). Evento de teste, não conta.
+      const capi = await enviarCAPI({ event_name: 'PageView', event_time: Math.floor(Date.now() / 1000),
+        action_source: 'website', user_data: { client_ip_address: '127.0.0.1', client_user_agent: 'health' } }, true)
+        .catch(e => ({ ok: false, motivo: String(e && e.message || e) }));
+      return json({ ...planilha, capi }, planilha.ok ? 200 : 500);
     } catch (e) {
       return json({ ok: false, erro: String(e && e.message || e) }, 500);
     }
@@ -142,6 +191,14 @@ export default async function handler(req) {
     const token = await getAccessToken(process.env.GOOGLE_CREDENTIALS);
     // Aba do mês; se falhar, aba "LEADS CONTINGÊNCIA". Só lança se as duas falharem.
     await gravarLead({ planilhaId: SPREADSHEET_ID, token, campos });
+
+    // Lead gravado: CAPI com o mesmo event_id do pixel (não bloqueia o lead se falhar).
+    if (campos['event id']) {
+      try {
+        await leadCAPI({ eventId: campos['event id'], fone, nome, cidade, fbp: campos.fbp, fbc: campos.fbc,
+          ip, ua: campos.navegador, pagina: campos.pagina });
+      } catch (e) { console.error('[revenda] capi:', e && e.message || e); }
+    }
 
     return json({ success: true, resultado: 'ok' }, 200, h);
   } catch (err) {
